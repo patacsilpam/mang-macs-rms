@@ -1,0 +1,169 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+body {
+    background: #1ED090;
+}
+
+h1 {
+    font-size: 1.7em;
+    font-weight: 600;
+    color: #1b1b1b;
+    display: flex;
+    justify-content: center;
+    align-self: center;
+}
+
+p {
+    font-size: 1.5rem;
+    margin: 10px;
+    font-weight: 200;
+    color: #1b1b1b;
+    text-align: center;
+}
+
+.form {
+    margin: 10px;
+    height: 40px;
+    width: 100%;
+    padding: 10px;
+    outline: none;
+    border-radius: 3px;
+    font-size: 1.5rem;
+    box-shadow: 1px 1px #d9d9d9;
+    display: flex;
+    align-items: center;
+    align-self: center;
+}
+
+.inline-checkbox {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+input.checkbox {
+    margin: 10px 0;
+    height: 20px;
+    width: 40px;
+}
+
+button {
+    padding: 5px;
+    background: rgb(91, 91, 251);
+    border: transparent;
+    color: white;
+    font-size: 1.5rem;
+    border-radius: 5px;
+    width: 150px;
+    margin: 10px 5px;
+    display: flex;
+    justify-content: center;
+    align-self: center;
+}
+
+button:hover {
+    background: rgb(81, 81, 226);
+}
+
+a {
+    text-decoration: none;
+}
+
+.container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-radius: 5px;
+    padding: 10px;
+    overflow: hidden;
+    width: 430px;
+}
+
+.icon-eye {
+    cursor: pointer;
+    display: flex;
+    align-self: flex-end;
+    position: relative;
+    top: -35px;
+    right: 10px;
+}
+
+.forgot-password {
+    font-size: 1.3rem;
+    text-align: center;
+}
+
+.text-forgot-password,
+.reset-password {
+    text-align: center;
+}
+
+.text-forgot-password {
+    font-size: 1.1em;
+    color: #272727;
+}
+
+.reset-password {
+    padding: 10px;
+    font-size: 1em;
+}
+
+.text-account {
+    font-size: 1.5rem;
+}
+
+.msg-Success,
+.msg-Error {
+    font-size: 1.5rem;
+    margin: 5px 0;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.reset-Success {
+    display: flex;
+    justify-content: flex-start;
+    margin: 10px;
+}
+
+.icons {
+    margin: 0 10px;
+}
+
+@media (max-width:700px) {
+    .container {
+        width: 100%;
+    }
+    h1 {
+        font-size: 1.4em;
+        width: 275px;
+        text-align: center;
+        font-weight: 600;
+    }
+    .text-account,
+    a {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width:654px) {
+    .container {
+        width: 100%;
+        padding: 10px;
+    }
+}
