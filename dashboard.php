@@ -1,4 +1,4 @@
-<?php require 'public/admin-inventory.php'?>
+<?php require 'public/admin-inventory.php'; require 'public/admin-count-orders.php'?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,51 +27,184 @@
         </header>
         <!--Inventory Container-->
         <main class="main-container">
-            <section>
+            <!--Row 1--->
+            <article class="sales-order-container">
+                <!--Chart for orders-->
+                <section class="sales-graph">
+                    <section class="sales-title">
+                        <h3>Sales Order 2022</h3>
+                        <section>
+                            <ul class="nav nav-pills" id="myTab">
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-toggle="tab" href="#dailySales">Daily</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#weeklySales">Weekly</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#monthlySales">Monthly</a>
+                                </li>
+                            </ul>
+                        </section>
+                    </section>
+                    <section class="tab-content">
+                        <section id="dailySales" class="container tab-pane active"><br>
+                            <h5>1</h5>
+                        </section>
+                        <section id="weeklySales" class="container tab-pane fade"><br>
+                            <h5>2</h5>
+                        </section>
+                        <section id="monthlySales" class="container tab-pane fade"><br>
+                            <h5>3</h5>
+                        </section>
+                    </section>
+                </section>
+                <section class="sales-report-orders">
+                    <!---Active Order--->
+                    <section>
+                        <section class="box-orders">
+                            <h3>Active Order</h3>
+                            <section class="view-sales-details">
+                                <p class="text--active"><?php countActiveOrders('countActiveOrder');?></p>
+                                <a href="orders.php" title="View Details">View</a>
+                            </section>
+                        </section>
+                    </section>
+                    <!--Total Order---->
+                    <section>
+                        <section class="box-orders">
+                            <h3>Total Order</h3>
+                            <section class="view-sales-details">
+                                <p class="text--total"><?php countActiveOrders('countTotalOrder');?></p>
+                                <a href="total-order.php" title="View Details">View</a>
+                            </section>
+                        </section>
+                    </section>
+                    <!--Cancelled Order---->
+                    <section>
+                        <section class="box-orders">
+                            <h3>Cancelled Order</h3>
+                            <section class="view-sales-details">
+                                <p class="text--cancelled"><?php countCancelledOrders('countCancelledOrders') ?></p>
+                                <a href="cancelled-orders.php" title="View Details">View</a>
+                            </section>
+                        </section>
+                    </section>
+                </section>
+            </article>
+            <!---Row 2-->
+            <article class="sales-order-container">
+                 <!--Delivered Orders-->
+                <section class="sales-order-type">
+                    <section>
+                        <section class="box-orders">
+                            <h3>Delivered Orders</h3>
+                            <section class="view-sales-details">
+                                <p class="text--delivered"><?php  countDeliveryOrders('countDeliveryOrders') ?></p>
+                                <a href="delivered-orders.php" title="View Details">View</a>
+                            </section>
+                        </section>
+                    </section>
+                </section>
+                 <!--Dine In Orders-->
+                <section class="sales-order-type box-middle">
+                    <section>
+                        <section class="box-orders">
+                            <h3>Dine In Orders</h3>
+                            <section class="view-sales-details">
+                                <p class="text--dineIn"><?php countDineInOrders('countDineInOrders') ?></p>
+                                <a href="dine-in-orders.php" title="View Details">View</a>
+                            </section>
+                        </section>
+                    </section>
+                </section>
+                <!--Pick Up Orders-->
+                <section class="sales-order-type">
+                    <section>
+                        <section class="box-orders">
+                            <h3>Pick Up Orders</h3>
+                            <section class="view-sales-details">
+                                <p class="text--pickUp"><?php countPickUpOrders('countPickUpOrder') ?></p>
+                                <a href="pick-up-orders.php" title="View Details">View</a>
+                            </section>
+                        </section>
+                    </section>
+                </section>
+            </article>
+            <!--Row 3-->
+            <article class="sales-book-container">
+                <!--chart for reservation-->
                 <article>
-                    <div class="boxes">
-                        <div class="line-box-1">
-                            <div class="box1">
-                                <h5 class="text-sales">Sales</h5>
-                                <span><?php //getSales('totalSales'); ?></span>
-                            </div>
-                            <div class="box2">
-                                <h5 class="text-sales">Reservation</h5>
-                                <span><?php //getReservation('totalGuests'); ?></span>
-                            </div>
-                            <div class="box3">
-                                <h5 class="text-sales">Delivery</h5>
-                                <span><?php //getDelivery('orderType'); ?></span>
-                            </div>
-                            <div class="box4">
-                                <h5 class="text-sales">Stocks</h5>
-                                <span><?php //getStocks('totalStocks') ?></span>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Charts-->
-                    <div class="line-chart-1">
-                        <div>
-                            <canvas id="dailyChart" class="canvas" width="600" height="350"></canvas>
-                            <?php //include 'charts/dailyChart.php'?>
-                        </div>
-                        <div>
-                            <canvas id="weeklyChart" class="canvas" width="600" height="350"></canvas>
-                            <?php //include 'charts/weeklyChart.php'?>
-                        </div>
-                    </div>
-                    <div class="line-chart-2">
-                        <div>
-                            <canvas id="monthlyChart" class="canvas" width="600" height="350"></canvas>
-                            <?php //include 'charts/monthlyChart.php'?>
-                        </div>
-                        <div>
-                            <canvas id="yearlyChart" class="canvas" width="600" height="350"></canvas>
-                            <?php //include 'charts/yearlyChart.php'?>
-                        </div>
-                    </div>
+                    <section class="sales-graph">
+                        <section class="sales-title">
+                            <h3>Sales Reservation 2022</h3>
+                            <section>
+                                <ul class="nav nav-pills" id="myTab">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" data-toggle="tab" href="#dailyBook">Daily</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#weeklyBook">Weekly</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#monthlyBook">Monthly</a>
+                                    </li>
+                                </ul>
+                            </section>
+                        </section>
+                        <section class="tab-content">
+                            <section id="dailyBook" class="container tab-pane active"><br>
+                                <h5>1</h5>
+                            </section>
+                            <section id="weeklyBook" class="container tab-pane fade"><br>
+                                <h5>2</h5>
+                            </section>
+                            <section id="monthlyBook" class="container tab-pane fade"><br>
+                                <h5>3</h5>
+                            </section>
+                        </section>
+                    </section>
                 </article>
-            </section>
+            </article>
+            <!--Row 4-->
+            <article class="sales-order-container">
+                <!--Active Booking-->
+                <section class="sales-order-type">
+                    <section>
+                        <section class="box-orders">
+                            <h3>Active Booking</h3>
+                            <section class="view-sales-details">
+                                <p class="text--active"><?php countActiveBooking('countActiveBooking') ?></p>
+                                <a href="reservation.php" title="View Details">View</a>
+                            </section>
+                        </section>
+                    </section>
+                </section>
+                <!--Total Booking-->
+                <section class="sales-order-type box-middle">
+                    <section>
+                        <section class="box-orders">
+                            <h3>Total Booking</h3>
+                            <section class="view-sales-details">
+                                <p class="text--total"><?php countTotalBooking('countTotalBooking') ?></p>
+                                <a href="total-booking.php" title="View Details">View</a>
+                            </section>
+                        </section>
+                    </section>
+                </section>
+                  <!--Cancelled Booking-->
+                <section class="sales-order-type">
+                    <section>
+                        <section class="box-orders">
+                            <h3>Cancelled Booking</h3>
+                            <section class="view-sales-details">
+                                <p class="text--cancelled"><?php countCancelledBooking('countCancelledBooking') ?></p>
+                                <a href="cancelled-booking.php" title="View Details">View</a>
+                            </section>
+                        </section>
+                    </section>
+                </section>
+            </article>
         </main>
         <?php include 'assets/template/admin/sidebar.php'?>
     </div>

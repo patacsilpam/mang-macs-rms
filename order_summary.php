@@ -51,7 +51,7 @@
                             tblcustomerorder.phone_number,tblcustomerorder.total_amount
                             FROM tblcustomerorder LEFT JOIN tblorderdetails
                             ON tblcustomerorder.order_number = tblorderdetails.order_number
-                            WHERE tblorderdetails.order_number=?");
+                            WHERE tblorderdetails.order_number=? LIMIT 1");
                         $getOrderSummary->bind_param('s',$getOrderNumber);
                         $getOrderSummary->execute();
                         $getOrderSummary->bind_result($orderNumber,$customerName,$placedOn,$requiredDate,$requiredTime,$orderType,$orderStatus,$email,$phoneNumber,$totalAmount);
@@ -139,7 +139,7 @@
                         <?php
                             $orderNumber = $_GET['order_number'];
                             require 'public/connection.php';
-                            $getOrder = $connect->prepare("SELECT customer_address,label_address FROM tblcustomerorder WHERE order_number=?");
+                            $getOrder = $connect->prepare("SELECT customer_address,label_address FROM tblcustomerorder WHERE order_number=? LIMIT 1");
                             $getOrder->bind_param('s',$orderNumber);
                             $getOrder->execute();
                             $getOrder->bind_result($customerAddress,$labelAddress);

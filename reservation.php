@@ -1,4 +1,4 @@
-<?php require 'public/admin-inventory.php'; ?>
+<?php require 'public/admin-inventory.php'; require 'public/admin-reservation.php'; ?>
 <!DOCTYPE html>
 <html lang="en-us">
 
@@ -12,8 +12,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
     <link rel="icon" type="image/jpeg" href="assets/images/mang-macs-logo.jpg" sizes="70x70">
     <link rel="stylesheet" href="assets/css/main.css" type="text/css">
     <title>Reservation</title>
@@ -33,8 +33,11 @@
             <section>
                 <article>
                     <div class="table-responsive table-container">
+                        <div class="add-product">
+                        </div>
                         <table id="example" class="table table-hover">
                             <thead class="thead-dark">
+
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Date</th>
@@ -45,12 +48,13 @@
                                     <th scope="col">Status</th>
                                 </tr>
                             </thead>
+                            <!---->
                             <tbody>
-                                <tr>
-                                    <?php 
-                                        $queryReservation = $connect->query("SELECT * FROM tblreservation WHERE status='Processing'");
-                                        while($fetch = $queryReservation->fetch_assoc()){
-                                            ?>
+                                <?php
+                                    require 'public/connection.php';
+                                    $queryReservation = $connect->query("SELECT * FROM tblreservation WHERE status='Pending' OR status='Booking Received'");
+                                    while($fetch = $queryReservation->fetch_assoc()){
+                                   ?>
                                 <tr>
                                     <td><?= $fetch['id']?></td>
                                     <td><?= $fetch['created_at']?></td>
@@ -58,12 +62,17 @@
                                     <td><?= $fetch['fname'] ?> <?=$fetch['lname']?></td>
                                     <td><?= $fetch['email']?></td>
                                     <td><?= $fetch['guests']?></td>
-                                    <td><?= $fetch['status']?></td>
+                                    <td>
+                                        <?= $fetch['status']?>
+                                        <button title="Edit" type="button" class="btn btn-transparent"
+                                            data-toggle="modal" data-target="#editUsers<?= $fetch['id'] ?>"><i
+                                                class="fas fa-edit" style="color: blue;"></i></button>
+                                        <?php include 'assets/template/admin/bookingStatus.php' ?>
+                                    </td>
                                 </tr>
                                 <?php
-                                        }
-                                    ?>
-                                </tr>
+                                    }
+                                ?>
                             </tbody>
                         </table>
                     </div>

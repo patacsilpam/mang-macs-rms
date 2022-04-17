@@ -1,8 +1,9 @@
 <?php require 'public/admin-inventory.php'; require 'public/admin-orders.php';?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="Orders" content="Mang Macs-Orders">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,13 +18,14 @@
     <link rel="stylesheet" href="assets/css/main.css" type="text/css">
     <title>Orders</title>
 </head>
+
 <body>
-<div class="grid-container">
+    <div class="grid-container">
         <!--Navigation-->
         <header class="nav-container">
             <h3>Orders</h3>
             <ul class="nav-list">
-                <?php include 'assets/template/admin/navbar.php' ?>
+                <?php include 'assets/template/admin/navbar.php'?>
             </ul>
         </header>
         <!--Sales' Categories-->
@@ -48,7 +50,7 @@
                             </thead>
                             <!---->
                             <tbody>
-                            <?php
+                                <?php
                                     require 'public/connection.php';
                                     $getOrders = "SELECT tblcustomerorder.order_number,tblcustomerorder.id,
                                     tblorderdetails.created_at,tblcustomerorder.customer_name,tblorderdetails.order_status,
@@ -61,25 +63,29 @@
                                     $displayOrders = $connect->query($getOrders);
                                     while($fetch = $displayOrders->fetch_assoc()){
                                    ?>
-                                    <tr>
-                                        <th scope="row"><?=$fetch['id']?></th>
-                                        <td><?=$fetch['created_at']?></td>
-                                        <td><?=$fetch['customer_name']?></td>
-                                        <td width="150">
-                                            <span class="flex">
-                                                <?=$fetch['order_status']?> 
-                                                <button title="Edit" type="button" class="btn btn-transparent" data-toggle="modal" data-target="#editUsers<?= $fetch['order_number'] ?>"><i class="fas fa-edit" style="color: blue;"></i></button>
-                                                <?php include 'assets/template/admin/orderStatus.php' ?>
-                                            </span>
-                                        </td>
-                                        <td><?=$fetch['order_type']?></td>
-                                        <td><?=$fetch['total_amount']?></td>
-                                        <td><?=$fetch['required_date']?><br><?=$fetch['required_time']?></td>
-                                        <td> 
-                                            <a href='order_summary.php?order_number=<?= $fetch['order_number'];?>' title="View Order Details"><i class="fas fa-arrow-circle-right"></i></a>
-                                        </td>
-                                    </tr>
-                                   <?php 
+                                <tr>
+                                    <th scope="row"><?=$fetch['id']?></th>
+                                    <td><?=$fetch['created_at']?></td>
+                                    <td><?=$fetch['customer_name']?></td>
+                                    <td width="150">
+                                        <span class="flex">
+                                            <?=$fetch['order_status']?>
+                                            <button title="Edit" type="button" class="btn btn-transparent"
+                                                data-toggle="modal"
+                                                data-target="#editUsers<?= $fetch['order_number'] ?>"><i
+                                                    class="fas fa-edit" style="color: blue;"></i></button>
+                                            <?php include 'assets/template/admin/orderStatus.php' ?>
+                                        </span>
+                                    </td>
+                                    <td><?=$fetch['order_type']?></td>
+                                    <td><?=$fetch['total_amount']?></td>
+                                    <td><?=$fetch['required_date']?><br><?=$fetch['required_time']?></td>
+                                    <td>
+                                        <a href='order_summary.php?order_number=<?= $fetch['order_number'];?>'
+                                            title="View Order Details"><i class="fas fa-arrow-circle-right"></i></a>
+                                    </td>
+                                </tr>
+                                <?php 
                                     }
                                  ?>
                             </tbody>
@@ -95,4 +101,5 @@
     <script src="assets/js/sidebar-menu-active.js"></script>
     <script src="assets/js/table.js"></script>
 </body>
+
 </html>

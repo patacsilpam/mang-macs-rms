@@ -7,10 +7,10 @@ function login(){
         if (isset($_POST['btnSignin'])) {
             $unameEmail = mysqli_real_escape_string($connect, $_POST['unameEmail']);
             $pword = mysqli_real_escape_string($connect, $_POST['pword']);
+            $position = 'Admin';
             //check username and email
-    
-            $check_uname_email = $connect->prepare("SELECT * FROM tblusers WHERE uname=? OR email=?");
-            $check_uname_email->bind_param('ss', $unameEmail, $unameEmail);
+            $check_uname_email = $connect->prepare("SELECT * FROM tblusers WHERE uname=? OR email=? OR position=?");
+            $check_uname_email->bind_param('sss', $unameEmail, $unameEmail,$position);
             $check_uname_email->execute();
             $row_uname_email = $check_uname_email->get_result();
             $fetch = $row_uname_email->fetch_assoc();
