@@ -126,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
            if($selectedCustomer == "PWD" || $selectedCustomer == "Senior Citizen"){
                 $insertPOS = $connect->prepare("INSERT INTO tblpos(id,id_number,customer_type,ordered_date,fname,lname,total,amount_pay,amount_change) VALUES(?,?,?,?,?,?,?,?,?)");
                 echo $connect->error;
-                $insertPOS->bind_param('isssssiii',$posId,$idNumber,$selectedCustomer,$ordered_date,$fname,$lname,$total,$amountPay,$returnChange);
+                $insertPOS->bind_param('isssssiii',$posId,$idNumber,$selectedCustomer,$orderedDate,$fname,$lname,$total,$amountPay,$returnChange);
                 $insertPOS->execute();
                 if ($insertPOS) {
                     header('Location:pos.php?insert-cart-successfully');

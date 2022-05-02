@@ -70,7 +70,6 @@
                                         $startDate = $_GET['startDate'];
                                         $endDate = $_GET['endDate'];
                                         $getTotalOrder = $connect->prepare("SELECT id,created_at,customer_id,email,product_name,product_variation,quantity,price,add_ons,order_type,order_status, (SELECT SUM(price * quantity) FROM tblorderdetails WHERE created_at BETWEEN (?) AND (?) and order_status='Cancelled') FROM tblorderdetails WHERE created_at BETWEEN (?) AND (?) and order_status='Cancelled'");
-                                        echo $connect->error;
                                         $getTotalOrder->bind_param('ssss',$startDate,$endDate,$startDate,$endDate);
                                         $getTotalOrder->execute();
                                         $getTotalOrder->bind_result($id,$createdAt,$customerId,$email,$product,$variation,$quantity,$price,$addOns,$orderType,$orderStatus,$totalAmount);
@@ -97,13 +96,41 @@
                                             echo "No Records Found";
                                         }
                                     
+                                    } else{
+                                        $getTotalOrder = $connect->prepare("SELECT id,created_at,customer_id,email,product_name,product_variation,quantity,price,add_ons,order_type,order_status,
+                                        (SELECT SUM(price * quantity) FROM tblorderdetails WHERE order_status='Cancelled') 
+                                        FROM tblorderdetails WHERE order_status='Cancelled'  ORDER BY created_at DESC");
+                                        $getTotalOrder->execute();
+                                        $getTotalOrder->bind_result($id,$createdAt,$customerId,$email,$product,$variation,$quantity,$price,$addOns,$orderType,$orderStatus,$totalAmount);
+                                        if($getTotalOrder){
+                                            while($getTotalOrder->fetch()){
+                                                ?>
+                                                <tr>
+                                                    <td><?= $id;?></td>
+                                                    <td><?= $createdAt?></td>
+                                                    <td><?= $customerId?></td>
+                                                    <td><?= $email?></td>
+                                                    <td><?= $product?></td>
+                                                    <td><?= $variation?></td>
+                                                    <td><?= $quantity?></td>
+                                                    <td><?= $price?></td>
+                                                    <td><?= $addOns?></td>
+                                                    <td><?= $orderType?></td>
+                                                    <td><?= $orderStatus?></td>
+                                                </tr>
+                                                <?php
+                                            }
+                                        }
+                                        else{
+                                            echo "No Records Found";
+                                        }
                                     }
                                  ?>
                             </tbody>
 
                           <tfoot>
                               <tr>
-                                <td colspan="10"> <b>Total Revenue: <?= $totalAmount?></b> </td>
+                                <td colspan="11"> <b>Total Revenue: <?= $totalAmount?></b> </td>
                               </tr>
                           </tfoot>
 

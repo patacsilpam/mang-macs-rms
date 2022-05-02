@@ -13,6 +13,7 @@ require 'public/admin-login.php';
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/login.css" type="text/css">
+    <link rel="stylesheet" href="assets/images/mang-macs-logo.jpg">
     <title>Sign in</title>
     
 </head>

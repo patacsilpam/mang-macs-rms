@@ -15,14 +15,14 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
     <link rel="icon" type="image/jpeg" href="assets/images/mang-macs-logo.jpg" sizes="70x70">
     <link rel="stylesheet" href="assets/css/main.css" type="text/css">
-    <title>Total Booking</title>
+    <title>POS Orders</title>
 </head>
 
 <body>
     <div class="grid-container">
         <!--Navigation-->
         <header class="nav-container">
-            <h3>Total Booking</h3>
+            <h3>POS Orders</h3>
             <ul class="nav-list">
                 <?php include 'assets/template/admin/navbar.php' ?>
             </ul>
@@ -43,8 +43,8 @@
                                 <input type="date" name="endDate" value="<?php  echo $_GET['endDate']?>">&emsp;
                                 <button type="submit" class="btn btn-primary">
                                     Filter <i class="fa fa-filter" aria-hidden="true"></i>
-                                </button> 
-                                <a href="total-booking-report.php?startDate=<?php if(isset($_GET['startDate'])) {echo $_GET['startDate'];} else{ echo date('Y-m-d',strtotime("first day of january this year"));}?>&endDate=<?php if(isset($_GET['endDate'])){ echo $_GET['endDate'];} else{ echo date('Y-m-d',strtotime("last day of december this year"));}?>"
+                                </button>
+                                <a href="total-pos-report.php?startDate=<?php if(isset($_GET['startDate'])) {echo $_GET['startDate'];} else{ echo date('Y-m-d',strtotime("first day of january this year"));}?>&endDate=<?php if(isset($_GET['endDate'])){ echo $_GET['endDate'];} else{ echo date('Y-m-d',strtotime("last day of december this year"));}?>"
                                     class="btn btn-success">
                                     <span>Export <i class="fa fa-file-pdf"></i></span>
                                 </a>
@@ -53,74 +53,88 @@
                         <table id="example" class="table table-hover">
                             <thead class="thead-dark">
                                 <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Booked Date</th>
-                                    <th scope="col">Customer ID</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Guests</th>
-                                    <th scope="col">Scheduled Date</th>
-                                    <th scope="col">Status</th>               
+                                    <th scope="col">Ordered Date</th>
+                                    <th scope="col">ID Number</th>
+                                    <th scope="col">Products</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Variation</th>
+                                    <th scope="col">Customer Type</th>
+                                    <th scope="col">Total</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                    require 'public/connection.php';             
-                                    if(isset($_GET['startDate']) && isset($_GET['endDate'])){           
+                                    require 'public/connection.php';    
+                                    $totalRevenue = 0;                   
+                                    if(isset($_GET['startDate']) && isset($_GET['endDate'])){
                                         $startDate = $_GET['startDate'];
                                         $endDate = $_GET['endDate'];
-                                        $getTotalOrder = $connect->prepare("SELECT id,created_at,customer_id,email,fname,lname,guests,scheduled_date,scheduled_time,status FROM tblreservation WHERE created_at BETWEEN (?) AND (?) AND status='Completed'");
+                                        $getTotalOrder = $connect->prepare("SELECT tblpos.ordered_date,tblpos.id_number,tblposorders.products,
+                                        tblposorders.quantity, tblposorders.price,tblposorders.variation, 
+                                        tblpos.customer_type,tblpos.total 
+                                        FROM tblpos LEFT JOIN tblposorders ON tblpos.id_number = tblposorders.id_number
+                                        WHERE ordered_date BETWEEN (?) AND (?)");
                                         echo $connect->error;
                                         $getTotalOrder->bind_param('ss',$startDate,$endDate);
                                         $getTotalOrder->execute();
-                                        $getTotalOrder->bind_result($id,$createdAt,$customerId,$email,$fname,$lname,$guests,$schedDate,$schedTime,$bookStatus);
+                                        $getTotalOrder->bind_result($orderedDate,$idNumber,$products,$quantity,$price,$variation,$customerType,$total);
                                         if($getTotalOrder){
                                             while($getTotalOrder->fetch()){
+                                                $totalRevenue += $total;
                                                 ?>
-                                                <tr>
-                                                    <td><?= $id?></td>
-                                                    <td><?= $createdAt?></td>
-                                                    <td><?= $customerId?></td>
-                                                    <td><?= $email?></td>
-                                                    <td><?= $fname.$lname?></td>
-                                                    <td><?= $guests?></td>
-                                                    <td><?= $schedDate.$schedTime?></td>             
-                                                    <td><?= $bookStatus?></td>
-                                                </tr>
-                                                <?php
-                                            }
+                                            <tr>
+                                                <td><?= $orderedDate;?></td>
+                                                <td><?= $idNumber;?></td>
+                                                <td><?= $products;?></td>
+                                                <td><?= $quantity?></td>
+                                                <td><?= $price?></td>
+                                                <td><?= $variation?></td>
+                                                <td><?= $customerType?></td>
+                                                <td><?= $total?></td>
+                                            </tr>
+                                <?php
                                         }
+                                      }
                                         else{
                                             echo "No Records Found";
                                         }
-                                    
                                     } else{
-                                        $getTotalOrder = $connect->prepare("SELECT id,created_at,customer_id,email,fname,lname,guests,scheduled_date,scheduled_time,status FROM tblreservation WHERE status='Completed'");
-                                        echo $connect->error;          
+                                        $getTotalOrder = $connect->prepare("SELECT tblpos.ordered_date,tblpos.id_number,tblposorders.products,
+                                        tblposorders.quantity, tblposorders.price,tblposorders.variation, 
+                                        tblpos.customer_type,tblpos.total 
+                                        FROM tblpos LEFT JOIN tblposorders ON tblpos.id_number = tblposorders.id_number");
+                                        echo $connect->error;
                                         $getTotalOrder->execute();
-                                        $getTotalOrder->bind_result($id,$createdAt,$customerId,$email,$fname,$lname,$guests,$schedDate,$schedTime,$bookStatus);
+                                        $getTotalOrder->bind_result($orderedDate,$idNumber,$products,$quantity,$price,$variation,$customerType,$total);
                                         if($getTotalOrder){
                                             while($getTotalOrder->fetch()){
+                                                $totalRevenue += $total;
                                                 ?>
-                                                <tr>
-                                                    <td><?= $id?></td>
-                                                    <td><?= $createdAt?></td>
-                                                    <td><?= $customerId?></td>
-                                                    <td><?= $email?></td>
-                                                    <td><?= $fname.$lname?></td>
-                                                    <td><?= $guests?></td>
-                                                    <td><?= $schedDate.$schedTime?></td>             
-                                                    <td><?= $bookStatus?></td>
-                                                </tr>
-                                                <?php
-                                            }
+                                <tr>
+                                    <td><?= $orderedDate;?></td>
+                                    <td><?= $idNumber;?></td>
+                                    <td><?= $products;?></td>
+                                    <td><?= $quantity?></td>
+                                    <td><?= $price?></td>
+                                    <td><?= $variation?></td>
+                                    <td><?= $customerType?></td>
+                                    <td><?= $total?></td>
+                                </tr>
+                                <?php
                                         }
+                                      }
                                         else{
                                             echo "No Records Found";
                                         }
                                     }
-                                 ?>
+                                ?>
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="8">Total Revenue: PHP <?=$totalRevenue;?>.00</td>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </article>

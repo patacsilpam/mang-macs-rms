@@ -26,7 +26,7 @@ function countTotalOrders($countTotalOrder){
 //count cancelled orders
 function countCancelledOrders($countCancelledOrder){
     require 'public/connection.php';
-    $cancelled = "cancelled orders";
+    $cancelled = "Cancelled";
     $count = $connect->prepare("SELECT COUNT(*) as 'cancelled_orders' FROM tblorderdetails WHERE order_status=?");
     $count->bind_param('s',$cancelled);
     $count->execute();
@@ -96,5 +96,23 @@ function countCancelledBooking($countCancelledBooking){
     $row = $count->get_result();
     $fetch = $row->fetch_assoc();
     echo $countCancelledBooking = $fetch['cancelled_booking']; 
+}
+function countCustomers($countCustomers){
+    require 'public/connection.php';
+    $cancelled = "cancelled";
+    $count = $connect->prepare("SELECT COUNT(*) as 'totalCustomers' FROM tblcustomers");
+    $count->execute();
+    $row = $count->get_result();
+    $fetch = $row->fetch_assoc();
+    echo $countCancelledBooking = $fetch['totalCustomers']; 
+}
+function countPosOrders($countPosOrders){
+    require 'public/connection.php';
+    $cancelled = "cancelled";
+    $count = $connect->prepare("SELECT COUNT(*) as 'totalPosOrders' FROM tblpos");
+    $count->execute();
+    $row = $count->get_result();
+    $fetch = $row->fetch_assoc();
+    echo $countCancelledBooking = $fetch['totalPosOrders']; 
 }
 ?>

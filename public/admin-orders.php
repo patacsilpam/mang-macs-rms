@@ -106,7 +106,7 @@ function updateOrderStatus(){
                 }
             }
             //update delivery order status to order received
-            else if($orderType == "Delivery"){
+            else if($orderType == "Deliver"){
                 $OrderStatus = $connect->prepare("UPDATE tblorderdetails SET order_status=? WHERE order_number=?");
                 $OrderStatus->bind_param('ss',$orderStatus,$orderNumber);
                 $OrderStatus->execute();   
@@ -377,6 +377,7 @@ function updateOrderStatus(){
                     }
                 }
             }
+            //send email notification to order type pick up
           else{
             $OrderStatus = $connect->prepare("UPDATE tblorderdetails SET order_status=? WHERE order_number=?");
             $OrderStatus->bind_param('ss',$orderStatus,$orderNumber);

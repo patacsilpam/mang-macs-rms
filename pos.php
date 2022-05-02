@@ -149,8 +149,8 @@
         <!--Sidebar-->
         <?php include 'assets/template/admin/sidebar.php'?>
     </div>
-    <script src="assets/js/sidebar-menu.js"></script>
     <script src="assets/js/sidebar-menu-active.js"></script>
+    <script src="assets/js/activePage.js"></script>
     <script src="assets/js/table.js"></script>
     <script src="assets/js/tab.js"></script>
 </body>

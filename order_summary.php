@@ -15,7 +15,7 @@
     <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
-    <link rel="icon" type="image/jpeg" href="logo/mang-macs-logo.jpg" sizes="70x70">
+    <link rel="icon" type="image/jpeg" href="assets/images/mang-macs-logo.jpg" sizes="70x70">
     <link rel="stylesheet" href="assets/css/main.css">
     <title>Order Summary</title>
 </head>
@@ -59,7 +59,7 @@
                         $GLOBALS['totalAmount'] = $totalAmount;
                    ?>
                         <p><strong>Order Number:</strong> <?=$orderNumber?></p>
-                        <p><strong>Customer name:</strong> <?=$customerName?></p>
+                        <p><strong>Account name:</strong> <?=$customerName?></p>
                         <p><strong>Date Added:</strong> <?=$placedOn?></p>
                         <p><strong>Delivery Time:</strong> <?=$requiredDate." ". $requiredTime?></p>
                         <p><strong>Order Type:</strong> <?=$orderType; ?></p>
@@ -69,7 +69,7 @@
                         <p><strong>Email:</strong> <?=$email?></p>
                         <p><strong>Phone Number:</strong> <?=$phoneNumber?></p>
                         <p><strong>Total Amount:</strong> <?=$totalAmount?></p>
-                        <p><strong><a href="#">View Payment</a></strong></p>
+                        <p><strong><a href="view-payment.php?order_number=<?= $getOrderNumber?>">View Payment</a></strong></p>
                         <?php } ?>
                     </article>
                 </article>
@@ -99,19 +99,20 @@
                                         <th scope="col">Quantity</th>
                                         <th scope="col">Unit Price</th>
                                         <th scope="col">Category</th>
+                                        <th scope="col">Add Ons</th>
                                         <th scope="col">Subtotal</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
                                     require 'public/connection.php';
-                                   
+                                    $recipientName="";
                                     $orderNumber = $_GET['order_number'];
-                                    $getOrderSummary = $connect->prepare("SELECT order_number,product_name,quantity,price,product_variation FROM tblorderdetails WHERE order_number=?");
+                                    $getOrderSummary = $connect->prepare("SELECT order_number,product_name,quantity,price,product_variation,add_ons,recipient_name FROM tblorderdetails WHERE order_number=?");
                                     echo $connect->error;
                                     $getOrderSummary->bind_param('s',$orderNumber);
                                     $getOrderSummary->execute();
-                                    $getOrderSummary->bind_result($orderId,$productName,$quantity,$price,$variation);
+                                    $getOrderSummary->bind_result($orderId,$productName,$quantity,$price,$variation,$addOns,$recipientName);
                                     while($getOrderSummary->fetch()){
                                    
                                         ?>
@@ -121,6 +122,7 @@
                                         <td><?=$quantity?></td>
                                         <td><?=$price?></td>
                                         <td><?=$variation?></td>
+                                        <td><?=$addOns?></td>
                                         <td><?=$subTotal = $price * $quantity;?></td>
                                     </tr>
                                     <?php
@@ -145,6 +147,7 @@
                             $getOrder->bind_result($customerAddress,$labelAddress);
                             $getOrder->fetch();
                         ?>
+                          <p><strong>Recipient Name: </strong><?=$recipientName?></p>
                         <p><strong>Address: </strong><?=$customerAddress?></p>
                         <p><strong>Label Address: </strong><?=$labelAddress?></p>
                     </article>

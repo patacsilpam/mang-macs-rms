@@ -21,6 +21,7 @@
             <label for="prodCategory">Product Category</label>
               <select name="productCategory" id="prodCategory" class="form-control">
                 <option value="">Select Category</option>
+                <option value="Promo">Promo</option>
                 <option value="Appetiser">Appetiser</option>
                 <option value="Combo Budget Meals">Combo Buget Meals</option>
                 <option value="Dimsum">Dimsum</option>
@@ -125,6 +126,7 @@
               <label for="prodCategory">Product Category</label>
               <select name="editProductCategory" id="prodCategory" class="form-control">
                 <option value="">Select Category</option>
+                <option value="Promo" <?php if ($fetch['productCategory'] == "Promo") echo 'selected ? "selected"'; ?>>Promo</option>
                 <option value="Appetiser" <?php if ($fetch['productCategory'] == "Appetiser") echo 'selected ? "selected"'; ?>>Appetiser</option>
                 <option value="Combo Budget Meals" <?php if ($fetch['productCategory'] == "Combo Budget Meals") echo 'selected ? "selected"'; ?>>Combo Buget Meals</option>
                 <option value="Dimsum" <?php if ($fetch['productCategory'] == "Dimsum") echo 'selected ? "selected"'; ?>>Dimsum</option>

@@ -10,11 +10,10 @@ function updateProfile(){
             $uname = mysqli_real_escape_string($connect, $_POST['uname']);
             $adminImage = basename($_FILES['adminImage']['name'] ?? '');
             $adminImageTemp = $_FILES['adminImage']['tmp_name'] ?? '';
-            $imageserverUrl = "http://192.168.1.14/Restaurant-Management-System-Admin/uploads/".$adminImage;
+            $imageserverUrl = "http://192.168.1.14/Mang-Macs-Management-System/assets/users-image/".$adminImage;
             $position = mysqli_real_escape_string($connect, $_POST['position']);
             //file upload path
-            $targetFilePath =  "uploads/".$adminImage;
-            $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
+            $targetFilePath =  "assets/users-image/".$adminImage;
             move_uploaded_file($adminImageTemp, $targetFilePath);
             if ($adminImageTemp != '') {
                 $update_admin_profile = $connect->prepare("UPDATE tblusers SET fname=?,lname=?,uname=?,email=?,profile=?,position=? WHERE id=?");

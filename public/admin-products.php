@@ -13,11 +13,11 @@ function insertProducts(){
             $productVariation = mysqli_real_escape_string($connect, $_POST['productVariation']);
             $status = mysqli_real_escape_string($connect, $_POST['status']);
             $price = mysqli_real_escape_string($connect, $_POST['productPrice']);
-            $productImage = $_FILES['imageProduct']['name'] ?? '';
+            $productImage = basename($_FILES['imageProduct']['name'] ?? '');
             $imageTemp = $_FILES['imageProduct']['tmp_name'] ?? '';
-            $imageFolderPath = "products/".$productImage;
-            $imageServerUrl = "http://192.168.1.13//Restaurant-Management-System-Admin/products/".$productImage;
+            $imageServerUrl = "http://192.168.1.14/Mang-Macs-Management-System/assets/img-products/".$productImage;
             $created_at = date('Y-m-d h:i:s');
+            $imageFolderPath = "assets/img-products/".$productImage;
             move_uploaded_file($imageTemp,$imageFolderPath);
             //insert product
             $insertProduct = $connect->prepare("INSERT tblproducts(id,code,productName,productCategory,productVariation,status,price,productImage,created_at)
@@ -41,10 +41,10 @@ function updateProducts(){
             $editProductVariation = mysqli_real_escape_string($connect, $_POST['editProductVariation']);
             $editStatus = mysqli_real_escape_string($connect, $_POST['editStatus']);
             $editPrice = mysqli_real_escape_string($connect, $_POST['editProductPrice']);
-            $editImageProduct = $_FILES['editImageProduct']['name'] ?? '';
+            $editImageProduct = basename($_FILES['editImageProduct']['name'] ?? '');
             $editImageProductTemp = $_FILES["editImageProduct"]["tmp_name"] ?? '';
-            $imageFolderPath = "products/".$editImageProduct;
-            $imageServerUrl = "http://192.168.1.13//Restaurant-Management-System-Admin/products/".$editImageProduct;
+            $imageFolderPath = "assets/img-products/".$editImageProduct;
+            $imageServerUrl = "http://192.168.1.14/Mang-Macs-Management-System/assets/img-products/".$editImageProduct;
             $edited_at = date('Y-m-d h:i:s');
           
             if  ($editImageProduct  != '') {

@@ -40,7 +40,7 @@
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Ordered Date</th>
-                                    <th scope="col">Customer Name</th>
+                                    <th scope="col">Account Name</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Order Type</th>
                                     <th scope="col">Total Order Amount</th>
@@ -97,8 +97,8 @@
         <!--Sidebar-->
         <?php include 'assets/template/admin/sidebar.php'?>
     </div>
-    <script src="assets/js/sidebar-menu.js"></script>
     <script src="assets/js/sidebar-menu-active.js"></script>
+    <script src="assets/js/activePage.js"></script>
     <script src="assets/js/table.js"></script>
 </body>
 

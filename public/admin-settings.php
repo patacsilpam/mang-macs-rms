@@ -2,8 +2,8 @@
 require 'public/admin-inventory.php';
 global $fetch;
 $unameError = "";
-global $waitingTime;
-global $deliveryChange;
+$waitingTime="";
+$deliveryChange="";
 function updateSalary(){
     require 'public/connection.php';
     if(isset($_SERVER["REQUEST_METHOD"]) == "POST"){
@@ -41,12 +41,14 @@ function settings(){
     require 'public/connection.php';
    
     if (isset($_SERVER["REQUEST_METHOD"]) == "POST") {
-        $selectSettings = "SELECT * FROM tblsettings";
+        $selectSettings = "SELECT * FROM tblsettings WHERE id='1'";
         $displaySettings = $connect->query($selectSettings);
         $fetch = $displaySettings->fetch_assoc();
         $id = $fetch['id'];
-        
-        if (isset($_POST["save"])) {
+        $GLOBALS['waitingTime'] = $fetch['waitingTime'];
+        $GLOBALS['deliveryChange'] = $fetch['deliveryChange'];
+        /*
+           if (isset($_POST["save"])) {
             $id = 0;
             $waitingTimeAmount = $_POST['waitingTime'];
             $deliveryChangeAmount = $_POST['deliveryChange'];
@@ -57,6 +59,7 @@ function settings(){
                 header('Location:settings.php?');
             }
         }
+         */
         if (isset($_POST["edit"])) {
             $waitingTimeAmount = $_POST['waitingTime'];
             $deliveryChangeAmount = $_POST['deliveryChange'];

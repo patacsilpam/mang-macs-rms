@@ -44,8 +44,9 @@
                                 <button type="submit" class="btn btn-primary">
                                     Filter <i class="fa fa-filter" aria-hidden="true"></i>
                                 </button>
-                                <a href="total-order-report.php?startDate=<?php  echo $_GET['startDate']?>&endDate=<?php  echo $_GET['endDate']?>" class="btn btn-success">
-                                 Export    <i class="fa fa-file-pdf"></i>
+                                <a href="total-order-report.php?startDate=<?php if(isset($_GET['startDate'])) {echo $_GET['startDate'];} else{ echo date('Y-m-d',strtotime("first day of january this year"));}?>&endDate=<?php if(isset($_GET['endDate'])){ echo $_GET['endDate'];} else{ echo date('Y-m-d',strtotime("last day of december this year"));}?>"
+                                    class="btn btn-success">
+                                    <span>Export <i class="fa fa-file-pdf"></i></span>
                                 </a>
                             </form>
                         </div><br>
@@ -72,7 +73,9 @@
                                     if(isset($_GET['startDate']) && isset($_GET['endDate'])){           
                                         $startDate = $_GET['startDate'];
                                         $endDate = $_GET['endDate'];
-                                        $getTotalOrder = $connect->prepare("SELECT id,created_at,customer_id,email,product_name,product_variation,quantity,price,add_ons,order_type,order_status, (SELECT SUM(price * quantity) FROM tblorderdetails WHERE created_at BETWEEN (?) AND (?) and order_status='Completed') FROM tblorderdetails WHERE created_at BETWEEN (?) AND (?) and order_status='Completed'");
+                                        $getTotalOrder = $connect->prepare("SELECT id,created_at,customer_id,email,product_name,product_variation,quantity,
+                                        price,add_ons,order_type,order_status, (SELECT SUM(price * quantity) FROM tblorderdetails WHERE created_at BETWEEN (?) 
+                                        AND (?) and order_status='Delivered') FROM tblorderdetails WHERE created_at BETWEEN (?) AND (?) and order_status='Delivered'");
                                         echo $connect->error;
                                         $getTotalOrder->bind_param('ssss',$startDate,$endDate,$startDate,$endDate);
                                         $getTotalOrder->execute();
@@ -80,35 +83,63 @@
                                         if($getTotalOrder){
                                             while($getTotalOrder->fetch()){
                                                 ?>
-                                                <tr>
-                                                    <td><?= $id;?></td>
-                                                    <td><?= $createdAt?></td>
-                                                    <td><?= $customerId?></td>
-                                                    <td><?= $email?></td>
-                                                    <td><?= $product?></td>
-                                                    <td><?= $variation?></td>
-                                                    <td><?= $quantity?></td>
-                                                    <td><?= $price?></td>
-                                                    <td><?= $addOns?></td>
-                                                    <td><?= $orderType?></td>
-                                                    <td><?= $orderStatus?></td>
-                                                </tr>
-                                                <?php
+                                <tr>
+                                    <td><?= $id;?></td>
+                                    <td><?= $createdAt?></td>
+                                    <td><?= $customerId?></td>
+                                    <td><?= $email?></td>
+                                    <td><?= $product?></td>
+                                    <td><?= $variation?></td>
+                                    <td><?= $quantity?></td>
+                                    <td><?= $price?></td>
+                                    <td><?= $addOns?></td>
+                                    <td><?= $orderType?></td>
+                                    <td><?= $orderStatus?></td>
+                                </tr>
+                                <?php
                                             }
                                         }
                                         else{
                                             echo "No Records Found";
                                         }
                                     
+                                    } else{
+                                        $getTotalOrder = $connect->prepare("SELECT id,created_at,customer_id,email,product_name,product_variation,quantity,
+                                        price,add_ons,order_type,order_status, (SELECT SUM(price * quantity) FROM tblorderdetails WHERE order_status='Completed') 
+                                        FROM tblorderdetails WHERE order_status='Completed'");
+                                        $getTotalOrder->execute();
+                                        $getTotalOrder->bind_result($id,$createdAt,$customerId,$email,$product,$variation,$quantity,$price,$addOns,$orderType,$orderStatus,$totalAmount);
+                                        if($getTotalOrder){
+                                            while($getTotalOrder->fetch()){
+                                                ?>
+                                <tr>
+                                    <td><?= $id;?></td>
+                                    <td><?= $createdAt?></td>
+                                    <td><?= $customerId?></td>
+                                    <td><?= $email?></td>
+                                    <td><?= $product?></td>
+                                    <td><?= $variation?></td>
+                                    <td><?= $quantity?></td>
+                                    <td><?= $price?></td>
+                                    <td><?= $addOns?></td>
+                                    <td><?= $orderType?></td>
+                                    <td><?= $orderStatus?></td>
+                                </tr>
+                                <?php
+                                            }
+                                        }
+                                        else{
+                                            echo "No Records Found";
+                                        }
                                     }
                                  ?>
                             </tbody>
 
-                          <tfoot>
-                              <tr>
-                                <td colspan="10"> <b>Total Revenue: <?= $totalAmount?></b> </td>
-                              </tr>
-                          </tfoot>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="10"> <b>Total Revenue: <?= $totalAmount?></b> </td>
+                                </tr>
+                            </tfoot>
 
                         </table>
                     </div>

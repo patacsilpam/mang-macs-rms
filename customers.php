@@ -15,14 +15,14 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
     <link rel="icon" type="image/jpeg" href="assets/images/mang-macs-logo.jpg" sizes="70x70">
     <link rel="stylesheet" href="assets/css/main.css" type="text/css">
-    <title>Cancelled Booking</title>
+    <title>Customers</title>
 </head>
 
 <body>
     <div class="grid-container">
         <!--Navigation-->
         <header class="nav-container">
-            <h3>Cancelled Booking</h3>
+            <h3>Customers</h3>
             <ul class="nav-list">
                 <?php include 'assets/template/admin/navbar.php' ?>
             </ul>
@@ -43,45 +43,41 @@
                                 <input type="date" name="endDate" value="<?php  echo $_GET['endDate']?>">&emsp;
                                 <button type="submit" class="btn btn-primary">
                                     Filter <i class="fa fa-filter" aria-hidden="true"></i>
-                                </button> 
+                                </button>
                             </form>
                         </div><br>
                         <table id="example" class="table table-hover">
                             <thead class="thead-dark">
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Booked Date</th>
-                                    <th scope="col">Customer ID</th>
                                     <th scope="col">Email</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Guests</th>
-                                    <th scope="col">Scheduled Date</th>
-                                    <th scope="col">Status</th>               
+                                    <th scope="col">Customer</th>
+                                    <th scope="col">Gender</th>
+                                    <th scope="col">Birthdate</th>
+                                    <th scope="col">Created At</th>
+                                    <th scope="col">User Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                    require 'public/connection.php';             
                                     if(isset($_GET['startDate']) && isset($_GET['endDate'])){           
                                         $startDate = $_GET['startDate'];
                                         $endDate = $_GET['endDate'];
-                                        $getTotalOrder = $connect->prepare("SELECT id,created_at,customer_id,email,fname,lname,guests,scheduled_date,scheduled_time,status FROM tblreservation WHERE created_at BETWEEN (?) AND (?) AND status='Cancelled'");
-                                        echo $connect->error;
+                                        $getTotalOrder = $connect->prepare("SELECT id,email_address,fname,lname,gender,birthdate,created_account,user_status FROM tblcustomers WHERE created_account BETWEEN (?) AND (?)");
                                         $getTotalOrder->bind_param('ss',$startDate,$endDate);
                                         $getTotalOrder->execute();
-                                        $getTotalOrder->bind_result($id,$createdAt,$customerId,$email,$fname,$lname,$guests,$schedDate,$schedTime,$bookStatus);
+                                        $getTotalOrder->bind_result($id,$email,$fname,$lname,$gender,$birthdate,$createdAccount,$userStatus);
                                         if($getTotalOrder){
                                             while($getTotalOrder->fetch()){
                                                 ?>
                                                 <tr>
-                                                    <td><?= $id?></td>
-                                                    <td><?= $createdAt?></td>
-                                                    <td><?= $customerId?></td>
-                                                    <td><?= $email?></td>
-                                                    <td><?= $fname.$lname?></td>
-                                                    <td><?= $guests?></td>
-                                                    <td><?= $schedDate.$schedTime?></td>             
-                                                    <td><?= $bookStatus?></td>
+                                                    <td><?= $id;?></td>
+                                                    <td><?= $email;?></td>
+                                                    <td><?= $fname." ".$lname?></td>
+                                                    <td><?= $gender?></td>
+                                                    <td><?= $birthdate?></td>
+                                                    <td><?= date('F d, Y',strtotime($createdAccount))?></td>
+                                                    <td><?= $userStatus?></td>
                                                 </tr>
                                                 <?php
                                             }
@@ -90,32 +86,32 @@
                                             echo "No Records Found";
                                         }
                                     
-                                    } else{
-                                        $getTotalOrder = $connect->prepare("SELECT id,created_at,customer_id,email,fname,lname,guests,scheduled_date,scheduled_time,status 
-                                        FROM tblreservation WHERE status='Cancelled' ORDER BY created_at DESC");
-                                        echo $connect->error;
-                                        $getTotalOrder->execute();
-                                        $getTotalOrder->bind_result($id,$createdAt,$customerId,$email,$fname,$lname,$guests,$schedDate,$schedTime,$bookStatus);
-                                        if($getTotalOrder){
-                                            while($getTotalOrder->fetch()){
-                                                ?>
-                                                <tr>
-                                                    <td><?= $id?></td>
-                                                    <td><?= $createdAt?></td>
-                                                    <td><?= $customerId?></td>
-                                                    <td><?= $email?></td>
-                                                    <td><?= $fname.$lname?></td>
-                                                    <td><?= $guests?></td>
-                                                    <td><?= $schedDate.$schedTime?></td>             
-                                                    <td><?= $bookStatus?></td>
-                                                </tr>
-                                                <?php
-                                            }
-                                        }
-                                        else{
-                                            echo "No Records Found";
+                                    }
+                                   else{
+                                    require 'public/connection.php';                       
+                                    $getTotalOrder = $connect->prepare("SELECT id,email_address,fname,lname,gender,birthdate,created_account,user_status FROM tblcustomers");
+                                    echo $connect->error;
+                                    $getTotalOrder->execute();
+                                    $getTotalOrder->bind_result($id,$email,$fname,$lname,$gender,$birthdate,$createdAccount,$userStatus);
+                                    if($getTotalOrder){
+                                        while($getTotalOrder->fetch()){
+                                            ?>
+                                            <tr>
+                                                <td><?= $id;?></td>
+                                                <td><?= $email;?></td>
+                                                <td><?= $fname." ".$lname?></td>
+                                                <td><?= $gender?></td>
+                                                <td><?= $birthdate?></td>
+                                                <td><?= date('F d, Y',strtotime($createdAccount))?></td>
+                                                <td><?= $userStatus?></td>
+                                            </tr>
+                                            <?php
                                         }
                                     }
+                                    else{
+                                        echo "No Records Found";
+                                    }
+                                   }
                                  ?>
                             </tbody>
                         </table>

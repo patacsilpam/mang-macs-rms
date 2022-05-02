@@ -142,9 +142,8 @@
                                             placeholder="Delivery Charge (ex. 50)" value="<?= $deliveryChange; ?>"
                                             required>
                                     </div><br>
-                                    <div>
-                                        <button type="submit" name="save" class="btn btn-primary">Save</button>
-                                        <button type="submit" name="edit" class="btn btn-success">Edit</button>
+                                    <div> 
+                                        <button type="submit" name="edit" class="btn btn-success">Save Changes</button>
                                     </div>
                                 </form>
                             </div>

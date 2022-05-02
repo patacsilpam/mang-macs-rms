@@ -69,7 +69,9 @@
                                     if(isset($_GET['startDate']) && isset($_GET['endDate'])){           
                                         $startDate = $_GET['startDate'];
                                         $endDate = $_GET['endDate'];
-                                        $getTotalOrder = $connect->prepare("SELECT id,created_at,customer_id,email,product_name,product_variation,quantity,price,add_ons,order_type,order_status, (SELECT SUM(price * quantity) FROM tblorderdetails WHERE created_at BETWEEN (?) AND (?) and order_type='Pick Up') FROM tblorderdetails WHERE created_at BETWEEN (?) AND (?) and order_type='Pick Up'");
+                                        $getTotalOrder = $connect->prepare("SELECT id,created_at,customer_id,email,product_name,product_variation,
+                                        quantity,price,add_ons,order_type,order_status, (SELECT SUM(price * quantity) FROM tblorderdetails WHERE created_at BETWEEN (?)
+                                        AND (?) and order_type='Pick Up') FROM tblorderdetails WHERE created_at BETWEEN (?) AND (?) and order_type='Pick Up'");
                                         echo $connect->error;
                                         $getTotalOrder->bind_param('ssss',$startDate,$endDate,$startDate,$endDate);
                                         $getTotalOrder->execute();
@@ -97,6 +99,35 @@
                                             echo "No Records Found";
                                         }
                                     
+                                    } else{
+                                        $getTotalOrder = $connect->prepare("SELECT id,created_at,customer_id,email,product_name,product_variation,
+                                        quantity,price,add_ons,order_type,order_status, (SELECT SUM(price * quantity) FROM tblorderdetails WHERE order_type='Pick Up')
+                                        FROM tblorderdetails WHERE order_type='Pick Up' ORDER  BY created_at DESC");
+                                        echo $connect->error;
+                                        $getTotalOrder->execute();
+                                        $getTotalOrder->bind_result($id,$createdAt,$customerId,$email,$product,$variation,$quantity,$price,$addOns,$orderType,$orderStatus,$totalAmount);
+                                        if($getTotalOrder){
+                                            while($getTotalOrder->fetch()){
+                                                ?>
+                                                <tr>
+                                                    <td><?= $id;?></td>
+                                                    <td><?= $createdAt?></td>
+                                                    <td><?= $customerId?></td>
+                                                    <td><?= $email?></td>
+                                                    <td><?= $product?></td>
+                                                    <td><?= $variation?></td>
+                                                    <td><?= $quantity?></td>
+                                                    <td><?= $price?></td>
+                                                    <td><?= $addOns?></td>
+                                                    <td><?= $orderType?></td>
+                                                    <td><?= $orderStatus?></td>
+                                                </tr>
+                                                <?php
+                                            }
+                                        }
+                                        else{
+                                            echo "No Records Found";
+                                        }
                                     }
                                  ?>
                             </tbody>

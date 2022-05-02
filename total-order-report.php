@@ -39,8 +39,7 @@ class PDF extends FPDF
         $this->Cell(22, 10, 'Order Status', 1, 0, 'C');
         $this->Ln();
     }
-    function viewTable($connect,$id,$createdAt,$customerId,$email,$product,$variation,$quantity,$price,$addOns,$orderType,$orderStatus,$totalAmount)
-    {
+    function viewTable($connect,$id,$createdAt,$customerId,$email,$product,$variation,$quantity,$price,$addOns,$orderType,$orderStatus,$totalAmount) {
         if(isset($_GET['startDate']) && isset($_GET['endDate'])){ 
             $startDate = $_GET['startDate'];
             $endDate = $_GET['endDate'];
@@ -65,8 +64,8 @@ class PDF extends FPDF
                     $this->Cell(22, 10, $orderStatus, 1, 0, 'C');
                     $this->Ln();
                 }
-            }
-        }
+            } 
+        } 
     }
     function Footer()
     {

@@ -335,6 +335,12 @@ sup {
     background: linear-gradient(rgb(15, 176, 125), rgb(15, 140, 100));
 }
 
+.sidebar-links li a:is(:link,
+:active,
+:visited).active-list {
+    background: linear-gradient(rgb(15, 176, 125), rgb(15, 140, 100));
+}
+
 .burger {
     display: none;
     justify-content: center;
@@ -446,11 +452,7 @@ input.checkbox {
     border-radius: 2px;
 }
 
-.span.actives {
-    display: flex;
-}
-
-ul li a.actives {
+ul li a.focus {
     background: linear-gradient(rgb(15, 176, 125), rgb(15, 140, 100));
 }
 
@@ -611,15 +613,14 @@ main>.sales-order-container {
     .sidebar>.logo {
         display: none;
     }
-    .sidebar-links li a {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+    .sidebar-links {
+        text-align: center;
     }
     .span {
         display: none;
-        width: 90px;
-        transition-delay: 1s;
+    }
+    .span.active {
+        display: block;
     }
     .admin-container {
         flex-direction: column;

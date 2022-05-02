@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.js"></script>
@@ -30,9 +31,9 @@
             <!--Row 1--->
             <article class="sales-order-container">
                 <!--Chart for orders-->
-                <section class="sales-graph">
+                <section class="sales-graph" style="position: relative;">
                     <section class="sales-title">
-                        <h3>Sales Order 2022</h3>
+                        <h3>Sales Order(<?php echo date('Y') ?>)</h3>
                         <section>
                             <ul class="nav nav-pills" id="myTab">
                                 <li class="nav-item">
@@ -48,14 +49,24 @@
                         </section>
                     </section>
                     <section class="tab-content">
-                        <section id="dailySales" class="container tab-pane active"><br>
-                            <h5>1</h5>
+                        <section id="dailySales" class="container tab-pane fade"><br />
+                            <canvas id="daily-sales-chart" class="canvas" style="width:250px; height:80px">
+                                <?php include 'assets/charts/daily-sales.php'?>
+                            </canvas>
                         </section>
-                        <section id="weeklySales" class="container tab-pane fade"><br>
-                            <h5>2</h5>
+                        <section id="weeklySales" class="container tab-pane fade"><br />
+                            <canvas id="weekly-sales-chart" class="canvas" style="width: 250px; height:70px">
+                                <?php include 'assets/charts/weekly-sales.php'?>
+                            </canvas><br>
+                            <section class="text-center">
+                                <?php echo date('F d',strtotime("sunday last week"))?> -
+                                <?php echo date('F d',strtotime("saturday this week"))?>
+                            </section>
                         </section>
-                        <section id="monthlySales" class="container tab-pane fade"><br>
-                            <h5>3</h5>
+                        <section id="monthlySales" class="container tab-pane fade"><br />
+                            <canvas id="monthly-sales-chart" class="canvas" style="width: 250px; height:80px">
+                                <?php include 'assets/charts/monthly-sales.php'?>3
+                            </canvas>
                         </section>
                     </section>
                 </section>
@@ -94,7 +105,7 @@
             </article>
             <!---Row 2-->
             <article class="sales-order-container">
-                 <!--Delivered Orders-->
+                <!--Delivered Orders-->
                 <section class="sales-order-type">
                     <section>
                         <section class="box-orders">
@@ -106,7 +117,7 @@
                         </section>
                     </section>
                 </section>
-                 <!--Dine In Orders-->
+                <!--Dine In Orders-->
                 <section class="sales-order-type box-middle">
                     <section>
                         <section class="box-orders">
@@ -154,13 +165,23 @@
                         </section>
                         <section class="tab-content">
                             <section id="dailyBook" class="container tab-pane active"><br>
-                                <h5>1</h5>
+                                <canvas id="daily-book-chart" class="canvas" style="width:250px; height:80px">
+                                    <?php include 'assets/charts/daily-book.php'?>
+                                </canvas>
                             </section>
                             <section id="weeklyBook" class="container tab-pane fade"><br>
-                                <h5>2</h5>
+                                <canvas id="weekly-book-chart" class="canvas" style="width:250px; height:70px">
+                                    <?php include 'assets/charts/weekly-book.php'?>
+                                </canvas>
+                                <section class="text-center">
+                                    <?php echo date('F d',strtotime("sunday last week"))?> -
+                                    <?php echo date('F d',strtotime("saturday this week"))?>
+                                </section>
                             </section>
                             <section id="monthlyBook" class="container tab-pane fade"><br>
-                                <h5>3</h5>
+                                <canvas id="monthly-book-chart" class="canvas" style="width:250px; height:80px">
+                                    <?php include 'assets/charts/monthly-book.php'?>
+                                </canvas>
                             </section>
                         </section>
                     </section>
@@ -192,7 +213,7 @@
                         </section>
                     </section>
                 </section>
-                  <!--Cancelled Booking-->
+                <!--Cancelled Booking-->
                 <section class="sales-order-type">
                     <section>
                         <section class="box-orders">
@@ -204,11 +225,38 @@
                         </section>
                     </section>
                 </section>
+            </article><br>
+            <article class="sales-order-container">
+                <!--Customers-->
+                <section class="sales-order-type">
+                    <section>
+                        <section class="box-orders">
+                            <h3>Mang Macs App Customers</h3>
+                            <section class="view-sales-details">
+                                <p class="text--active"><?php countCustomers('countCustomers') ?></p>
+                                <a href="customers.php" title="View Details">View</a>
+                            </section>
+                        </section>
+                    </section>
+                </section>
+                <!--Total Booking-->
+                <section class="sales-order-type box-middle">
+                    <section>
+                        <section class="box-orders">
+                            <h3>POS Orders</h3>
+                            <section class="view-sales-details">
+                                <p class="text--total"><?php countPosOrders('countPosOrders')?></p>
+                                <a href="total-pos.php" title="View Details">View</a>
+                            </section>
+                        </section>
+                    </section>
+                </section>
             </article>
         </main>
         <?php include 'assets/template/admin/sidebar.php'?>
     </div>
-
+    <script src="assets/js/sidebar-menu-active.js"></script>
+    <script src="assets/js/activePage.js"></script>
 </body>
 
 </html>
