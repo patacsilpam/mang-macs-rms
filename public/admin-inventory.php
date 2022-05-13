@@ -33,7 +33,15 @@ function insertStocks(){
             $insertInventory->bind_param('isssiiiss', $id, $expirationDate, $created_at, $product,$quantityPurchased,$quantityInStock,$quantitySold, $status,$inCharge);
             $insertInventory->execute();
             if ($insertInventory) {
-                header('Location:inventory.php?insert-successfully');
+                $_SESSION['status'] = "Successful";
+                $_SESSION['status_code'] ="success";
+                $_SESSION['message'] = "Successfully added";
+                header('Location:inventory.php');
+            } else{
+                $_SESSION['status'] = "Error";
+                $_SESSION['status_code'] ="error";
+                $_SESSION['message'] = "Could not add item";
+                header('Location:products.php');
             }
         }
     }
@@ -57,7 +65,15 @@ function updateStocks(){
                 $updateInventory->bind_param('ssiiissi', $expirationDate, $product, $quantityPurchased,$quantityInStock,$quantitySold, $status,$inCharge, $id);
                 $updateInventory->execute();
                 if ($updateInventory) {
-                    header('Location:inventory.php?update-successfully');
+                    $_SESSION['status'] = "Successful";
+                    $_SESSION['status_code'] ="success";
+                    $_SESSION['message'] = "Successfully updated";
+                    header('Location:inventory.php');
+                }  else{
+                    $_SESSION['status'] = "Error";
+                    $_SESSION['status_code'] ="error";
+                    $_SESSION['message'] = "Could not update item";
+                    header('Location:products.php');
                 }
             }
         }
@@ -76,7 +92,15 @@ function deleteStocks(){
                 $alterTable = "ALTER TABLE tblinventory AUTO_INCREMENT = 1";
                 $alterTableId = $connect->query($alterTable);
                 if ($alterTableId) {
-                    header('Location:inventory.php?deleted');
+                    header('Location:inventory.php');
+                    $_SESSION['status'] = "Successful";
+                    $_SESSION['status_code'] ="success";
+                    $_SESSION['message'] = "Successfully deleted";
+                } else{
+                    $_SESSION['status'] = "Error";
+                    $_SESSION['status_code'] ="error";
+                    $_SESSION['message'] = "Could not delete item";
+                    header('Location:products.php');
                 }
             }
         }

@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="Users" content="Mang Macs-Users">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
@@ -40,34 +41,7 @@
                                 data-target="#addUsers">Add &nbsp;<i class="fas fa-plus icons"></i></button>
                             <?php require 'assets/template/admin/users.php' ?>
                         </div><br><br>
-                        <div>
-                            <?php
-                            //message box for registration
-                            if (isset($_GET['insert-successfully'])) {
-                            ?>
-                            <small style="width:30%" class="alert alert-success msg-Success">User successfully
-                                inserted.</small>
-                            <?php
-                            }
-                            if (isset($_GET['update-successfully'])) {
-                            ?>
-                            <small style="width:30%" class="alert alert-success msg-Success">User successfully
-                                updated.</small>
-                            <?php
-                            }
-                            if ($unameError) {
-                            ?>
-                            <small style="width:30%" class="alert alert-danger msg-Error">Username already
-                                exists.</small>
-                            <?php
-                            }
-                            if ($emailError) {
-                            ?>
-                            <small style="width:30%" class="alert alert-danger msg-Error">Email already exists</small>
-                            <?php
-                            }
-                            ?>
-                        </div>
+                        
                         <table id="example" class="table table-hover">
                             <thead class="thead-dark">
                                 <tr>
@@ -110,6 +84,19 @@
         </main>
         <!--Sidebar-->
         <?php include 'assets/template/admin/sidebar.php'?>
+        <?php if(isset($_SESSION['status']) && isset($_SESSION['status']) != ""){
+            ?>
+            <script>
+                swal({
+                    title: "<?php echo $_SESSION['status']; ?>",
+                    text: "<?php echo $_SESSION['message']; ?>",
+                    icon: "<?php echo $_SESSION['status_code']; ?>",
+                    button: "Ok",
+                    });
+            </script>
+            <?php
+            unset($_SESSION['status']);
+        } ?>
     </div>
     <script src="assets/js/sidebar-menu-active.js"></script>
     <script src="assets/js/activePage.js"></script>

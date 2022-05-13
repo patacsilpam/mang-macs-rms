@@ -26,7 +26,15 @@ function insertProducts(){
             $insertProduct->execute();
             //check if true
             if ($insertProduct) {
-                header('Location:products.php?insert-successfully');
+                $_SESSION['status'] = "Successful";
+                $_SESSION['status_code'] ="success";
+                $_SESSION['message'] = "Successfully added";
+                header('Location:products.php');
+            } else{
+                $_SESSION['status'] = "Error";
+                $_SESSION['status_code'] ="error";
+                $_SESSION['message'] = "Could not add item";
+                header('Location:products.php');
             }
         }
     }
@@ -46,7 +54,6 @@ function updateProducts(){
             $imageFolderPath = "assets/img-products/".$editImageProduct;
             $imageServerUrl = "http://192.168.1.14/Mang-Macs-Management-System/assets/img-products/".$editImageProduct;
             $edited_at = date('Y-m-d h:i:s');
-          
             if  ($editImageProduct  != '') {
                 //update product
                 $updateProduct = $connect->prepare("UPDATE tblproducts SET productName=?,productCategory=?,productVariation=?,status=?,price=?,productImage=?,created_at=? WHERE id=?");
@@ -54,7 +61,15 @@ function updateProducts(){
                 $updateProduct->execute();
                 if ($updateProduct) {
                     move_uploaded_file($editImageProductTemp,$imageFolderPath);
-                    header('Location:products.php?update-successfully');
+                    $_SESSION['status'] = "Successful";
+                    $_SESSION['status_code'] ="success";
+                    $_SESSION['message'] = "Successfully updated";
+                    header('Location:products.php');
+                } else{
+                    $_SESSION['status'] = "Error";
+                    $_SESSION['status_code'] ="error";
+                    $_SESSION['message'] = "Could not update item";
+                    header('Location:products.php');
                 }
             } else {
                 //check image product
@@ -69,7 +84,15 @@ function updateProducts(){
                 $updateProduct->bind_param('ssssissi', $editProductName, $editProductCategory, $editProductVariation, $editStatus, $editPrice,  $editProductImage, $edited_at, $id);
                 $updateProduct->execute();
                 if ($updateProduct) {
+                    $_SESSION['status'] = "Successful";
+                    $_SESSION['status_code'] ="success";
+                    $_SESSION['message'] = "Successfully updated";
                     header('Location:products.php?');
+                } else{
+                    $_SESSION['status'] = "Error";
+                    $_SESSION['status_code'] ="error";
+                    $_SESSION['message'] = "Could not update item";
+                    header('Location:products.php');
                 }
             }
         }
@@ -87,7 +110,15 @@ function deleteProducts(){
             $alterTable = "ALTER TABLE tblproducts AUTO_INCREMENT=1";
             $alter = $connect->query($alterTable);
             if ($alter) {
+                $_SESSION['status'] = "Successful";
+                $_SESSION['status_code'] ="success";
+                $_SESSION['message'] = "Successfully deleted";   
                 header('Location:products.php?');
+            }  else{
+                $_SESSION['status'] = "Error";
+                $_SESSION['status_code'] ="error";
+                $_SESSION['message'] = "Could not deleted item";
+                header('Location:products.php');
             }
         }
     }

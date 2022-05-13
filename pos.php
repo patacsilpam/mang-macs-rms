@@ -7,9 +7,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="POS" content="Mang Macs-POS">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
     <link rel="icon" type="image/jpeg" href="assets/images/mang-macs-logo.jpg" sizes="70x70">
     <link rel="stylesheet" href="assets/css/main.css" type="text/css">
@@ -102,9 +106,9 @@
                                     </tr>
                                 </table>
                                 <div class="empty-table-cart-btn">
-                                    <a href="pos.php?action=empty" class="btn btn-secondary"><i class="fas fa-table"></i> Empty</a>
-                                    <a href="pos.php?action=empty" class="btn btn-danger"><i class="fas fa-window-close"></i> Cancel</a>
-                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#payModal"><i class="fas fa-file-invoice-dollar"></i> Pay</button>
+                                    <button title="Empty" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#emptyCart"><i class="fas fa-table"></i> Empty</button>
+                                    <button title="Cancel" type="button" class="btn btn-danger" data-toggle="modal" data-target="#cancelCart"><i class="fas fa-window-close"></i> Cancel</button>
+                                    <button title="Pay" type="button" class="btn btn-success" data-toggle="modal" data-target="#payModal"><i class="fas fa-file-invoice-dollar"></i> Pay</button>
                                     <?php include 'assets/template/admin/pos-pay.php'?>
                                 </div>
                             </div>
@@ -140,7 +144,8 @@
                             ?>
                                    
                         </div>
-                            <?php require 'assets/template/admin/pos.php'?>     
+                            <?php require 'assets/template/admin/pos.php'?>    
+                            <?php include 'assets/template/admin/emptyCart.php'?> 
                         </div>
                     </div>
                 </article>
@@ -148,6 +153,31 @@
         </main>
         <!--Sidebar-->
         <?php include 'assets/template/admin/sidebar.php'?>
+        <?php if(isset($_GET['success'])){
+            ?>
+        <script>
+            swal({
+                title: "Successful",
+                text: "Successfully saved",
+                icon: "success",
+                button: "Ok",
+            });
+        </script>
+        <?php
+        } else{
+            if(isset($_GET['error'])){
+        ?>
+        <script>
+            swal({
+                title: "Error",
+                text: "Could not save",
+                icon: "error",
+                button: "Ok",
+            });
+        </script>   
+        <?php
+            }
+        }?>
     </div>
     <script src="assets/js/sidebar-menu-active.js"></script>
     <script src="assets/js/activePage.js"></script>

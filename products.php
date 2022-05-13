@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="Products" content="Mang Macs-Products">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -39,24 +40,7 @@
                                     class="fas fa-plus"></i></button>
                             <?php include 'assets/template/admin/products.php'?>
                             <br><br>
-                        </div>
-                        <div>
-                            <?php
-                            //message box for registration
-                            if (isset($_GET['insert-successfully'])) {
-                            ?>
-                            <small style="width:30%" class="alert alert-success msg-Success">Product successfully
-                                inserted.</small>
-                            <?php
-                            }
-                            if (isset($_GET['update-successfully'])) {
-                            ?>
-                            <small style="width:30%" class="alert alert-success msg-Success">Product successfully
-                                updated.</small>
-                            <?php
-                            }
-                            ?>
-                        </div>
+                        </div>       
                         <table id="example" class="table table-hover">
                             <thead class="thead-dark">
                                 <tr>
@@ -107,6 +91,19 @@
         </main>
         <!--Sidebar-->
         <?php include 'assets/template/admin/sidebar.php'?>
+        <?php if(isset($_SESSION['status']) && isset($_SESSION['status']) != ""){
+            ?>
+            <script>
+                swal({
+                    title: "<?php echo $_SESSION['status']; ?>",
+                    text: "<?php echo $_SESSION['message']; ?>",
+                    icon: "<?php echo $_SESSION['status_code']; ?>",
+                    button: "Ok",
+                    });
+            </script>
+            <?php
+            unset($_SESSION['status']);
+        } ?>
     </div>
     <script src="assets/js/sidebar-menu-active.js"></script>
     <script src="assets/js/activePage.js"></script>

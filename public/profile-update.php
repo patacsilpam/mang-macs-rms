@@ -1,4 +1,5 @@
 <?php
+
 function updateProfile(){
     require 'public/connection.php';
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -19,8 +20,10 @@ function updateProfile(){
                 $update_admin_profile = $connect->prepare("UPDATE tblusers SET fname=?,lname=?,uname=?,email=?,profile=?,position=? WHERE id=?");
                 $update_admin_profile->bind_param('ssssssi', $fname, $lname, $uname, $email,  $imageserverUrl, $position, $id);
                 $update_admin_profile->execute();
-                if ($update_admin_profile) {
-                    header('Location:profile.php?msg-updated');
+                if ($update_admin_profile) {  
+                    header('Location:profile.php?updated');
+                } else{
+                    header('Location:profile.php?error');
                 }
             } else {
                 $check_admin_profile = $connect->prepare("SELECT * FROM tblusers WHERE id=?");
@@ -34,7 +37,9 @@ function updateProfile(){
                 $update_admin_profile->bind_param('ssssssi', $fname, $lname, $uname, $email, $fetchImage, $position, $id);
                 $update_admin_profile->execute();
                 if ($update_admin_profile) {
-                    header('Location:profile.php');
+                    header('Location:profile.php?updated');
+                } else{
+                    header('Location:profile.php?error');
                 }
             }
         }

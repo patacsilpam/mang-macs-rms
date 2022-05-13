@@ -33,6 +33,8 @@ function updatePassword(){
                         $update_admin_password->execute();
                         if ($update_admin_password) {
                             header('Location:profile.php?updated');
+                        } else{
+                            header('Location:profile.php?error');
                         }
                     } else {
                        $GLOBALS['pwordError'] = "Incorrect password.";

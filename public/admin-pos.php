@@ -106,7 +106,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 $insertCart->bind_param('issiis', $ids,$idNumber,$s_productName,$s_quantity,$s_price,$s_variation);
                 $insertCart->execute();
                 if ($insertCart) {
-                    header('Location:pos.php?insert-cart-successfully');
+                    header('Location:pos.php?success');
+                    unset($_SESSION["cart_item"]);
+                } else{
+                    header('Location:pos.php?error');
                     unset($_SESSION["cart_item"]);
                 }
             }
@@ -117,7 +120,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 $insertCart->bind_param('issiis', $ids,$noIdNumber,$s_productName,$s_quantity,$s_price,$s_variation);
                 $insertCart->execute();
                 if ($insertCart) {
-                    header('Location:pos.php?insert-cart-successfully');
+                    header('Location:pos.php?success');
+                    unset($_SESSION["cart_item"]);
+                } else{
+                    header('Location:pos.php?error');
                     unset($_SESSION["cart_item"]);
                 }
             }
@@ -129,7 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 $insertPOS->bind_param('isssssiii',$posId,$idNumber,$selectedCustomer,$orderedDate,$fname,$lname,$total,$amountPay,$returnChange);
                 $insertPOS->execute();
                 if ($insertPOS) {
-                    header('Location:pos.php?insert-cart-successfully');
+                    header('Location:pos.php?success');
                     unset($_SESSION["cart_item"]);
                 }
             } else{
@@ -137,7 +143,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 $insertPOS->bind_param('isssssiii',$posId,$noIdNumber,$noSelectedCustomer,$orderedDate,$fname,$lname,$total,$amountPay,$returnChange);
                 $insertPOS->execute();
                 if ($insertPOS) {
-                    header('Location:pos.php?insert-cart-successfully');
+                    header('Location:pos.php?success');
+                    unset($_SESSION["cart_item"]);
+                } else{
+                    header('Location:pos.php?error');
                     unset($_SESSION["cart_item"]);
                 }
            }

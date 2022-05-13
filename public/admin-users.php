@@ -45,9 +45,17 @@ function insertUsers(){
                 $insertUser->bind_param('issssssssi', $id, $fname, $lname, $uname, $email, $passwordHash, $profile, $position, $created_at, $verification_code);
                 $insertUser->execute();
                 if ($insertUser) {
-                    header('Location:users.php?insert-successfully');
+                    $_SESSION['status'] = "Successful";
+                    $_SESSION['status_code'] ="success";
+                    $_SESSION['message'] = "Successfully added";
+                    header('Location:users.php');
+                } else{
+                    $_SESSION['status'] = "Error";
+                    $_SESSION['status_code'] ="error";
+                    $_SESSION['message'] = "Could not add user";
+                    header('Location:products.php');
                 }
-            }
+            } 
         }
     }
 }
@@ -73,7 +81,15 @@ function editUsers(){
                 $updateUser->bind_param('sssssi', $fname, $lname, $uname, $email, $position, $id);
                 $updateUser->execute();
                 if ($updateUser) {
-                    header('Location:users.php?update-successfully');
+                    $_SESSION['status'] = "Successful";
+                    $_SESSION['status_code'] ="success";
+                    $_SESSION['message'] = "Successfully updated";
+                    header('Location:users.php');
+                } else{
+                    $_SESSION['status'] = "Error";
+                    $_SESSION['status_code'] ="error";
+                    $_SESSION['message'] = "Could not update user";
+                    header('Location:users.php');
                 }
             }
         }
@@ -92,7 +108,15 @@ function deleteUsers(){
                 $alterTable = "ALTER TABLE users AUTO_INCREMENT = 1";
                 $alterTableId = $connect->query($alterTable);
                 if ($alterTableId) {
-                    header('Location:users.php?deleted');
+                    $_SESSION['status'] = "Successful";
+                    $_SESSION['status_code'] ="success";
+                    $_SESSION['message'] = "Successfully deleted";
+                    header('Location:users.php');
+                } else{
+                    $_SESSION['status'] = "Error";
+                    $_SESSION['status_code'] ="error";
+                    $_SESSION['message'] = "Could not delete user";
+                    header('Location:users.php');
                 }
             }
         }

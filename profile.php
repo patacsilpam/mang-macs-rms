@@ -10,6 +10,7 @@ require 'public/password-update.php';
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="Profile" content="Mang Macs-Profile">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -35,14 +36,7 @@ require 'public/password-update.php';
                     <div class="admin-container">
                         <div class="profile-information-container">
                             <h1>Account Information</h1>
-                            <?php
-                            if (isset($_GET['msg-updated'])) {
-                            ?>
-                            <div class="alert alert-success msg-Success"><i class="fas fa-check"></i>Updated Account
-                                Successfully</div>
-                            <?php
-                            }
-                            ?>
+
                             <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST"
                                 class="profile-information-container" enctype="multipart/form-data">
                                 <?php
@@ -93,14 +87,6 @@ require 'public/password-update.php';
                             <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST"
                                 class="profile-information-container">
                                 <h1>Change Password</h1>
-                                <?php
-                                if (isset($_GET['updated'])) {
-                                ?>
-                                <div class="alert alert-success msg-Success"><i class="fas fa-check"></i>Password
-                                    changed successfully.</div>
-                                <?php
-                                }
-                                ?>
                                 <label for="currentPassword">Current Password</label>
                                 <input type="password" class="form-control togglePassword" name="currentPassword"
                                     placeholder="Current Password" required>
@@ -125,6 +111,31 @@ require 'public/password-update.php';
         </main>
         <!--Sidebar-->
         <?php include 'assets/template/admin/sidebar.php'?>
+        <?php if(isset($_GET['updated'])){
+            ?>
+        <script>
+            swal({
+                title: "Successful",
+                text: "Successfully updated",
+                icon: "success",
+                button: "Ok",
+            });
+        </script>
+        <?php
+        } else{
+            if(isset($_GET['error'])){
+        ?>
+        <script>
+            swal({
+                title: "Error",
+                text: "Could not update",
+                icon: "error",
+                button: "Ok",
+            });
+        </script>   
+        <?php
+            }
+        }?>
     </div>
     <script src="assets/js/sidebar-menu.js"></script>
     <script src="assets/js/sidebar-menu-active.js"></script>
