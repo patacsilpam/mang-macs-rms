@@ -35,12 +35,12 @@ function insertStocks(){
             if ($insertInventory) {
                 $_SESSION['status'] = "Successful";
                 $_SESSION['status_code'] ="success";
-                $_SESSION['message'] = "Successfully added";
+                $_SESSION['message'] = "Insert new item successfully";
                 header('Location:inventory.php');
             } else{
                 $_SESSION['status'] = "Error";
                 $_SESSION['status_code'] ="error";
-                $_SESSION['message'] = "Could not add item";
+                $_SESSION['message'] = "Could not insert item";
                 header('Location:products.php');
             }
         }
@@ -67,7 +67,7 @@ function updateStocks(){
                 if ($updateInventory) {
                     $_SESSION['status'] = "Successful";
                     $_SESSION['status_code'] ="success";
-                    $_SESSION['message'] = "Successfully updated";
+                    $_SESSION['message'] = "Update item successfully";
                     header('Location:inventory.php');
                 }  else{
                     $_SESSION['status'] = "Error";
@@ -95,7 +95,7 @@ function deleteStocks(){
                     header('Location:inventory.php');
                     $_SESSION['status'] = "Successful";
                     $_SESSION['status_code'] ="success";
-                    $_SESSION['message'] = "Successfully deleted";
+                    $_SESSION['message'] = "Delete item successfully";
                 } else{
                     $_SESSION['status'] = "Error";
                     $_SESSION['status_code'] ="error";

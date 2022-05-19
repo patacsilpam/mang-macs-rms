@@ -47,12 +47,12 @@ function insertUsers(){
                 if ($insertUser) {
                     $_SESSION['status'] = "Successful";
                     $_SESSION['status_code'] ="success";
-                    $_SESSION['message'] = "Successfully added";
+                    $_SESSION['message'] = "Insert new user successfully";
                     header('Location:users.php');
                 } else{
                     $_SESSION['status'] = "Error";
                     $_SESSION['status_code'] ="error";
-                    $_SESSION['message'] = "Could not add user";
+                    $_SESSION['message'] = "Could not insert user";
                     header('Location:products.php');
                 }
             } 
@@ -83,7 +83,7 @@ function editUsers(){
                 if ($updateUser) {
                     $_SESSION['status'] = "Successful";
                     $_SESSION['status_code'] ="success";
-                    $_SESSION['message'] = "Successfully updated";
+                    $_SESSION['message'] = "Update user successully";
                     header('Location:users.php');
                 } else{
                     $_SESSION['status'] = "Error";
@@ -110,7 +110,7 @@ function deleteUsers(){
                 if ($alterTableId) {
                     $_SESSION['status'] = "Successful";
                     $_SESSION['status_code'] ="success";
-                    $_SESSION['message'] = "Successfully deleted";
+                    $_SESSION['message'] = "Delete user successfully";
                     header('Location:users.php');
                 } else{
                     $_SESSION['status'] = "Error";

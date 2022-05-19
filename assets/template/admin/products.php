@@ -22,10 +22,17 @@
               <select name="productCategory" id="prodCategory" class="form-control">
                 <option value="">Select Category</option>
                 <option value="Promo">Promo</option>
+                <option value="Add Ons">Add Ons</option>
                 <option value="Appetiser">Appetiser</option>
+                <option value="Bbq">Barbeque</option>     
+                <option value="Beer Bucket">Beer Bucket(With Pulutan)</option>
+                <option value="Beverages and Liqours">Beverages and Liqours</option>
                 <option value="Combo Budget Meals">Combo Buget Meals</option>
+                <option value="Dessert">Dessert</option>
                 <option value="Dimsum">Dimsum</option>
                 <option value="Drinks">Drinks</option>
+                <option value="Grilled Siomai">Grilled Siomai</option>
+                <option value="Mang Macs Pulutan">Mang Macs Pulutan</option>
                 <option value="Meals Good for 3 pax">Meals Good for 3 pax</option>
                 <option value="Noodles">Noodles</option>
                 <option value="Pancit">Pancit</option>
@@ -33,23 +40,26 @@
                 <option value="Pancit Bilao(Canton)">Pancit Bilao(Canton)</option>
                 <option value="Palabok Bilao">Palabok Bilao</option>
                 <option value="Pizza">Pizza</option>
-                <option value="Rice">Rice</option>
-                <option value="Rice Meals with Ice Tea">Rice Meals with Ice Tea</option>
+                <option value="Sizzling Plates">Sizzling Plates</option>
                 <option value="Spaghetti Bilao">Spaghetti Bilao</option>
                 <option value="Seafoods">Seafoods</option>
                 <option value="Soup">Soup</option>
                 <option value="Vegetables">Vegetables</option>
+                <option value="Wine">Wine</option>
               </select>
             </div>
             <div class="mt-2">
-            <label for="prodVariation">Product Variation</label>
+            <label for="prodVariation">Sub Product Category</label>
               <select name="productVariation" id="prodVariation" class="form-control">
-                <option value="">Select Variation</option>
+                <option value="">Select Sub Product Category</option>
                 <option value="">None</option>
                 <optgroup label="Meals Good for 3 pax">
                   <option value="Beef">Beef</option>
                   <option value="Chicken">Chicken</option>
                   <option value="Pork">Pork</option>
+                  <option value="Pigar Pigar">Pigar Pigar</option>
+                  <option value="Rice">Rice</option>
+                  <option value="Vegetable"></option>
                 </optgroup>
                 <optgroup label="Pizza">
                   <option value="Medium">Medium</option>
@@ -122,6 +132,7 @@
               <input type="text" class="form-control" id="prodName" name="editProductName" placeholder="E
               nter Product Name" value="<?= $fetch['productName'] ?>" required>
             </div>
+            <!---Edit Product Category!-->
             <div class="mt-2">
               <label for="prodCategory">Product Category</label>
               <select name="editProductCategory" id="prodCategory" class="form-control">
@@ -138,7 +149,6 @@
                 <option value="Pancit Bilao(Canton)" <?php if ($fetch['productCategory'] == "Panict Bilao(Canton)") echo 'selected ? "selected"'; ?>>Pancit Bilao(Canton)</option>
                 <option value="Palabok Bilao" <?php if ($fetch['productCategory'] == "Palabok Bilao") echo 'selected ? "selected"'; ?>>Palabok Bilao</option>
                 <option value="Pizza" <?php if ($fetch['productCategory'] == "Pizza") echo 'selected ? "selected"'; ?>>Pizza</option>
-                <option value="Rice" <?php if ($fetch['productCategory'] == "Rice") echo 'selected ? "selected"'; ?>>Rice</option>
                 <option value="Rice Meals with Ice Tea" <?php if ($fetch['productCategory'] == "Rice Meals with Ice Tea") echo 'selected ? "selected"'; ?>>Rice Meals with Ice Tea</option>
                 <option value="Spaghetti Bilao" <?php if ($fetch['productCategory'] == "Spaghetti Bilao") echo 'selected ? "selected"'; ?>>Spaghetti Bilao</option>
                 <option value="Seafoods" <?php if ($fetch['productCategory'] == "Seafoods") echo 'selected ? "selected"'; ?>>Seafoods</option>
@@ -146,15 +156,18 @@
                 <option value="Vegetables" <?php if ($fetch['productCategory'] == "Vegetables") echo 'selected ? "selected"'; ?>>Vegetables</option>
               </select>
             </div>
+            <!---Edit Product Variation--!-->
            <div class="mt-2">
-           <label for="prodVariation">Product Variation</label>
+           <label for="prodVariation">Sub Product Category</label>
             <select name="editProductVariation" id="prodVariation" class="form-control">
-              <option value="">Select Variation</option>
+              <option value="">Select Product  Category</option>
               <optgroup label="Meals Good for 3 pax">
                 <option value="Beef" <?php if ($fetch['productVariation'] == "Beef") echo 'selected ? "selected"'; ?>>Beef</option>
                 <option value="Chicken" <?php if ($fetch['productVariation'] == "Chicken") echo 'selected ? "selected"' ?>>Chicken</option>
                 <option value="Pork" <?php if ($fetch['productVariation'] == "Pork") echo 'selected ? "selected"' ?>>Pork</option>
-              </optgroup>
+                <option value="Pigar Pigar <?php if($fetch['productVariation'] == "Pigar Pigar") echo 'selected ? "selected"';?>">Pigar Pigar</option>
+                <option value="Rice" <?php if($fetch['productVariation'] == "Rice") echo 'selected ? "selected"';?>>Rice</option>
+                <option value="Vegetable <?php if($fetch['productVariation'] == "Vegetable") echo 'selected ? "selected"';?>"></option> 
               <optgroup label="Pizza">
                 <option value="Medium" <?php if ($fetch['productVariation'] == "Medium") echo 'selected ? "selected"' ?>>Medium</option>
                 <option value="Large" <?php if ($fetch['productVariation'] == "Large") echo 'selected ? "selected"' ?>>Large</option>

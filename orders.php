@@ -59,7 +59,7 @@
                                     FROM tblcustomerorder LEFT JOIN tblorderdetails 
                                     ON tblorderdetails.order_number = tblcustomerorder.order_number
                                     WHERE tblorderdetails.order_status = 'Pending' OR tblorderdetails.order_status = 'Order Received'
-                                    OR tblorderdetails.order_status = 'Shipped'";
+                                    OR tblorderdetails.order_status = 'Shipped' GROUP BY tblcustomerorder.id";
                                     $displayOrders = $connect->query($getOrders);
                                     while($fetch = $displayOrders->fetch_assoc()){
                                    ?>
@@ -82,7 +82,7 @@
                                     <td><?=$fetch['required_date']?><br><?=$fetch['required_time']?></td>
                                     <td>
                                         <a href='order_summary.php?order_number=<?= $fetch['order_number'];?>'
-                                            title="View Order Details"><i class="fas fa-arrow-circle-right"></i></a>
+                                            title="View Order Details">View <i class="fas fa-arrow-circle-right"></i></a>
                                     </td>
                                 </tr>
                                 <?php 

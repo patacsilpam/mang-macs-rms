@@ -28,12 +28,12 @@ function insertProducts(){
             if ($insertProduct) {
                 $_SESSION['status'] = "Successful";
                 $_SESSION['status_code'] ="success";
-                $_SESSION['message'] = "Successfully added";
+                $_SESSION['message'] = "Insert new product successfully";
                 header('Location:products.php');
             } else{
                 $_SESSION['status'] = "Error";
                 $_SESSION['status_code'] ="error";
-                $_SESSION['message'] = "Could not add item";
+                $_SESSION['message'] = "Could not insert product";
                 header('Location:products.php');
             }
         }
@@ -63,12 +63,12 @@ function updateProducts(){
                     move_uploaded_file($editImageProductTemp,$imageFolderPath);
                     $_SESSION['status'] = "Successful";
                     $_SESSION['status_code'] ="success";
-                    $_SESSION['message'] = "Successfully updated";
+                    $_SESSION['message'] = "Update product successfully";
                     header('Location:products.php');
                 } else{
                     $_SESSION['status'] = "Error";
                     $_SESSION['status_code'] ="error";
-                    $_SESSION['message'] = "Could not update item";
+                    $_SESSION['message'] = "Could not update product";
                     header('Location:products.php');
                 }
             } else {
@@ -86,12 +86,12 @@ function updateProducts(){
                 if ($updateProduct) {
                     $_SESSION['status'] = "Successful";
                     $_SESSION['status_code'] ="success";
-                    $_SESSION['message'] = "Successfully updated";
+                    $_SESSION['message'] = "Update product successfully";
                     header('Location:products.php?');
                 } else{
                     $_SESSION['status'] = "Error";
                     $_SESSION['status_code'] ="error";
-                    $_SESSION['message'] = "Could not update item";
+                    $_SESSION['message'] = "Could not update product";
                     header('Location:products.php');
                 }
             }
@@ -112,12 +112,12 @@ function deleteProducts(){
             if ($alter) {
                 $_SESSION['status'] = "Successful";
                 $_SESSION['status_code'] ="success";
-                $_SESSION['message'] = "Successfully deleted";   
+                $_SESSION['message'] = "Delete product successfully";   
                 header('Location:products.php?');
             }  else{
                 $_SESSION['status'] = "Error";
                 $_SESSION['status_code'] ="error";
-                $_SESSION['message'] = "Could not deleted item";
+                $_SESSION['message'] = "Could not delete item";
                 header('Location:products.php');
             }
         }

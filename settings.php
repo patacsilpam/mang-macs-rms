@@ -32,40 +32,7 @@
         <main class="main-container">
             <section>
                 <article>
-                    <div class="settings-container">
-                        <!--Menu Container--->
-                        <div class="menu-container" style="overflow-x:auto;">
-                            <h4>Menu</h4>
-                            <table class="display table">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Category</th>
-                                        <th>Foods</th>
-                                        <th>Price</th>
-                                        <th>Date Created</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    $selectProduct = "SELECT * FROM tblproducts";
-                                    $displayProduct = $connect->query($selectProduct);
-                                    while ($fetch = $displayProduct->fetch_assoc()) {
-                                    ?>
-                                    <tr>
-                                        <td><?= $fetch['id'] ?></td>
-                                        <td><?= $fetch['productCategory'] ?></td>
-                                        <td><?= $fetch['productName'] ?></td>
-                                        <td><?= $fetch['price'] ?></td>
-                                        <td><?= $fetch['created_at'] ?></td>
-
-                                    </tr>
-                                    <?php
-                                    }
-                                    ?>
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="settings-container">        
                         <!--Users Container--->
                         <div class="users-container" style="overflow-x:auto;">
                             <h4>Employee</h4>
@@ -100,7 +67,7 @@
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $selectProduct = "SELECT * FROM tblusers WHERE position='Staff'";
+                                    $selectProduct = "SELECT * FROM tblusers";
                                     $displayProduct = $connect->query($selectProduct);
                                     while ($fetch = $displayProduct->fetch_assoc()) {
                                     ?>
