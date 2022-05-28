@@ -254,9 +254,7 @@ sup {
 .table-center {
     display: flex;
     justify-content: center;
-    padding: 5px;
     height: 400px;
-    margin: 0 0 40px 0;
 }
 
 .empty-cart {

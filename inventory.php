@@ -43,14 +43,11 @@
                             <thead class="thead-dark">
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Created At</th>
-                                    <th scope="col">EXP</th>
-                                    <th scope="col">Product</th>
-                                    <th scope="col">Quantity Purchased</th>
-                                    <th scope="col">Quantity in Stock</th>
-                                    <th scope="col">Quantity Sold</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">In charge</th>
+                                    <th scope="col">Purchased Date</th>
+                                    <th scope="col">EXP Date</th>
+                                    <th scope="col">Item Name</th>
+                                    <th scope="col">Item Purchased</th>
+                                    <th scope="col">Item Stock</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
@@ -65,7 +62,7 @@
                                     $endDate = date($expiredDate, $offset);
                                     $todayDate = new DateTime($today);
                                     $exp = new DateTime($endDate);
-                                    if ($exp < $todayDate) {
+                                    if ($exp <= $todayDate) {
                                         $highligtRow = "#ff4444";
                                     }
                                     if ($exp > $todayDate) {
@@ -74,14 +71,11 @@
                                 ?>
                                     <tr style="background: <?php echo $highligtRow; ?>;">
                                         <th scope="row"><?= $fetch['id'] ?></th>
-                                        <td><?= $fetch['created_at'] ?></td>
-                                        <td><?= $fetch['expiration_date'] ?></td>
+                                        <td><?= date('F d, Y',strtotime($fetch['created_at'])) ?></td>
+                                        <td><?= date('F d, Y',strtotime($fetch['expiration_date'])) ?></td>
                                         <td><?= $fetch['product'] ?></td>
                                         <td><?= $fetch['quantityPurchased'] ?></td>
                                         <td><?= $fetch['quantityInStock'] ?></td>
-                                        <td><?= $fetch['quantitySold'] ?></td>
-                                        <td><?= $fetch['status'] ?></td>
-                                        <td><?= $fetch['in_charge'] ?></td>
                                         <td style="display: flex;">
                                             <span><button title="Edit" type="button" class="btn btn-success" data-toggle="modal" data-target="#editInventory<?= $fetch['id'] ?>"><i class="fas fa-edit"></i></button></span>
                                             <?php require 'assets/template/admin/inventory.php' ?>&emsp;

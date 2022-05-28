@@ -1,7 +1,5 @@
 <div class="add-product-container">
     <div class="container mt-3 add-product-container">
-        <h2>Products</h2>
-        <br>
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" id="myTab">
             <li class="nav-item">
@@ -50,6 +48,7 @@
                         <label class="text-danger">₱<?=$fetch['price']?>.00</label>
                         <input type="number" class="form-control input-quantity" value="1" name="quantity">
                         <button type="submit" name="add-to-cart" class="btn btn-warning">Add</button>
+                         <!---Add Category and Product Code Here :)----!-->
                     </form>
                     <?php
                             }
@@ -130,14 +129,14 @@
                     $displayPizza = $connect->query($getPizza);
                         while($fetch = $displayPizza->fetch_assoc()){
                         ?>
-                    <form method="POST" action="pos.php?action=add&code=<?=$fetch['code']?>" class="box-product">
+                    <form method="POST" action="pos.php?action=add&code=<?=$fetch['code']?>" class="box-product" >
                         <input type="hidden" value="<?=$fetch['code']?>">
                         <img src="<?=$fetch['productImage'] ?>" class="img-product" />
                         <strong class="text-product-name"><?=$fetch['productName']?></strong>
                         <small class="text-dark"><?=$fetch['productVariation']?></small>
                         <label class="text-danger">₱<?=$fetch['price']?>.00</label>
                         <input type="number" class="form-control input-quantity" value="1" name="quantity">
-                        <button type="submit" name="add-to-cart" class="btn btn-warning">Add</button>
+                        <button type="submit" id="btn-pizza" name="add-to-cart" class="btn btn-warning">Add</button>
                     </form>
                     <?php
                         }
@@ -215,3 +214,14 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript">
+    $(document).ready(function(){
+        $('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
+            localStorage.setItem('activeTab', $(e.target).attr('href'));
+        });
+        var activeTab = localStorage.getItem('activeTab');
+        if(activeTab){
+            $('#myTab a[href="' + activeTab + '"]').tab('show');
+        }
+    });
+</script>

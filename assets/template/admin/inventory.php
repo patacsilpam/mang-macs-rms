@@ -15,33 +15,26 @@
                     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST">
                         <input type="hidden" name="id">
                         <div class="mt2">
+                            <label for="expirationDate">Purchased Date</label>
+                            <input type="date" id="purchasedDate" name="purchasedDate" class="form-control" required>
+                        </div>
+                        <div class="mt2">
                             <label for="expirationDate">Expiration Date</label>
                             <input type="date" id="expirationDate" name="expirationDate" class="form-control" required>
                         </div>
                         <div class="mt-2">
-                            <label for="product">Product</label>
+                            <label for="product">Item Name</label>
                             <input type="text" class="form-control" name="product" placeholder="Enter Product" required>
                         </div>
                         <div class="mt-2">
-                            <label for="status">Status</label>
-                            <select name="status" class="form-control">
-                                <option value="Available">Availabe</option>
-                                <option value="Not Available">Not Available</option>
-                            </select>
-                        </div>
-                        <div class="mt-2">
-                            <label for="quantity">Quantity Purchase</label>
+                            <label for="quantity">Item Purchase</label>
                             <input type="number" class="form-control" name="quantityPurchased"
                                 placeholder="Enter Quantity Purchased" required>
                         </div>
                         <div class="mt-2">
-                            <label for="quantity">Quantity In Stock</label>
+                            <label for="quantity">Item Stock</label>
                             <input type="number" class="form-control" name="quantityInStock"
                                 placeholder="Enter Quantity In Stock" required>
-                        </div>
-                        <div class="mt-2">
-                            <label for="incharge">In charge</label>
-                            <input type="text" class="form-control" name="incharge" placeholder="In charge" required>
                         </div>
                 </div>
             </div>
@@ -70,6 +63,11 @@
                     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST">
                         <input type="hidden" name="id" value="<?=$fetch['id']?>">
                         <div class="mt2">
+                            <label for="expirationDate">Purchased Date</label>
+                            <input type="date" id="purchasedDate" name="purchasedDate" class="form-control"
+                                value="<?=$fetch['created_at']?>" required>
+                        </div>
+                        <div class="mt2">
                             <label for="expirationDate">Expiration Date</label>
                             <input type="date" id="expirationDate" name="expirationDate" class="form-control"
                                 value="<?=$fetch['expiration_date']?>" required>
@@ -90,22 +88,7 @@
                             <input type="number" class="form-control" name="quantityInStock"
                                 placeholder="Enter Quantity Purchased" value="<?= $fetch['quantityInStock']?>" required>
                         </div>
-                        <div class="mt-2">
-                            <label for="status">Status</label>
-                            <select name="status" class="form-control">
-                                <option value="Available"
-                                    <?php if($fetch['status'] == "Available") echo 'selected ? "selected"'?>>Availabe
-                                </option>
-                                <option value="Not Available"
-                                    <?php if($fetch['status'] == "Not Available") echo 'selected ? "selected"';?>>Not
-                                    Available</option>
-                            </select>
-                        </div>
-                        <div class="mt-2">
-                            <label for="incharge">In charge</label>
-                            <input type="text" class="form-control" name="incharge" placeholder="In charge"
-                                value="<?=$fetch['in_charge']?>" required>
-                        </div>
+                        
                 </div>
             </div>
             <div class="modal-footer">

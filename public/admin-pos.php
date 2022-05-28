@@ -87,6 +87,12 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $idNumber = $_POST['idNumber'];
         $noIdNumber = bin2hex(openssl_random_pseudo_bytes(11));
         $discountedPrice = $_POST['discountedPrice'];
+        $category = '';
+        $productCode = '';
+        /*
+            Reminder:
+            Please add the category and product code value to insert in database
+        */
         
             foreach ($id as $index => $code) {
             $ids = $code;

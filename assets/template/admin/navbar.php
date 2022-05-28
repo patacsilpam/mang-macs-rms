@@ -6,7 +6,7 @@
     </a>
     <div class="dropdown-menu dropdown-bell-icon" aria-labelledby="dropdownMenuLink">
         <a class="dropdown-item" href="inventory.php">
-            <?php
+        <?php
             $getExpDate = "SELECT * FROM tblinventory WHERE expiration_date < now()";
             $displayExpDate = $connect->query($getExpDate);
             if ($displayExpDate) {
@@ -16,20 +16,19 @@
             ?>
             <div class="dropdown-notif">
                 <b>Expired</b>
-                <p class="text-dark">The item<i>( <?= $fetchItem['product'] ?> )</i> you added from <br> <?= $expDate ?>
+                <p class="text-dark">The item<i>( <?= $fetchItem['product'] ?> )</i> you purchased from <br> <?= $expDate ?>
                     has expired.</p>
-                <p> In charge - <?= $fetchItem['in_charge'] ?></p>
                 <?php if ($timeLapse > 0) {
-                            echo $timeLapse . '<small> days ago</small>';
+                            echo 'Expired '. $timeLapse . '<small> days ago</small>';
                         } else {
-                            echo '<small>Today</small>';
+                            echo '<small> Expired today</small>';
                         } ?>
                 <hr>
             </div>
             <?php
                 }
             }
-            $getAboutToExp = "SELECT * FROM tblinventory WHERE expiration_date BETWEEN curdate() AND DATE_ADD(curdate(), INTERVAL 7 DAY)";
+            $getAboutToExp = "SELECT * FROM tblinventory WHERE expiration_date BETWEEN curdate() + 1 AND DATE_ADD(curdate(), INTERVAL 6 DAY)";
             $displayAboutToExp = $connect->query($getAboutToExp);
             if ($displayAboutToExp) {
                 while ($fetchItem = $displayAboutToExp->fetch_assoc()) {
@@ -41,9 +40,8 @@
                 ?>
             <div class="dropdown-notif">
                 <b>About to Expire</b>
-                <p class="text-dark">The item <i>( <?= $fetchItem['product'] ?> )</i> you added from <br> <?= $today ?>
+                <p class="text-dark">The item <i>( <?= $fetchItem['product'] ?> )</i> you purchased from <br> <?= $today ?>
                     is about to expire on <br><?= $expDate ?>.</p>
-                <p> In charge - <?= $fetchItem['in_charge'] ?></p>
                 <?php if ($timeLapse > 0) {
                             echo $timeLapse . '<small> days to go</small>';
                         } else {

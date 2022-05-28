@@ -8,9 +8,9 @@ if (!isset($_SESSION['loggedIn'])) {
 date_default_timezone_set('Asia/Manila');
 //display notification
 $countNotif = "SELECT COUNT(*) FROM
-                (SELECT * FROM tblinventory WHERE expiration_date < now()
-                 UNION
-                SELECT * FROM tblinventory WHERE expiration_date BETWEEN curdate() AND DATE_ADD(curdate(), INTERVAL 7 DAY)) tblinventory";
+            (SELECT * FROM tblinventory WHERE expiration_date < now()
+            UNION
+            SELECT * FROM tblinventory WHERE expiration_date BETWEEN curdate() + 1 AND DATE_ADD(curdate(), INTERVAL 6 DAY)) tblinventory ";
 $displayNotif = $connect->query($countNotif);
 $fetchNotif = $displayNotif->fetch_row();
 //
@@ -19,14 +19,14 @@ function insertStocks(){
     if (isset($_SERVER["REQUEST_METHOD"]) == "POST"){
         if (isset($_POST["btn-save-inventory"])) {
             $id = mysqli_real_escape_string($connect, $_POST['id']);
-            $created_at = date('y-m-d');
+            $created_at = mysqli_real_escape_string($connect,$_POST['purchasedDate']);
             $expirationDate = mysqli_real_escape_string($connect, $_POST['expirationDate']);
             $product = mysqli_real_escape_string($connect, $_POST['product']);
             $quantityPurchased= mysqli_real_escape_string($connect, $_POST['quantityPurchased']);
             $quantityInStock = $quantityPurchased;
             $quantitySold = 0;
-            $status = mysqli_real_escape_string($connect,$_POST['status']);
-            $inCharge = mysqli_real_escape_string($connect, $_POST['incharge']);
+            $status ='';
+            $inCharge = '';
             //insert inventory
             $insertInventory = $connect->prepare("INSERT tblinventory(id,expiration_date,created_at,product,quantityPurchased,quantityInStock,quantitySold,status,in_charge)
             VALUES (?,?,?,?,?,?,?,?,?)");
@@ -51,18 +51,18 @@ function updateStocks(){
     if(isset($_SERVER["REQUEST_METHOD"]) == "POST"){
         if (isset($_POST["btn-edit-inventory"])) {
             $id = mysqli_real_escape_string($connect, $_POST['id']);
-            $created_at = date('y-m-d');
+            $purchasedDate =  mysqli_real_escape_string($connect, $_POST['purchasedDate']);
             $expirationDate = mysqli_real_escape_string($connect, $_POST['expirationDate']);
             $product = mysqli_real_escape_string($connect, $_POST['product']);
             $quantityPurchased = mysqli_real_escape_string($connect, $_POST['quantityPurchased']);
             $quantityInStock = mysqli_real_escape_string($connect,$_POST['quantityInStock']);
             $quantitySold = $quantityPurchased - $quantityInStock;
-            $status = mysqli_real_escape_string($connect,$_POST['status']);
-            $inCharge = mysqli_real_escape_string($connect, $_POST['incharge']);
+            $status = '';
+            $inCharge = '';
             //insert inventory
-            if (!empty($expirationDate) && !empty($product) && !empty($quantityPurchased) && !empty($quantityInStock) && !empty($status) && !empty($inCharge)) {
-                $updateInventory = $connect->prepare("UPDATE tblinventory SET expiration_date=?,product=?,quantityPurchased=?,quantityInStock=?,quantitySold=?,status=?,in_charge=? WHERE id=?");
-                $updateInventory->bind_param('ssiiissi', $expirationDate, $product, $quantityPurchased,$quantityInStock,$quantitySold, $status,$inCharge, $id);
+            if (!empty($expirationDate) && !empty($product) && !empty($quantityPurchased) && !empty($quantityInStock)) {
+                $updateInventory = $connect->prepare("UPDATE tblinventory SET created_at=?,expiration_date=?,product=?,quantityPurchased=?,quantityInStock=?,quantitySold=?,status=?,in_charge=? WHERE id=?");
+                $updateInventory->bind_param('sssiiissi', $purchasedDate,$expirationDate, $product, $quantityPurchased,$quantityInStock,$quantitySold, $status,$inCharge, $id);
                 $updateInventory->execute();
                 if ($updateInventory) {
                     $_SESSION['status'] = "Successful";

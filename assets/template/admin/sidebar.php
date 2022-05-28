@@ -21,7 +21,7 @@
             <a href="pos.php"><i class="fas fa-print icons"></i><span class="span">POS</span></a>
         </li>
         <li title="Stocks">
-            <a href="inventory.php"><i class="fas fa-boxes icons"></i><span class="span">Stocks</span></a>
+            <a href="inventory.php"><i class="fas fa-boxes icons"></i><span class="span">Inventory</span></a>
         </li>
         <li title="Users">
             <a href="users.php"><i class="fas fa-users-cog icons"></i><span class="span">Users</span></a>

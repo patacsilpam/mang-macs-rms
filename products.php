@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
     <link rel="icon" type="image/jpeg" href="assets/images/mang-macs-logo.jpg" sizes="70x70">
     <link rel="stylesheet" href="assets/css/main.css" type="text/css">
+   
     <title>Products</title>
 </head>
 
@@ -38,7 +39,7 @@
                             <button title="Add Product" type="button" class="btn btn-primary btn-add"
                                 data-toggle="modal" data-target="#addProducts">Add &nbsp;<i
                                     class="fas fa-plus"></i></button>
-                            <?php include 'assets/template/admin/products.php'?>
+                            <?php include 'assets/template/admin/addProduct.php'?>
                             <br><br>
                         </div>       
                         <table id="example" class="table table-hover">
@@ -71,13 +72,14 @@
                                     <td><?= $fetch['price'] ?></td>
                                     <td><?= $fetch['status'] ?></td>
                                     <td style="display: flex;">
-                                        <button title="Edit" type="button" class="btn btn-success" data-toggle="modal"
-                                            data-target="#editProducts<?= $fetch['id']; ?>"><i
-                                                class="fas fa-edit"></i></button>
-                                        <?php include 'assets/template/admin/products.php'?>&emsp;
+                                        <button value="<?= $fetch['productCategory']; ?>" title="Edit" type="button" class="btn btn-success" data-toggle="modal"
+                                            data-target="#editProducts<?= $fetch['id']; ?>"  onclick="clickPrice(this)"><i
+                                                class="fas fa-edit"></i></button>    
+                                        <?php include 'assets/template/admin/editProduct.php'?>&emsp;            
                                         <button title="Delete" type="button" class="btn btn-danger" data-toggle="modal"
                                             data-target="#deleteProduct<?= $fetch['id']; ?>"><i
                                                 class="fas fa-trash"></i></button>
+                                           
                                     </td>
                                 </tr>
                                 <?php
@@ -108,6 +110,8 @@
     <script src="assets/js/sidebar-menu-active.js"></script>
     <script src="assets/js/activePage.js"></script>
     <script src="assets/js/table.js"></script>
+    <script src="assets/js/products.js"></script>
 </body>
 
 </html>
+

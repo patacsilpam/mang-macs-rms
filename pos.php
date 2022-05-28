@@ -58,9 +58,9 @@
                                         <th class="input-cart">Remove</th>
                                     </tr>	
                                 </thead>
-                                <tbody class="overflow-auto" >
-                                    <div>
-                                    <tr>
+                                <tbody>
+                                    <div class="overflow-auto">
+                                    
                                     <?php		
                                         foreach ($_SESSION["cart_item"] as $item){
                                             $item_price = $item["quantity"]*$item["price"];
@@ -84,12 +84,13 @@
                                                 <input type="hidden" name="subTotal[]" value="<?= $item_price; ?>">
                                                 <input type="hidden" name="totalQuantity" value="<?= $total_quantity; ?>">
                                                 <input type="hidden" name="totalPrice" value="<?= $total_price; ?>">
+                                                <!---Add Category and Product Code Here :)----!-->
                                             </tr>
                                             <?php
                                                
                                         }
                                             ?>
-                                        <tr>
+                                        
                                     </div>
                                 </tbody>
                             </table>
