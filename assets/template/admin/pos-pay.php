@@ -48,7 +48,7 @@
                         </div>
                         <div class="mt-3">
                             <label>Discounted Price:</label>
-                            <input type="number" class="form-control border border-primary" name="discountedPrice[]"
+                            <input type="number" class="form-control border border-primary" name="discountedPrice"
                                 id="totalPrice" readonly>
                         </div>
                         <hr>

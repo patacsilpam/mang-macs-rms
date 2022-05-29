@@ -77,7 +77,10 @@
                                                     <a href="pos.php?action=remove&code=<?php echo $item["id"]; ?>"><i class="fas fa-times p-1 mb-2 bg-danger text-white" title="Remove"></i></a>
                                                 </td>
                                                 <input type="hidden" name="id[]" value="0">
+                                                <input type="hidden" name="idNumber[]" value="0">
+                                                <input type="hidden" name="productCode[]" value="<?= $item['productCode']?>">
                                                 <input type="hidden" name="productName[]" value="<?= $item['name']?>">
+                                                <input type="hidden" name="productCategory[]" value="<?= $item['category']?>">
                                                 <input type="hidden" name="quantity[]" value="<?=$item["quantity"]; ?>" >
                                                 <input type="hidden" name="variation[]" value="<?= $item["variation"]; ?>">
                                                 <input type="hidden" name="price[]" value="<?= $item["price"]; ?>" >

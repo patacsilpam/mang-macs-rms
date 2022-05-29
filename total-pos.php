@@ -58,6 +58,7 @@
                                     <th scope="col">Products</th>
                                     <th scope="col">Quantity</th>
                                     <th scope="col">Price</th>
+                                    <th scope="col">Category</th>
                                     <th scope="col">Variation</th>
                                     <th scope="col">Customer Type</th>
                                     <th scope="col">Total</th>
@@ -71,14 +72,14 @@
                                         $startDate = $_GET['startDate'];
                                         $endDate = $_GET['endDate'];
                                         $getTotalOrder = $connect->prepare("SELECT tblpos.ordered_date,tblpos.id_number,tblposorders.products,
-                                        tblposorders.quantity, tblposorders.price,tblposorders.variation, 
+                                        tblposorders.quantity, tblposorders.price,tblposorders.category,tblposorders.variation, 
                                         tblpos.customer_type,tblpos.total 
                                         FROM tblpos LEFT JOIN tblposorders ON tblpos.id_number = tblposorders.id_number
                                         WHERE ordered_date BETWEEN (?) AND (?)");
                                         echo $connect->error;
                                         $getTotalOrder->bind_param('ss',$startDate,$endDate);
                                         $getTotalOrder->execute();
-                                        $getTotalOrder->bind_result($orderedDate,$idNumber,$products,$quantity,$price,$variation,$customerType,$total);
+                                        $getTotalOrder->bind_result($orderedDate,$idNumber,$products,$quantity,$price,$category,$variation,$customerType,$total);
                                         if($getTotalOrder){
                                             while($getTotalOrder->fetch()){
                                                 $totalRevenue += $total;
@@ -89,6 +90,7 @@
                                                 <td><?= $products;?></td>
                                                 <td><?= $quantity?></td>
                                                 <td><?= $price?></td>
+                                                <td><?= $category?></td>
                                                 <td><?= $variation?></td>
                                                 <td><?= $customerType?></td>
                                                 <td><?= $total?></td>
@@ -101,12 +103,12 @@
                                         }
                                     } else{
                                         $getTotalOrder = $connect->prepare("SELECT tblpos.ordered_date,tblpos.id_number,tblposorders.products,
-                                        tblposorders.quantity, tblposorders.price,tblposorders.variation, 
+                                        tblposorders.quantity, tblposorders.price,tblposorders.category,tblposorders.variation, 
                                         tblpos.customer_type,tblpos.total 
                                         FROM tblpos LEFT JOIN tblposorders ON tblpos.id_number = tblposorders.id_number");
                                         echo $connect->error;
                                         $getTotalOrder->execute();
-                                        $getTotalOrder->bind_result($orderedDate,$idNumber,$products,$quantity,$price,$variation,$customerType,$total);
+                                        $getTotalOrder->bind_result($orderedDate,$idNumber,$products,$quantity,$price,$category,$variation,$customerType,$total);
                                         if($getTotalOrder){
                                             while($getTotalOrder->fetch()){
                                                 $totalRevenue += $total;
@@ -117,6 +119,7 @@
                                     <td><?= $products;?></td>
                                     <td><?= $quantity?></td>
                                     <td><?= $price?></td>
+                                    <td><?= $category?></td>
                                     <td><?= $variation?></td>
                                     <td><?= $customerType?></td>
                                     <td><?= $total?></td>
