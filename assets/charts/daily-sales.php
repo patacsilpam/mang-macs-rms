@@ -4,7 +4,7 @@
     error_reporting(0);
     $getDays = $connect->query("SELECT COUNT(product_name), YEAR(created_at) as 'year',DAY(created_at) as 'day',
     SUM(price*quantity) as 'totalSales' FROM tblorderdetails
-    WHERE order_status='Completed' AND YEAR(created_at) = YEAR(curdate()) 
+    WHERE order_status='Order Completed' AND YEAR(created_at) = YEAR(curdate()) 
     AND MONTH(created_at) = MONTH(curdate()) GROUP BY YEAR(created_at),DAY(created_at) 
     ORDER BY YEAR(created_at),MONTH(created_at),DAY(created_at)");
   

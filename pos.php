@@ -110,7 +110,6 @@
                                     </tr>
                                 </table>
                                 <div class="empty-table-cart-btn">
-                                    <button title="Empty" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#emptyCart"><i class="fas fa-table"></i> Empty</button>
                                     <button title="Cancel" type="button" class="btn btn-danger" data-toggle="modal" data-target="#cancelCart"><i class="fas fa-window-close"></i> Cancel</button>
                                     <button title="Pay" type="button" class="btn btn-success" data-toggle="modal" data-target="#payModal"><i class="fas fa-file-invoice-dollar"></i> Pay</button>
                                     <?php include 'assets/template/admin/pos-pay.php'?>
@@ -138,7 +137,6 @@
                                         </tr>
                                     </table>
                                     <div class="empty-table-cart-btn">
-                                        <button type="button" class="btn btn-secondary"><i class="fas fa-table"></i> Empty</button>
                                         <button type="button" class="btn btn-danger"><i class="fas fa-window-close"></i> Cancel</button>
                                         <button type="button" class="btn btn-success"><i class="fas fa-file-invoice-dollar"></i> Pay</button>
                                     </div>

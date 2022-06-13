@@ -12,91 +12,85 @@
         <p>Add Product</p>
         <div class="input-form">
           <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="id">
+            <input type="hidden" name="id[]">
+            <input type="hidden" name="stocks" value="0">
             <div>
-              <label for="prodName">Product Name</label>
+              <label style="font-size: 1.1rem">Product Name</label>
               <input type="text" class="form-control" id="prodName" name="productName" placeholder="Enter Product Name" required>
             </div>
-            <div class="mt-2">
-            <label for="prodCategory">Product Category</label>
-              <select name="productCategory" class="form-control prodCategory" onchange="changeVariation(this)">
+            <div class="mt-3">
+            <label style="font-size: 1.1rem">Category</label>
+              <select name="productCategory" class="form-control" onchange="changeVariation(this)">
                 <option value="">Select Category</option>
                 <option value="Promo">Promo</option>
                 <option value="Add Ons">Add Ons</option>
                 <option value="Appetizer">Appetizer</option>
                 <option value="Bbq">Barbeque</option>     
+                <option value="Beef">Beef</option>
                 <option value="Beer Bucket">Beer Bucket(With Pulutan)</option>
                 <option value="Beverages and Liqours">Beverages and Liqours</option>
+                <option value="Carbonara Bilao">Carbonara Bilao</option>
+                <option value="Chicken">Chicken</option>
                 <option value="Dessert">Dessert</option>
                 <option value="Dimsum">Dimsum</option>
                 <option value="Drinks">Drinks</option>
                 <option value="Grilled Siomai">Grilled Siomai</option>
                 <option value="Mang Macs Pulutan">Mang Macs Pulutan</option>
-                <option value="Meals Good for 3 pax">Meals Good for 3 pax</option>
                 <option value="Noodles">Noodles</option>
                 <option value="Pasta">Pasta</option>
                 <option value="Palabok Bilao">Palabok Bilao</option>
                 <option value="Pancit">Pancit</option>
-                <option value="Pancit Bilao(Bihon)">Pancit Bilao(Bihon)</option>
-                <option value="Pancit Bilao(Canton)">Pancit Bilao(Canton)</option>
+                <option value="Pancit Bilao(Bihon Guisado)">Pancit Bilao(Bihon Guisado)</option>
+                <option value="Pancit Bilao(Canton Bihon)">Pancit Bilao(Canton Bihon)</option>
+                <option value="Pork">Pork</option>
+                <option value="Pigar Pigar">Pigar Pigar</option>
                 <option value="Pizza">Pizza</option>
+                <option value="Rice">Rice</option>
+                <option value="Seafoods">Seafoods</option>
                 <option value="Sizzling Plates">Sizzling Plates</option>
                 <option value="Spaghetti Bilao">Spaghetti Bilao</option>
                 <option value="Soup">Soup</option>
+                <option value="Vegetable">Vegetable</option>
                 <option value="Wine">Wine</option>
               </select>
             </div>
-            <div class="mt-2 variationContainer">
-            <label for="prodVariation">Select sub-category</label>
-              <select name="productVariation" class="form-control">
-                <option value="">Select sub-category</option>
-                <optgroup label="Meals Good for 3 pax" class="mealsGood">
-                  <option value="Beef">Beef</option>
-                  <option value="Chicken">Chicken</option>
-                  <option value="Pork">Pork</option>
-                  <option value="Pigar Pigar">Pigar Pigar</option>
-                  <option value="Rice">Rice</option>
-                  <option value="Seafoods">Seafoods</option>
-                  <option value="Vegetable">Vegetable</option>
-                </optgroup>
-                <optgroup label="Pizza"  class="pizza">
-                  <option value="Medium">Medium</option>
-                  <option value="Large">Large</option>
-                </optgroup>
-                <optgroup label="Palabok Bilao" class="palabokBilao">
-                  <option value="7-10 Person">7 - 10 Person</option>
-                  <option value="10-15 Person">10 - 15 Person</option>
-                  <option value="15-20 Person">15 - 20 Person</option>
-                </optgroup>
-                <optgroup label="Pancit Bilao(Bihon)" class="pancitBihon">
-                  <option value="7-10 Person">7 - 10 Person</option>
-                  <option value="10-15 Person">10 - 15 Person</option>
-                  <option value="15-20 Person">15 - 20 Person</option>
-                </optgroup>
-                <optgroup label="Pancit Bilao(Canton)" class="pancitCanton">
-                  <option value="7-10 Person">7 - 10 Person</option>
-                  <option value="10-15 Person">10 - 15 Person</option>
-                  <option value="15-20 Person">15 - 20 Person</option>
-                </optgroup>
-                <optgroup label="Spaghetti Bilao" class="spaghettiBilao">
-                  <option value="7-10 Person">7 - 10 Person</option>
-                  <option value="10-15 Person">10 - 15 Person</option>
-                  <option value="15-20 Person">15 - 20 Person</option>
-                </optgroup>
-              </select>
+            <div class="noCategoryPrice mt-3" style="display: none;">
+              <label style="font-size: 1.1rem">Price</label>
+              <input type="number" class="form-control  mt-2 " name="price" placeholder="Enter Price">
             </div>
-            <div class="mt-2">
-              <label for="status">Status</label>
-              <select name="status" id="status" class="form-control" required>
-                <option value="In Stock">In stock</option>
-                <option value="Out of Stock">Out of Stock</option>
-              </select>
+            <div class="pizzaPrice mt-3" style="display: none;">
+              <label style="font-size: 1.1rem">Price</label>
+              <!--Medium-->
+              <div style="display: flex;">
+                <input type="text" class="bg-transparent border-0" name="pizzaSize[]" value="Medium" style="width: 80px">
+                <input type="number" class="form-control  mt-2 " name="pizzaPrice[]" placeholder="Enter Price">
+              </div>
+              <div class="mt-3"  style="display: flex;">
+                <input type="text" class="bg-transparent border-0" name="pizzaSize[]" value="Large" style="width: 80px">
+                <input type="number" class="form-control mt-2" name="pizzaPrice[]" placeholder="Enter Price">
+              </div>
             </div>
-            <div class="mt-2">
-            <label for="prodPrice">Product Price</label>
-            <input type="number" class="form-control" name="productPrice" id="prodPrice" placeholder="Enter Product Price" required>
+            <div class="bilaoPrice mt-3" style="display: none;">
+              <label style="font-size: 1.1rem">Price</label>
+              <!--Medium-->
+              <div style="display: flex;">
+                <input type="text" class="bg-transparent border-0" name="bilaoSize[]" value="7 - 10 Person" style="width: 120px">
+                <input type="number" class="form-control  mt-2 " name="bilaoPrice[]" placeholder="Enter Price">
+              </div>
+              <div class="mt-3"  style="display: flex;">
+                <input type="text" class="bg-transparent border-0" name="bilaoSize[]" value="10 -15 Person" style="width: 120px">
+                <input type="number" class="form-control mt-2" name="bilaoPrice[]" placeholder="Enter Price">
+              </div>
+              <div class="mt-3"  style="display: flex;">
+                <input type="text" class="bg-transparent border-0" name="bilaoSize[]" value="15 -20 Person" style="width: 120px">
+                <input type="number" class="form-control mt-2" name="bilaoPrice[]" placeholder="Enter Price">
+              </div>
             </div>
-            <div class="mt-2">
+            <div class="mt-3">
+              <label style="font-size: 1.1rem">Time of Preparation</label>
+              <input type="number" class="form-control" name="preparedTime" placeholder="e.g (20 mins)">
+            </div>
+            <div style="font-size: 1.1rem" class="mt-2">
               <label for="prodImage">Choose Image</label>
               <input type="file" multiple accept="image/png, image/jpeg, image/jpg" name="imageProduct" required>
             </div>
@@ -110,6 +104,9 @@
     </div>
   </div>
 </div>
+
+
+
 
 
 

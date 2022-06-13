@@ -15,14 +15,14 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
     <link rel="icon" type="image/jpeg" href="assets/images/mang-macs-logo.jpg" sizes="70x70">
     <link rel="stylesheet" href="assets/css/main.css" type="text/css">
-    <title>Dine In Orders</title>
+    <title>Pick Up Orders</title>
 </head>
 
 <body>
     <div class="grid-container">
         <!--Navigation-->
         <header class="nav-container">
-            <h3>Dine In Orders</h3>
+            <h3>Pick Up Orders</h3>
             <ul class="nav-list">
                 <?php include 'assets/template/admin/navbar.php' ?>
             </ul>

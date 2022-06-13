@@ -450,20 +450,24 @@ input.checkbox {
     border-radius: 2px;
 }
 
-ul li a.focus {
-    background: linear-gradient(rgb(15, 176, 125), rgb(15, 140, 100));
-}
-
-main>.sales-order-container {
+.sales-report-orders {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    flex-wrap: wrap;
 }
 
-.sales-order-container>.sales-graph,
-.sales-report-orders>section,
-.sales-order-type>section {
-    border-radius: 3px;
+.sales-report-orders>section {
+    background-color: #ffffff;
+    margin: 0 2rem 2rem 0;
+    padding: 1rem;
+    height: 122px;
+    max-width: 100%;
+    flex-grow: 1;
+    width: 15%;
+}
+
+.box-orders>h3 {
+    font-size: 1.1rem;
 }
 
 .sales-order-container>.sales-graph {
@@ -498,34 +502,6 @@ main>.sales-order-container {
     margin: .4rem .3rem;
 }
 
-.sales-report-orders>section {
-    background-color: #ffffff;
-    margin: 0 0 2rem 0;
-    padding: 1rem;
-    height: 122px;
-    max-width: 100%;
-    width: 300px;
-}
-
-.sales-report-orders>section>.box-orders>h3,
-.sales-order-type>section>.box-orders>h3 {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #323B55;
-}
-
-.sales-order-container>.sales-order-type {
-    background-color: #ffffff;
-    padding: 1rem;
-    height: 122px;
-    max-width: 100%;
-    width: 100%;
-}
-
-.sales-order-container>.box-middle {
-    margin: 0 1rem;
-}
-
 .sales-book-container {
     margin: 2rem 0 2rem;
 }
@@ -536,6 +512,10 @@ main>.sales-order-container {
     background: #fff;
 }
 
+ul li a.focus {
+    background: linear-gradient(rgb(15, 176, 125), rgb(15, 140, 100));
+}
+
 .view-sales-details {
     display: flex;
     flex-direction: row;
@@ -544,7 +524,7 @@ main>.sales-order-container {
 }
 
 .view-sales-details>p {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     font-weight: 600;
 }
 

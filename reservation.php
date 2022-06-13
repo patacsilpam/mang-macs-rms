@@ -44,7 +44,7 @@
                                     <th scope="col">Date Schedule</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Email</th>
-                                    <th scope="col">Guests</th>
+                                    <th scope="col">No. of Guests</th>
                                     <th scope="col">Status</th>
                                 </tr>
                             </thead>
@@ -52,7 +52,7 @@
                             <tbody>
                                 <?php
                                     require 'public/connection.php';
-                                    $queryReservation = $connect->query("SELECT * FROM tblreservation WHERE status='Pending' OR status='Booking Received'");
+                                    $queryReservation = $connect->query("SELECT * FROM tblreservation WHERE status='Pending'");
                                     while($fetch = $queryReservation->fetch_assoc()){
                                    ?>
                                 <tr>

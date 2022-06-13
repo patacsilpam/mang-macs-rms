@@ -11,7 +11,7 @@
             </div>
             <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'])?>" method="POST">
                 <div class="modal-body">
-                    <label for="">Change Booking Status</label><br>
+                    <label for="">Confirmation</label><br>
                     <input type="hidden" value="<?=$fetch['id']?>" name="id">
                     <input type="hidden" value="<?= $fetch['fname']." ".$fetch['lname'];?>" name="customerName">
                     <input type="hidden" value="<?=$fetch['created_at']?>" name="reservedDate">
@@ -20,9 +20,8 @@
                     <input type="hidden" value="<?= $fetch['guests']?>" name="guests">
                     <input type="hidden" value="<?= $fetch['refNumber']?>" name="refNumber">
                     <select class="form-control" name="bookStatus">
-                        <option value="Pending" <?php if($fetch['status'] == "Pending") echo 'selected ? "selected"';?>>Pending</option>
-                        <option value="Booking Received" <?php if($fetch['status'] == "Booking Received") echo 'selected ? "selected"';?>>Booking Received</option>
-                        <option value="Completed" <?php if($fetch['status'] == "Completed")  echo 'selected ? "selected"'?>>Completed</option>
+                        <option value="Reserved" <?php if($fetch['status'] == "Reserved") echo 'selected ? "selected"';?>>Yes</option>
+                        <option value="Not Available" <?php if($fetch['status'] == "Not Available") echo 'selected ? "selected"';?>>No</option>
                     </select>
                 </div>
                 <div class="modal-footer">

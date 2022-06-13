@@ -18,10 +18,20 @@
                     <input type="hidden" value="<?=$fetch['created_at']?>" name="orderDate">
                     <input type="hidden" value="<?= $fetch['email']?>" name="email">
                     <select class="form-control" name="orderStatus">
-                        <option value="Pending" <?php if($fetch['order_status'] == "Pending") echo 'selected ? "selected"';?>>Pending</option>
-                        <option value="Order Received" <?php if($fetch['order_status'] == "Order Received") echo 'selected ? "selected"';?>>Order Received</option>
-                        <option value="Shipped" <?php if($fetch['order_status'] == "Shipped") echo 'selected ? "selected"';?>>Shipped</option>
-                        <option value="Delivered" <?php if($fetch['order_status'] == "Delivered")  echo 'selected ? "selected"'?>>Delivered</option>
+                        <optgroup label="Deliver" class="deliver">
+                            <option value="Pending" <?php if($fetch['order_status'] == "Pending") echo 'selected ? "selected"';?>>Pending</option>
+                            <option value="Order Received" <?php if($fetch['order_status'] == "Order Received") echo 'selected ? "selected"';?>>Order Received</option>
+                            <option value="Order Processing" <?php if($fetch['order_status'] == "Order Processing") echo 'selected ? "selected"';?>>Order Processing</option>
+                            <option value="Out for Delivery" <?php if($fetch['order_status'] == "Out for Delivery") echo 'selected ? "selected"';?>>Out for Delivery</option>
+                            <option value="Order Completed" <?php if($fetch['order_status'] == "Order Completed")  echo 'selected ? "selected"'?>>Delivered</option>
+                        </optgroup>
+                        <optgroup label="Pick Up" class="pickUp">
+                            <option value="Pending" <?php if($fetch['order_status'] == "Pending") echo 'selected ? "selected"';?>>Pending</option>
+                            <option value="Order Received" <?php if($fetch['order_status'] == "Order Received") echo 'selected ? "selected"';?>>Order Received</option>
+                            <option value="Order Processing" <?php if($fetch['order_status'] == "Order Processing") echo 'selected ? "selected"';?>>Order Processing</option>
+                            <option value="Ready for Pick Up" <?php if($fetch['order_status'] == "Ready for Pick Up") echo 'selected ? "selected"';?>>Ready for Pick Up</option>
+                            <option value="Order Completed" <?php if($fetch['order_status'] == "Order Completed")  echo 'selected ? "selected"'?>>Order Completed</option>
+                        </optgroup>
                     </select>
                 </div>
                 <div class="modal-footer">
@@ -32,3 +42,40 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    function btnOrderType(orderType){
+        console.log(orderType.value)
+        let deliverList = document.querySelectorAll('.deliver'); 
+        let pickUpList = document.querySelectorAll('.pickUp');     
+        //display:block deliver class list 
+        for(let i=0; i<deliverList.length; i++){
+            deliverList[i].style.display='block';
+        }
+       //display:block pickup class list 
+        for(let i=0; i<pickUpList.length; i++){
+            pickUpList[i].style.display='block';
+        }
+        //deliver
+       if(orderType.value == "Deliver"){
+            for(let i=0; i<deliverList.length; i++){
+                deliverList[i].style.display='block';
+            }
+       }
+       else{
+            for(let i=0; i<deliverList.length; i++){
+                deliverList[i].style.display='none';
+            }
+       }
+       //pick up
+       if(orderType.value == "Pick Up"){
+        for(let i=0; i<pickUpList.length; i++){
+            pickUpList[i].style.display='block';
+        }
+       }
+       else{
+            for(let i=0; i<pickUpList.length; i++){
+                pickUpList[i].style.display='none';
+            }
+       }
+    }
+</script>

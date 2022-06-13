@@ -1,4 +1,4 @@
-<?php require 'public/admin-products.php'; ?>
+<?php require 'public/admin-products.php'?>
 <!DOCTYPE html>
 <html lang="en-us">
 
@@ -17,7 +17,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
     <link rel="icon" type="image/jpeg" href="assets/images/mang-macs-logo.jpg" sizes="70x70">
     <link rel="stylesheet" href="assets/css/main.css" type="text/css">
-   
     <title>Products</title>
 </head>
 
@@ -25,7 +24,7 @@
     <div class="grid-container">
         <!--Navigation-->
         <header class="nav-container">
-            <h3>Products</h3>
+            <h3>Available Menu</h3>
             <ul class="nav-list">
                 <?php include 'assets/template/admin/navbar.php'?>
             </ul>
@@ -35,58 +34,43 @@
             <section>
                 <article>
                     <div class="table-responsive table-container">
-                        <div class="add-product">
-                            <button title="Add Product" type="button" class="btn btn-primary btn-add"
-                                data-toggle="modal" data-target="#addProducts">Add &nbsp;<i
-                                    class="fas fa-plus"></i></button>
-                            <?php include 'assets/template/admin/addProduct.php'?>
-                            <br><br>
-                        </div>       
                         <table id="example" class="table table-hover">
                             <thead class="thead-dark">
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Created At</th>
-                                    <th scope="col">Image</th>
-                                    <th scope="col">Product</th>
-                                    <th scope="col">Product Category</th>
+                                    <th scope="col">Category</th>
+                                    <th scope="col">Product Name</th>
                                     <th scope="col">Variation</th>
-                                    <th scope="col">Price</th>
-                                    <th scope="col">Time of Preparation</th>
+                                    <th scope="col">Stocks</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                $selectProduct = "SELECT * FROM tblproducts";
-                                $displayProduct = $connect->query($selectProduct);
-                                while ($fetch = $displayProduct->fetch_assoc()) {
-                                ?>
-                                <tr>
-                                    <th scope="row"><?= $fetch['id'] ?></th>
-                                    <td><?= $fetch['created_at'] ?></td>
-                                    <td><img src="<?= $fetch['productImage']?>" alt="image" width="50"></td>
-                                    <td><?= $fetch['productName'] ?></td>
-                                    <td><?= $fetch['productCategory'] ?></td>
-                                    <td><?= $fetch['productVariation'] ?></td>
-                                    <td>₱ <?= $fetch['price'] ?></td>
-                                    <td><?= $fetch['preparationTime']?>mins</td>
-                                    <td style="display: flex;">
-                                        <button title="View" type="button" class="btn btn-primary" data-toggle="modal"
-                                            data-target="#viewProduct<?= $fetch['id']; ?>"><i
+                                    $getProductCategory = $connect->prepare("SELECT id,productCategory,productName,productVariation,stocks FROM tblproducts GROUP BY productName");
+                                    $getProductCategory->execute();
+                                    $getProductCategory->store_result();
+                                    $getProductCategory->bind_result($id,$productCategory,$productName,$productVariation,$stocks);
+                                    while($getProductCategory->fetch()){
+                                        ?>
+                                        <tr>
+                                            <td><?=$id?></td>
+                                            <td><?=$productCategory?></td>
+                                            <td><?=$productName?></td>
+                                            <td><?=$productVariation?></td>
+                                            <td><small>Starts from </small><?=$stocks?></td>
+                                            <td>
+                                            <button title="View" type="button" class="btn btn-primary" data-toggle="modal"
+                                            data-target="#viewStocks<?= $id; ?>"><i
                                                 class="fas fa-eye"></i></button>&emsp;
-                                        <button value="<?= $fetch['productCategory']; ?>" title="Edit" type="button" class="btn btn-success" data-toggle="modal"
-                                            data-target="#editProducts<?= $fetch['id']; ?>"  onclick="clickCategory(this)"><i
+                                            <?php include 'assets/template/admin/editStocks.php'; ?> 
+                                            <button value="<?php if(empty($productVariation)) {echo "null";} else{ echo $productVariation;} ?>" title="Edit" type="button" class="btn btn-success" data-toggle="modal"
+                                                data-target="#editStocks<?=$id;?>" onclick="clickStocks(this)"><i
                                                 class="fas fa-edit"></i></button>    
-                                       <?php include 'assets/template/admin/editProduct.php'?>&emsp;            
-                                        <button title="Delete" type="button" class="btn btn-danger" data-toggle="modal"
-                                            data-target="#deleteProduct<?= $fetch['id']; ?>"><i
-                                                class="fas fa-trash"></i></button>
-                                           
-                                    </td>
-                                </tr>
-                                <?php
-                                }
+                                            </td>
+                                        </tr>
+                                        <?php
+                                    }
                                 ?>
                             </tbody>
                         </table>
@@ -114,7 +98,12 @@
     <script src="assets/js/activePage.js"></script>
     <script src="assets/js/table.js"></script>
     <script src="assets/js/products.js"></script>
+  
 </body>
 
 </html>
 
+<?php 
+
+
+?>

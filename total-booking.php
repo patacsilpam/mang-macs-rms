@@ -69,7 +69,7 @@
                                     if(isset($_GET['startDate']) && isset($_GET['endDate'])){           
                                         $startDate = $_GET['startDate'];
                                         $endDate = $_GET['endDate'];
-                                        $getTotalOrder = $connect->prepare("SELECT id,created_at,customer_id,email,fname,lname,guests,scheduled_date,scheduled_time,status FROM tblreservation WHERE created_at BETWEEN (?) AND (?) AND status='Completed'");
+                                        $getTotalOrder = $connect->prepare("SELECT id,created_at,customer_id,email,fname,lname,guests,scheduled_date,scheduled_time,status FROM tblreservation WHERE created_at BETWEEN (?) AND (?) AND status='Reserved'");
                                         echo $connect->error;
                                         $getTotalOrder->bind_param('ss',$startDate,$endDate);
                                         $getTotalOrder->execute();
@@ -82,9 +82,9 @@
                                                     <td><?= $createdAt?></td>
                                                     <td><?= $customerId?></td>
                                                     <td><?= $email?></td>
-                                                    <td><?= $fname.$lname?></td>
+                                                    <td><?= $fname." ".$lname?></td>
                                                     <td><?= $guests?></td>
-                                                    <td><?= $schedDate.$schedTime?></td>             
+                                                    <td><?= $schedDate."  ".$schedTime?></td>             
                                                     <td><?= $bookStatus?></td>
                                                 </tr>
                                                 <?php
@@ -95,7 +95,7 @@
                                         }
                                     
                                     } else{
-                                        $getTotalOrder = $connect->prepare("SELECT id,created_at,customer_id,email,fname,lname,guests,scheduled_date,scheduled_time,status FROM tblreservation WHERE status='Completed'");
+                                        $getTotalOrder = $connect->prepare("SELECT id,created_at,customer_id,email,fname,lname,guests,scheduled_date,scheduled_time,status FROM tblreservation WHERE status='Reserved'");
                                         echo $connect->error;          
                                         $getTotalOrder->execute();
                                         $getTotalOrder->bind_result($id,$createdAt,$customerId,$email,$fname,$lname,$guests,$schedDate,$schedTime,$bookStatus);
@@ -107,9 +107,9 @@
                                                     <td><?= $createdAt?></td>
                                                     <td><?= $customerId?></td>
                                                     <td><?= $email?></td>
-                                                    <td><?= $fname.$lname?></td>
+                                                    <td><?= $fname." ".$lname?></td>
                                                     <td><?= $guests?></td>
-                                                    <td><?= $schedDate.$schedTime?></td>             
+                                                    <td><?= $schedDate." ".$schedTime?></td>             
                                                     <td><?= $bookStatus?></td>
                                                 </tr>
                                                 <?php

@@ -75,7 +75,7 @@
                                         $endDate = $_GET['endDate'];
                                         $getTotalOrder = $connect->prepare("SELECT id,created_at,customer_id,email,product_name,product_variation,quantity,
                                         price,add_ons,order_type,order_status, (SELECT SUM(price * quantity) FROM tblorderdetails WHERE created_at BETWEEN (?) 
-                                        AND (?) and order_status='Delivered') FROM tblorderdetails WHERE created_at BETWEEN (?) AND (?) and order_status='Delivered'");
+                                        AND (?) and order_status='Order Completed') FROM tblorderdetails WHERE created_at BETWEEN (?) AND (?) and order_status='Order Completed'");
                                         echo $connect->error;
                                         $getTotalOrder->bind_param('ssss',$startDate,$endDate,$startDate,$endDate);
                                         $getTotalOrder->execute();
@@ -105,8 +105,8 @@
                                     
                                     } else{
                                         $getTotalOrder = $connect->prepare("SELECT id,created_at,customer_id,email,product_name,product_variation,quantity,
-                                        price,add_ons,order_type,order_status, (SELECT SUM(price * quantity) FROM tblorderdetails WHERE order_status='Completed') 
-                                        FROM tblorderdetails WHERE order_status='Completed'");
+                                        price,add_ons,order_type,order_status, (SELECT SUM(price * quantity) FROM tblorderdetails WHERE order_status='Order Completed') 
+                                        FROM tblorderdetails WHERE order_status='Order Completed'");
                                         $getTotalOrder->execute();
                                         $getTotalOrder->bind_result($id,$createdAt,$customerId,$email,$product,$variation,$quantity,$price,$addOns,$orderType,$orderStatus,$totalAmount);
                                         if($getTotalOrder){

@@ -4,9 +4,11 @@ function countActiveOrders($countActiveOrder){
     require 'public/connection.php';
     $pending = "Pending";
     $orderReceived = "Order Received";
-    $shipped = "Shipped";
-    $count = $connect->prepare("SELECT COUNT(*) as 'active_orders' FROM tblorderdetails WHERE order_status=? OR order_status=? OR order_status=?");
-    $count->bind_param('sss',$pending,$orderReceived,$shipped);
+    $shipped = "Order Processing";
+    $readyForPickUp = "Ready For Pick Up";
+    $outForDelivery = "Out for Delivery";
+    $count = $connect->prepare("SELECT COUNT(*) as 'active_orders' FROM tblorderdetails WHERE order_status=? OR order_status=? OR order_status=? OR order_status=? OR order_status=?");
+    $count->bind_param('sssss',$pending,$orderReceived,$shipped,$readyForPickUp,$outForDelivery);
     $count->execute();
     $row = $count->get_result();
     $fetch = $row->fetch_assoc();
@@ -15,9 +17,9 @@ function countActiveOrders($countActiveOrder){
 //count completed order
 function countTotalOrders($countTotalOrder){
     require 'public/connection.php';
-    $cancelled = "cancelled orders";
+    $orderCompleted = "Order Completed";
     $count = $connect->prepare("SELECT COUNT(*) as 'completed_orders' FROM tblorderdetails WHERE order_status=?");
-    $count->bind_param('s',$cancelled);
+    $count->bind_param('s',$orderCompleted);
     $count->execute();
     $row = $count->get_result();
     $fetch = $row->fetch_assoc();
@@ -38,23 +40,12 @@ function countCancelledOrders($countCancelledOrder){
 function countDeliveryOrders($countDeliveryOrders){
     require 'public/connection.php';
     $delivery = "Deliver";
-
     $count = $connect->prepare("SELECT COUNT(*) as 'delivery_orders' FROM tblorderdetails WHERE order_type=?");
     $count->bind_param('s',$delivery);
     $count->execute();
     $row = $count->get_result();
     $fetch = $row->fetch_assoc();
     echo $countDeliveryOrders = $fetch['delivery_orders']; 
-}
-function countDineInOrders($countDineInOrders){
-    require 'public/connection.php';
-    $dineIn = "Dine In";
-    $count = $connect->prepare("SELECT COUNT(*) as 'dineIn_orders' FROM tblorderdetails WHERE order_type=?");
-    $count->bind_param('s',$dineIn);
-    $count->execute();
-    $row = $count->get_result();
-    $fetch = $row->fetch_assoc();
-    echo $countDineInOrders = $fetch['dineIn_orders']; 
 }
 function countPickUpOrders($countPickUpOrders){
     require 'public/connection.php';
@@ -69,7 +60,6 @@ function countPickUpOrders($countPickUpOrders){
 function countActiveBooking($countActiveBooking){
     require 'public/connection.php';
     $pending = "Pending";
-    $bookingReceived = "Booking Received";
     $count = $connect->prepare("SELECT COUNT(*) as 'active_booking' FROM tblreservation WHERE status=? OR status=?");
     $count->bind_param('ss',$pending,$bookingReceived);
     $count->execute();
@@ -79,7 +69,7 @@ function countActiveBooking($countActiveBooking){
 }
 function countTotalBooking($countTotalBooking){
     require 'public/connection.php';
-    $completed = "Completed";
+    $completed = "Approved";
     $count = $connect->prepare("SELECT COUNT(*) as 'completed_booking' FROM tblreservation WHERE status=?");
     $count->bind_param('s',$completed);
     $count->execute();
@@ -99,7 +89,6 @@ function countCancelledBooking($countCancelledBooking){
 }
 function countCustomers($countCustomers){
     require 'public/connection.php';
-    $cancelled = "cancelled";
     $count = $connect->prepare("SELECT COUNT(*) as 'totalCustomers' FROM tblcustomers");
     $count->execute();
     $row = $count->get_result();
@@ -108,8 +97,7 @@ function countCustomers($countCustomers){
 }
 function countPosOrders($countPosOrders){
     require 'public/connection.php';
-    $cancelled = "cancelled";
-    $count = $connect->prepare("SELECT COUNT(*) as 'totalPosOrders' FROM tblpos");
+    $count = $connect->prepare("SELECT COUNT(*) as 'totalPosOrders' FROM tblposorders");
     $count->execute();
     $row = $count->get_result();
     $fetch = $row->fetch_assoc();

@@ -24,7 +24,7 @@ function updateBookingStatus(){
             $mail->setFrom('mangmacsmarinerospizzahouse@gmail.com', "Mang Mac's Marinero");
             $mail->addAddress($email);
             $mail->isHTML(true);
-            if($bookStatus == "Booking Received"){
+            if($bookStatus == "Reserved"){
                 $updateBookStatus = $connect->prepare("UPDATE tblreservation SET status=? WHERE id=?");
                 $updateBookStatus->bind_param('si',$bookStatus,$id);
                 $updateBookStatus->execute();
@@ -42,7 +42,7 @@ function updateBookingStatus(){
                             </div>
                             <div style='text-align: center;'>
                                 <p>Hello ".$customerName."</p>
-                                <h3>Your booking at Mang Mac’s Food Shop is now confirmed.</h3> 
+                                <h3>Your table reservation for ".$guests." is already confirmed. See you at ".$placedOn."</h3> 
                             </div>
                         </div>
                         <hr style='border:0.3px solid #dbdbdb;'>
@@ -85,7 +85,7 @@ function updateBookingStatus(){
                 $updateBookStatus->bind_param('si',$bookStatus,$id);
                 $updateBookStatus->execute();
                 if($updateBookStatus){
-                    $mail->Subject = "Your Booking #".$refNumber." has been completed";
+                    $mail->Subject = "Your reservation #".$refNumber." is not available";
                         $mail->Body = "
                         <div class='container' style='padding: 1rem;'>
                         <div style='display: flex; flex-direction: column; align-items: center;'>
@@ -98,7 +98,7 @@ function updateBookingStatus(){
                             </div>
                             <div style='text-align: center;'>
                                 <p>Hello ".$customerName."</p>
-                                <h3>Your booking at Mang Mac’s Food Shop is now completed.</h3> 
+                                <h3>Sorry, there is no available table for accomodation.</h3> 
                                 <p>See you next time.&#128512;</p>
                             </div>
                         </div>

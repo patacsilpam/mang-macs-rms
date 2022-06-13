@@ -14,11 +14,29 @@
         <li title="Reservation">
             <a href="reservation.php"><i class="fas fa-ticket-alt icons"></i><span class="span">Reservation</span></a>
         </li>
-        <li title="Products">
-            <a href="products.php"><i class="fab fa-product-hunt icons"></i><span class="span">Products</span></a>
+        <li title="Products">    
+            <a class="text-white" href="products.php" data-toggle="collapse" data-target="#collapseProducts" role="button" aria-expanded="false">
+                <i class="fas fa-boxes icons"></i>
+                <span class="span">See Products <i class="fas fa-angle-down icons"></i></span>
+            </a>
+            <div class="collapse" id="collapseProducts">
+                <div class="card card-body" style="background:#040720; padding:0;">
+                    <a class="text-white" href="products.php">Products</a>
+                    <a class="text-white" href="available-menu.php">Available Menu</a>
+                </div>
+            </div>
         </li>
-        <li title="POS">
-            <a href="pos.php"><i class="fas fa-print icons"></i><span class="span">POS</span></a>
+        <li title="POS">    
+            <a class="text-white" href="pos.php" data-toggle="collapse" data-target="#collapsePOS" role="button" aria-expanded="false">
+                <i class="fas fa-boxes icons"></i>
+                <span class="span">See POS <i class="fas fa-angle-down icons"></i></span>
+            </a>
+            <div class="collapse" id="collapsePOS">
+                <div class="card card-body" style="background:#040720; padding:0;">
+                    <a class="text-white" href="pos.php">POS</a>
+                    <a class="text-white" href="pos-orders.php">POS Orders</a>
+                </div>
+            </div>
         </li>
         <li title="Stocks">
             <a href="inventory.php"><i class="fas fa-boxes icons"></i><span class="span">Inventory</span></a>
@@ -29,3 +47,8 @@
     </ul>
 </div>
 </div>
+<style>
+    .text-collapse{
+        color: #ffff;
+    }
+</style>

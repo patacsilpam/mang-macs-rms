@@ -43,7 +43,7 @@ class PDF extends FPDF
         if(isset($_GET['startDate']) && isset($_GET['endDate'])){ 
             $startDate = $_GET['startDate'];
             $endDate = $_GET['endDate'];
-            $getTotalOrder = $connect->prepare("SELECT id,created_at,customer_id,email,product_name,product_variation,quantity,price,add_ons,order_type,order_status, (SELECT SUM(price * quantity) FROM tblorderdetails WHERE created_at BETWEEN (?) AND (?) and order_status='Completed') FROM tblorderdetails WHERE created_at BETWEEN (?) AND (?) and order_status='Completed'");
+            $getTotalOrder = $connect->prepare("SELECT id,created_at,customer_id,email,product_name,product_variation,quantity,price,add_ons,order_type,order_status, (SELECT SUM(price * quantity) FROM tblorderdetails WHERE created_at BETWEEN (?) AND (?) and order_status='Order Completed') FROM tblorderdetails WHERE created_at BETWEEN (?) AND (?) and order_status='Order Completed'");
             echo $connect->error;
             $getTotalOrder->bind_param('ssss',$startDate,$endDate,$startDate,$endDate);
             $getTotalOrder->execute();

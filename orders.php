@@ -59,7 +59,9 @@
                                     FROM tblcustomerorder LEFT JOIN tblorderdetails 
                                     ON tblorderdetails.order_number = tblcustomerorder.order_number
                                     WHERE tblorderdetails.order_status = 'Pending' OR tblorderdetails.order_status = 'Order Received'
-                                    OR tblorderdetails.order_status = 'Shipped' GROUP BY tblcustomerorder.id";
+                                    OR tblorderdetails.order_status = 'Order Processing' OR tblorderdetails.order_status = 'Out for Delivery'
+                                    OR tblorderdetails.order_status = 'Ready for Pick Up' 
+                                    GROUP BY tblcustomerorder.id ORDER BY id DESC";
                                     $displayOrders = $connect->query($getOrders);
                                     while($fetch = $displayOrders->fetch_assoc()){
                                    ?>
@@ -70,10 +72,9 @@
                                     <td width="150">
                                         <span class="flex">
                                             <?=$fetch['order_status']?>
-                                            <button title="Edit" type="button" class="btn btn-transparent"
-                                                data-toggle="modal"
-                                                data-target="#editUsers<?= $fetch['order_number'] ?>"><i
-                                                    class="fas fa-edit" style="color: blue;"></i></button>
+                                            <button value="<?=$fetch['order_type']?>" onclick="btnOrderType(this)" title="Edit" type="button" class="btn btn-transparent" data-toggle="modal" data-target="#editUsers<?= $fetch['order_number'] ?>">
+                                                 <i class="fas fa-edit" style="color: blue;"></i>
+                                            </button>
                                             <?php include 'assets/template/admin/orderStatus.php' ?>
                                         </span>
                                     </td>
