@@ -171,17 +171,18 @@ sup {
     background: white;
     height: 700px;
 }
-
+.filter-date{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
 .add-product {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    position: relative;
+    justify-content:flex-end;
 }
-
-.btn-add {
-    position: absolute;
-    right: 10px;
+.add-product>button{
+    margin: 0 1rem;
 }
 
 .products-container {
@@ -205,7 +206,11 @@ sup {
     flex-direction: row;
     flex-wrap: wrap;
 }
-
+.img-products{
+    object-fit: cover;
+    height: 50px;
+    width: 50px;
+}
 .box-product {
     position: relative;
     display: flex;
@@ -459,8 +464,8 @@ input.checkbox {
 .sales-report-orders>section {
     background-color: #ffffff;
     margin: 0 2rem 2rem 0;
-    padding: 1rem;
-    height: 122px;
+    padding: .8rem;
+    height: 100px;
     max-width: 100%;
     flex-grow: 1;
     width: 15%;

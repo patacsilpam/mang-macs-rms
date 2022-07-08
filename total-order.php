@@ -32,10 +32,10 @@
             <section>
                 <article>
                     <div class="table-responsive table-container">
-                        <div class="add-product">
-                            <a href="dashboard.php" class="btn btn-primary" title="Back to Dashboard">
-                                <i class="fa fa-arrow-left"></i> Back
-                            </a>
+                        <div class="filter-date">
+                            <h3>
+                                <a href="dashboard.php" title="Back"><i class="fa fa-arrow-circle-left"></i></a>
+                            </h3>
                             <form method="GET">
                                 <label>From Date:</label>
                                 <input type="date" name="startDate" value="<?php  echo $_GET['startDate']?>">&emsp;
@@ -55,92 +55,97 @@
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Ordered Date</th>
-                                    <th scope="col">Customer ID</th>
-                                    <th scope="col">Email</th>
+                                    <th scope="col">Customer Name</th>
                                     <th scope="col">Product</th>
                                     <th scope="col">Variation</th>
                                     <th scope="col">Quantity</th>
                                     <th scope="col">Price</th>
+                                    <th scope="col">Subtotal</th>
                                     <th scope="col">Add Ons</th>
                                     <th scope="col">Order Type</th>
-                                    <th scope="col">Order Status</th>
+                                   
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
                                     require 'public/connection.php';
-                                    $totalAmount="";
+                                    $totalAmount=0;
                                     if(isset($_GET['startDate']) && isset($_GET['endDate'])){           
                                         $startDate = $_GET['startDate'];
                                         $endDate = $_GET['endDate'];
-                                        $getTotalOrder = $connect->prepare("SELECT id,created_at,customer_id,email,product_name,product_variation,quantity,
-                                        price,add_ons,order_type,order_status, (SELECT SUM(price * quantity) FROM tblorderdetails WHERE created_at BETWEEN (?) 
-                                        AND (?) and order_status='Order Completed') FROM tblorderdetails WHERE created_at BETWEEN (?) AND (?) and order_status='Order Completed'");
-                                        echo $connect->error;
-                                        $getTotalOrder->bind_param('ssss',$startDate,$endDate,$startDate,$endDate);
+                                        $getTotalOrder = $connect->prepare("SELECT tblorderdetails.id,tblorderdetails.created_at,
+                                        tblcustomerorder.customer_name,tblorderdetails.product_name,tblorderdetails.product_variation,
+                                        tblorderdetails.quantity,tblorderdetails.price,tblorderdetails.price * tblorderdetails.quantity as 'subtotal',
+                                        tblorderdetails.add_ons,tblorderdetails.order_type 
+                                        FROM tblorderdetails LEFT JOIN tblcustomerorder ON tblorderdetails.customer_id = tblcustomerorder.customer_id
+                                        WHERE tblorderdetails.created_at BETWEEN (?) AND (?) and tblorderdetails.order_status='Order Completed'");
+                                        $getTotalOrder->bind_param('ss',$startDate,$endDate);
                                         $getTotalOrder->execute();
-                                        $getTotalOrder->bind_result($id,$createdAt,$customerId,$email,$product,$variation,$quantity,$price,$addOns,$orderType,$orderStatus,$totalAmount);
+                                        $getTotalOrder->bind_result($id,$createdAt,$customerName,$product,$variation,$quantity,$price,$subtotal,$addOns,$orderType);
                                         if($getTotalOrder){
                                             while($getTotalOrder->fetch()){
+                                                $totalAmount += $subtotal;
                                                 ?>
-                                <tr>
-                                    <td><?= $id;?></td>
-                                    <td><?= $createdAt?></td>
-                                    <td><?= $customerId?></td>
-                                    <td><?= $email?></td>
-                                    <td><?= $product?></td>
-                                    <td><?= $variation?></td>
-                                    <td><?= $quantity?></td>
-                                    <td><?= $price?></td>
-                                    <td><?= $addOns?></td>
-                                    <td><?= $orderType?></td>
-                                    <td><?= $orderStatus?></td>
-                                </tr>
-                                <?php
-                                            }
-                                        }
-                                        else{
-                                            echo "No Records Found";
-                                        }
+                                                    <tr>
+                                                        <td><?= $id?></td>
+                                                        <td><?= $createdAt?></td>
+                                                        <td><?= $customerName?></td>
+                                                        <td><?= $product?></td>
+                                                        <td><?= $variation?></td>
+                                                        <td><?= $quantity?></td>
+                                                        <td><?= $price?></td>
+                                                        <td><?= $subtotal?></td>
+                                                        <td><?= $addOns?></td>
+                                                        <td><?= $orderType?></td>
+                                                    </tr>
+                                            <?php
+                                                    }
+                                                }
+                                                else{
+                                                    echo "No Records Found";
+                                                }
                                     
-                                    } else{
-                                        $getTotalOrder = $connect->prepare("SELECT id,created_at,customer_id,email,product_name,product_variation,quantity,
-                                        price,add_ons,order_type,order_status, (SELECT SUM(price * quantity) FROM tblorderdetails WHERE order_status='Order Completed') 
-                                        FROM tblorderdetails WHERE order_status='Order Completed'");
-                                        $getTotalOrder->execute();
-                                        $getTotalOrder->bind_result($id,$createdAt,$customerId,$email,$product,$variation,$quantity,$price,$addOns,$orderType,$orderStatus,$totalAmount);
-                                        if($getTotalOrder){
-                                            while($getTotalOrder->fetch()){
-                                                ?>
-                                <tr>
-                                    <td><?= $id;?></td>
-                                    <td><?= $createdAt?></td>
-                                    <td><?= $customerId?></td>
-                                    <td><?= $email?></td>
-                                    <td><?= $product?></td>
-                                    <td><?= $variation?></td>
-                                    <td><?= $quantity?></td>
-                                    <td><?= $price?></td>
-                                    <td><?= $addOns?></td>
-                                    <td><?= $orderType?></td>
-                                    <td><?= $orderStatus?></td>
-                                </tr>
-                                <?php
+                                            } else{
+                                                $date = date('Y-m-d');
+                                                $getTotalOrder = $connect->prepare("SELECT tblorderdetails.id,tblorderdetails.created_at,
+                                                tblcustomerorder.customer_name,tblorderdetails.product_name,tblorderdetails.product_variation,
+                                                tblorderdetails.quantity,tblorderdetails.price,tblorderdetails.price * tblorderdetails.quantity as 'subtotal',
+                                                tblorderdetails.add_ons,tblorderdetails.order_type 
+                                                FROM tblorderdetails LEFT JOIN tblcustomerorder ON tblorderdetails.customer_id = tblcustomerorder.customer_id
+                                                WHERE tblorderdetails.created_at LIKE (?) and tblorderdetails.order_status='Order Completed'");
+                                                $getTotalOrder->bind_param('s',$date);
+                                                $getTotalOrder->execute();
+                                                $getTotalOrder->bind_result($id,$createdAt,$customerName,$product,$variation,$quantity,$price,$subtotal,$addOns,$orderType);
+                                                if($getTotalOrder){
+                                                    while($getTotalOrder->fetch()){
+                                                        $totalAmount += $subtotal;
+                                                        ?>
+                                            <tr>
+                                                <td><?= $id?></td>
+                                                <td><?= $createdAt?></td>
+                                                <td><?= $customerName?></td>
+                                                <td><?= $product?></td>
+                                                <td><?= $variation?></td>
+                                                <td><?= $quantity?></td>
+                                                <td><?= $price?></td>
+                                                <td><?= $subtotal?></td>
+                                                <td><?= $addOns?></td>
+                                                <td><?= $orderType?></td>
+                                            </tr>
+                                            <?php
+                                                }
+                                            }
+                                            else{
+                                                echo "No Records Found";
                                             }
                                         }
-                                        else{
-                                            echo "No Records Found";
-                                        }
-                                    }
-                                 ?>
+                                    ?>
                             </tbody>
-
                             <tfoot>
                                 <tr>
-                                    <td colspan="10"> <b>Total Revenue: <?= $totalAmount?></b> </td>
+                                    <td colspan="10"> <b>Total Sales: ₱ <?= $totalAmount?>.00</b> </td>
                                 </tr>
                             </tfoot>
-
                         </table>
                     </div>
                 </article>

@@ -10,12 +10,11 @@
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
     <link rel="icon" type="image/jpeg" href="assets/images/mang-macs-logo.jpg" sizes="70x70">
     <link rel="stylesheet" href="assets/css/main.css" type="text/css">
     <title>Users</title>
@@ -34,50 +33,52 @@
         <main class="main-container">
             <section>
                 <article>
-
                     <div class="table-responsive table-container">
                         <div class="add-product">
-                            <button title="Add Products" class="btn btn-primary btn-add" data-toggle="modal"
-                                data-target="#addUsers">Add &nbsp;<i class="fas fa-plus icons"></i></button>
-                            <?php require 'assets/template/admin/users.php' ?>
-                        </div><br><br>
-                        
-                        <table id="example" class="table table-hover">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Created At</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="coll">Username</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Account Type</th>
-                                    <th scope="col">Action</th </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                $selectUsers = "SELECT * FROM tblusers";
-                                $displayUsers = $connect->query($selectUsers);
-                                while ($fetch = $displayUsers->fetch_assoc()) {
-                                ?>
+                            <button title="Add Product" type="button" class="btn btn-primary btn-add" data-toggle="modal" data-target="#addUsers">Add &nbsp;
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <?php include 'assets/template/admin/users.php'?>
+                        </div> <br>
+                       <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'])?>" method="POST">
+                            <table id="example" class="table table-hover">
+                                <thead class="thead-dark">
                                     <tr>
-                                        <th scope="row"><?= $fetch['id'] ?></th>
-                                        <td><?= $fetch['created_at'] ?></td>
-                                        <td><?= $fetch['fname'] . ' ' . $fetch['lname'] ?></td>
-                                        <td><?= $fetch['uname'] ?></td>
-                                        <td><?= $fetch['email'] ?></td>
-                                        <td><?= $fetch['position'] ?></td>
-                                        <td style="display: flex;">
-                                            <span><button title="Edit" type="button" class="btn btn-success" data-toggle="modal" data-target="#editUsers<?= $fetch['id'] ?>"><i class="fas fa-edit"></i></button></span>
-                                            <?php require 'assets/template/admin/users.php' ?>&emsp;
-                                            <span><button title="Delete" type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteUsers<?= $fetch['id'] ?>"><i class="fas fa-trash"></i></button></span>
-                                        </td>
-                                    </tr>
-                                <?php
-                                }
-                                ?>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Created At</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="coll">Username</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Account Type</th>
+                                        <th scope="col">Action</th </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $selectUsers = "SELECT * FROM tblusers";
+                                    $displayUsers = $connect->query($selectUsers);
+                                    while ($fetch = $displayUsers->fetch_assoc()) {
+                                    ?>
+                                        <tr>
+                                            <th scope="row"><?= $fetch['id'] ?></th>
+                                            <td><?= $fetch['created_at'] ?></td>
+                                            <td><?= $fetch['fname'] . ' ' . $fetch['lname'] ?></td>
+                                            <td><?= $fetch['uname'] ?></td>
+                                            <td><?= $fetch['email'] ?></td>
+                                            <td><?= $fetch['position'] ?></td>
+                                            <td style="display: flex;">
+                                                <span><button title="Edit" type="button" class="btn btn-primary" data-toggle="modal" data-target="#showUsers<?= $fetch['id'] ?>"><i class="fas fa-edit"></i></button></span>&emsp;
+                                                <span><button title="Edit" type="button" class="btn btn-success" data-toggle="modal" data-target="#editUsers<?= $fetch['id'] ?>"><i class="fas fa-edit"></i></button></span>
+                                                <?php require 'assets/template/admin/users.php' ?>&emsp;
+                                                <span><button title="Delete" type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteUsers<?= $fetch['id'] ?>"><i class="fas fa-trash"></i></button></span>
+                                            </td>
+                                        </tr>
+                                    <?php
+                                    }
+                                    ?>
 
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </form>
                     </div>
                 </article>
             </section>

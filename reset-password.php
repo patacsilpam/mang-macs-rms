@@ -27,7 +27,7 @@ require 'public/admin-signup.php';
                 ?>
                     <div class="text-reset-box">
                         <p class="reset-Success alert alert-success"><i class="fas fa-check icons"></i> Your password has been reset.</p>
-                        <p class="reset-Success">To sign in with your new account,<a href="login.php" class="text-primary">click here.</a></p>
+                        <p class="reset-Success">To sign in with your  account,<a href="login.php" class="text-primary">click here.</a></p>
                     </div>
                 <?php
 

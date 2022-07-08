@@ -32,10 +32,10 @@
             <section>
                 <article>
                     <div class="table-responsive table-container">
-                        <div class="add-product">
-                            <a href="dashboard.php" class="btn btn-primary" title="Back to Dashboard">
-                                <i class="fa fa-arrow-left"></i> Back
-                            </a>
+                        <div class="filter-date">
+                            <h3>
+                                <a href="dashboard.php" title="Back"><i class="fa fa-arrow-circle-left"></i></a>
+                            </h3>
                             <form method="GET">
                                 <label>From Date:</label>
                                 <input type="date" name="startDate" value="<?php  echo $_GET['startDate']?>">&emsp;
@@ -54,46 +54,45 @@
                             <thead class="thead-dark">
                                 <tr>
                                     <th scope="col">Ordered Date</th>
-                                    <th scope="col">ID Number</th>
+                                    <th scope="col">Customer Type</th>
+                                    <th scope="col">PWD/Senior Citizen Number</th>
                                     <th scope="col">Products</th>
+                                    <th scope="col">Variation</th>
+                                    <th scope="col">Category</th>
                                     <th scope="col">Quantity</th>
                                     <th scope="col">Price</th>
-                                    <th scope="col">Category</th>
-                                    <th scope="col">Variation</th>
-                                    <th scope="col">Customer Type</th>
-                                    <th scope="col">Total</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
                                     require 'public/connection.php';    
-                                    $totalRevenue = 0;                   
+                                    $totalAmount = 0;    
+                                   // $status="Settled";               
                                     if(isset($_GET['startDate']) && isset($_GET['endDate'])){
                                         $startDate = $_GET['startDate'];
                                         $endDate = $_GET['endDate'];
-                                        $getTotalOrder = $connect->prepare("SELECT tblpos.ordered_date,tblpos.id_number,tblposorders.products,
+                                        $getTotalOrder = $connect->prepare("SELECT tblpos.ordered_date,tblpos.pwd_senior_number,tblposorders.products,
                                         tblposorders.quantity, tblposorders.price,tblposorders.category,tblposorders.variation, 
-                                        tblpos.customer_type,tblpos.total 
+                                        tblpos.customer_type,tblposorders.price*tblposorders.quantity as 'total'
                                         FROM tblpos LEFT JOIN tblposorders ON tblpos.id_number = tblposorders.id_number
-                                        WHERE ordered_date BETWEEN (?) AND (?)");
+                                        WHERE tblposorders.ordered_date BETWEEN (?) AND (?)");
                                         echo $connect->error;
                                         $getTotalOrder->bind_param('ss',$startDate,$endDate);
                                         $getTotalOrder->execute();
-                                        $getTotalOrder->bind_result($orderedDate,$idNumber,$products,$quantity,$price,$category,$variation,$customerType,$total);
+                                        $getTotalOrder->bind_result($orderedDate,$pwdSenior,$products,$quantity,$price,$category,$variation,$customerType,$total);
                                         if($getTotalOrder){
                                             while($getTotalOrder->fetch()){
-                                                $totalRevenue += $total;
+                                             $totalAmount +=$total;
                                                 ?>
                                             <tr>
                                                 <td><?= $orderedDate;?></td>
-                                                <td><?= $idNumber;?></td>
+                                                <td><?= $customerType?></td>
+                                                <td><?= $pwdSenior;?></td>
                                                 <td><?= $products;?></td>
+                                                <td><?= $variation?></td>
+                                                <td><?= $category?></td>
                                                 <td><?= $quantity?></td>
                                                 <td><?= $price?></td>
-                                                <td><?= $category?></td>
-                                                <td><?= $variation?></td>
-                                                <td><?= $customerType?></td>
-                                                <td><?= $total?></td>
                                             </tr>
                                 <?php
                                         }
@@ -102,28 +101,29 @@
                                             echo "No Records Found";
                                         }
                                     } else{
-                                        $getTotalOrder = $connect->prepare("SELECT tblpos.ordered_date,tblpos.id_number,tblposorders.products,
+                                        $date = date('Y-m-d');
+                                        $getTotalOrder = $connect->prepare("SELECT tblpos.ordered_date,tblpos.pwd_senior_number,tblposorders.products,
                                         tblposorders.quantity, tblposorders.price,tblposorders.category,tblposorders.variation, 
-                                        tblpos.customer_type,tblpos.total 
-                                        FROM tblpos LEFT JOIN tblposorders ON tblpos.id_number = tblposorders.id_number");
-                                        echo $connect->error;
+                                        tblpos.customer_type,tblposorders.price*tblposorders.quantity as 'total'
+                                        FROM tblpos LEFT JOIN tblposorders ON tblpos.id_number = tblposorders.id_number 
+                                        WHERE tblpos.ordered_date LIKE (?)");
+                                        $getTotalOrder->bind_param('s',$date);
                                         $getTotalOrder->execute();
                                         $getTotalOrder->bind_result($orderedDate,$idNumber,$products,$quantity,$price,$category,$variation,$customerType,$total);
                                         if($getTotalOrder){
                                             while($getTotalOrder->fetch()){
-                                                $totalRevenue += $total;
+                                                $totalAmount +=$total;
                                                 ?>
-                                <tr>
-                                    <td><?= $orderedDate;?></td>
-                                    <td><?= $idNumber;?></td>
-                                    <td><?= $products;?></td>
-                                    <td><?= $quantity?></td>
-                                    <td><?= $price?></td>
-                                    <td><?= $category?></td>
-                                    <td><?= $variation?></td>
-                                    <td><?= $customerType?></td>
-                                    <td><?= $total?></td>
-                                </tr>
+                                        <tr>
+                                            <td><?= $orderedDate;?></td>
+                                            <td><?= $customerType?></td>
+                                            <td><?= $idNumber;?></td>
+                                            <td><?= $products;?></td>
+                                            <td><?= $variation?></td>
+                                            <td><?= $category?></td>
+                                            <td><?= $quantity?></td>
+                                            <td><?= $price?></td>
+                                        </tr>
                                 <?php
                                         }
                                       }
@@ -135,7 +135,7 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="8">Total Revenue: PHP <?=$totalRevenue;?>.00</td>
+                                    <td colspan="9">Total Revenue: PHP <?=$totalAmount;?>.00</td>
                                 </tr>
                             </tfoot>
                         </table>

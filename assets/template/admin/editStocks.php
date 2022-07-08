@@ -1,8 +1,9 @@
-<!--Update Stocks-->
+<!--Update Product Stocks-->
 <div class="modal fade" id="editStocks<?=$id;?>" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalCenterTitle">Edit Quantity</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -39,10 +40,11 @@
   </div>
 </div>
 <!---View Stocks--->
-<div class="modal fade" id="viewStocks<?=$id;?>" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="viewStocks<?=$id ?>" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalCenterTitle">Quantity</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -59,7 +61,8 @@
               while($getStocks->fetch()){
                   ?>
                       <div class="mt-3">
-                          <span style="display: flex;"> <p>Stocks: <?=" ".$variations?> ( <?= $stocks?> ) </p></span>
+                          <input type="text" class="bg-transparent border-0 sizes" value="<?=$variations?>" disabled>
+                          <input type="number" class="form-control  mt-2" value="<?=$stock?>" name="stocks" disabled>
                       </div>
                   <?php
               }

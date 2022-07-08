@@ -19,7 +19,7 @@ require 'public/admin-pos.php'
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
     <link rel="icon" type="image/jpeg" href="assets/images/mang-macs-logo.jpg" sizes="70x70">
-    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/main.css" type="text/css">
     <title>POS Orders</title>
 </head>
 
@@ -77,7 +77,11 @@ require 'public/admin-pos.php'
                                                 <button title="Edit" type="button" class="btn btn-transparent" data-toggle="modal" data-target="#editPosOrder<?=$idNumber?>"><i class="fas fa-edit" style="color: blue;"></i></button>
                                                 <?php include 'assets/template/admin/pos-orders.php' ?>
                                             </td>
-                                            <td><a href="pos-order-summary.php?id_number=<?=$idNumber?>" title="View Order Details">View Details <i class="fas fa-arrow-circle-right"></i> </a></td>
+                                            <td>
+                                                <a href="pos-order-summary.php?id_number=<?=$idNumber?>" title="View Order Details">
+                                                   <button class="btn btn-primary"><i class="fas fa-eye"></i></button> 
+                                                </a>
+                                            </td>
                                        </tr>
                                         <?php
                                     }
@@ -95,9 +99,6 @@ require 'public/admin-pos.php'
     <script src="assets/js/activePage.js"></script>
     <script src="assets/js/table.js"></script>
     <script src="assets/js/tab.js"></script>
-    
-    
-  
 </body>
 
 </html>

@@ -27,7 +27,7 @@ class PDF extends FPDF
     {
         $this->SetFont('Arial', 'B',12);
         $this->Cell(50, 10, 'Ordered Date', 1, 0, 'C');
-        $this->Cell(30, 10, 'ID Number', 1, 0, 'C');     
+        $this->Cell(35, 10, 'ID Number', 1, 0, 'C');     
         $this->Cell(40, 10, 'Product', 1, 0, 'C');
         $this->Cell(25, 10, 'Quantity', 1, 0, 'C');
         $this->Cell(25, 10, 'Price', 1, 0, 'C');
@@ -37,22 +37,24 @@ class PDF extends FPDF
     }
     function viewTable($connect,$orderedDate,$idNumber,$products,$quantity,$price,$variation,$customerType,$total) {
         if(isset($_GET['startDate']) && isset($_GET['endDate'])){ 
+            $totalAmount=0;
             $startDate = $_GET['startDate'];
             $endDate = $_GET['endDate'];
-            $getTotalOrder = $connect->prepare("SELECT tblpos.ordered_date,tblpos.id_number,tblposorders.products,
-            tblposorders.quantity, tblposorders.price,tblposorders.variation, 
-            tblpos.customer_type,tblpos.total 
-            FROM tblpos LEFT JOIN tblposorders ON tblpos.id_number = tblposorders.id_number
-            WHERE ordered_date BETWEEN (?) AND (?)");
+            $getTotalOrder = $connect->prepare("SELECT tblpos.ordered_date,tblpos.pwd_senior_number,tblposorders.products,
+            tblposorders.quantity, tblposorders.price,tblposorders.category,tblposorders.variation, 
+            tblpos.customer_type,tblposorders.price*tblposorders.quantity as 'total'
+            FROM tblpos LEFT JOIN tblposorders ON tblpos.id_number = tblposorders.id_number 
+            WHERE tblposorders.ordered_date BETWEEN (?) AND (?)");
             echo $connect->error;
             $getTotalOrder->bind_param('ss',$startDate,$endDate);
             $getTotalOrder->execute();
-            $getTotalOrder->bind_result($orderedDate,$idNumber,$products,$quantity,$price,$variation,$customerType,$total);
+            $getTotalOrder->bind_result($orderedDate,$idNumber,$products,$quantity,$price,$category,$variation,$customerType,$total);
             if($getTotalOrder){
                 while($getTotalOrder->fetch()){
+                    $totalAmount+=$total;
                     $this->SetFont('Arial', '', 10);
                     $this->Cell(50, 10, $orderedDate, 1, 0, 'C');
-                    $this->Cell(30, 10, $idNumber, 1, 0, 'C');
+                    $this->Cell(35, 10, $idNumber, 1, 0, 'C');
                     $this->Cell(40, 10, $products, 1, 0, 'C');
                     $this->Cell(25, 10, $quantity, 1, 0, 'C');      
                     $this->Cell(25, 10, $price, 1, 0, 'C');
@@ -61,6 +63,7 @@ class PDF extends FPDF
                     $this->Ln();
                 }
             } 
+            $this->Cell(50, 10, "Total Sales: PHP $totalAmount.00", 1, 0, 'C');
         } 
     }
     function Footer()
@@ -77,6 +80,7 @@ class PDF extends FPDF
 $pdf = new PDF('L');
 $pdf->AliasNbPages();
 $pdf->AddPage();
+$pdf->setLeftMargin(28);
 $pdf->SetFont('Times', '', 8);
 $pdf->headerTable();
 $pdf->viewTable($connect,$orderedDate,$idNumber,$products,$quantity,$price,$variation,$customerType,$total);

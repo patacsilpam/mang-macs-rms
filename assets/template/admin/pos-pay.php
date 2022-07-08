@@ -23,7 +23,7 @@
                         oninput="calculateNoDiscount()" onkeyup="EnableDisable(this)" required>
                 </div>
                 <div class="mt-3">
-                    <strong>Dicount(<i>For Senior Citizen and PWD only</i>)</strong>
+                    <strong>Discount(<i>For Senior Citizen and PWD only</i>)</strong>
                     <label>Customer Type</label>
                     <select class="form-control" id="selectedCustomer" name="selectedCustomer"
                         onchange="chooseDiscount()" disabled>

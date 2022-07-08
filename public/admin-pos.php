@@ -72,7 +72,7 @@ function insertCart(){
         if (isset($_POST['btn-save-cart'])) {
             $id = $_POST['id'];
             $posId = "";
-            $orderedDate = date('y-m-d h:i:s');
+            $orderedDate = date('y-m-d');
             $quantity = $_POST['quantity'];
             $productName = $_POST['productName'];
             $variation =  $_POST['variation'];
@@ -113,9 +113,9 @@ function insertCart(){
                 $s_productCode = $productCode[$index];
                 $s_category = $category[$index];
                 if($selectedCustomer == "PWD" || $selectedCustomer == "Senior Citizen"){
-                    $insertCart = $connect->prepare("INSERT INTO tblposorders(id,id_number,product_code,products,quantity,price,variation,category) 
-                    VALUES(?,?,?,?,?,?,?,?)");
-                    $insertCart->bind_param('isssiiss', $ids,$noIdNumber,$s_productCode,$s_productName,$s_quantity,$s_price,$s_variation,$s_category);
+                    $insertCart = $connect->prepare("INSERT INTO tblposorders(id,id_number,product_code,products,quantity,price,variation,category,ordered_date) 
+                    VALUES(?,?,?,?,?,?,?,?,?)");
+                    $insertCart->bind_param('isssiisss', $ids,$noIdNumber,$s_productCode,$s_productName,$s_quantity,$s_price,$s_variation,$s_category,$orderedDate);
                     $insertCart->execute();
                     if ($insertCart) {
                         header('Location:pos.php?success');
@@ -126,10 +126,9 @@ function insertCart(){
                     }
                 }
                 else{
-                    $insertCart = $connect->prepare("INSERT INTO tblposorders(id,id_number,product_code,products,quantity,price,variation,category) 
-                    VALUES(?,?,?,?,?,?,?,?)");
-                    echo $connect->error;
-                    $insertCart->bind_param('isssiiss', $ids,$noIdNumber,$s_productCode,$s_productName,$s_quantity,$s_price,$s_variation,$s_category);
+                    $insertCart = $connect->prepare("INSERT INTO tblposorders(id,id_number,product_code,products,quantity,price,variation,category,ordered_date) 
+                    VALUES(?,?,?,?,?,?,?,?,?)");
+                    $insertCart->bind_param('isssiisss', $ids,$noIdNumber,$s_productCode,$s_productName,$s_quantity,$s_price,$s_variation,$s_category,$orderedDate);
                     $insertCart->execute();
                     if ($insertCart) {
                         header('Location:pos.php?success');

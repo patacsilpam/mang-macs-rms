@@ -44,6 +44,36 @@
         </div>
     </div>
 </div>
+<!-- View Users -->
+<div class="modal fade" id="showUsers<?= $fetch['id']; ?>" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">User Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <div>
+            <div class="d-flex justify-content-center">
+                <img src="<?=$fetch['profile']?>" alt="profile" width="250">
+            </div>
+            <div>
+                <p>Name: <?=$fetch['fname']." ".$fetch['lname'];?></p>
+                <p>Email: <?=$fetch['email']?></p>
+                <p>Account Type: <?=$fetch['position']?></p>
+                <p>Created At: <?=date('F d, Y h:i:s',strtotime($fetch['created_at']));?></p>
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Edit User -->
 <div class="modal fade" id="editUsers<?= $fetch['id'] ?>" data-backdrop="static" data-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">

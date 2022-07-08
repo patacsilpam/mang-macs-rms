@@ -37,37 +37,29 @@
                         <section class="box-orders">
                             <h3>New Order</h3>
                             <section class="view-sales-details">
-                                <p class="text--active"><?php countActiveOrders('countActiveOrder');?></p>
+                                <p class="text--active"><?php countActiveOrders();?></p>
                                 <a href="orders.php" title="View Details">View</a>
                             </section>
                         </section>
                     </section>
-                    <!--Total Order---->
-                    <section>
+                      <!--New Reservation---->
+                      <section>
                         <section class="box-orders">
-                            <h3>Total Order</h3>
+                            <h3>New Reservation</h3>
                             <section class="view-sales-details">
-                                <p class="text--total"><?php countActiveOrders('countTotalOrder');?></p>
-                                <a href="total-order.php" title="View Details">View</a>
+                                <p class="text--active"><?php countActiveBooking() ?></p>
+                                <a href="reservation.php" title="View Details">View</a>
                             </section>
                         </section>
                     </section>
-                    <!--Cancelled Order---->
-                    <section>
-                        <section class="box-orders">
-                            <h3>Cancelled Order</h3>
-                            <section class="view-sales-details">
-                                <p class="text--cancelled"><?php countCancelledOrders('countCancelledOrders') ?></p>
-                                <a href="cancelled-orders.php" title="View Details">View</a>
-                            </section>
-                        </section>
-                    </section>
+                </section>
+                <section class="sales-report-orders">
                      <!--Delivered Order---->
                     <section>
                         <section class="box-orders">
-                            <h3>Delivered Orders</h3>
+                            <h3>Delivery Orders</h3>
                             <section class="view-sales-details">
-                                <p class="text--delivered"><?php  countDeliveryOrders('countDeliveryOrders') ?></p>
+                                <p class="text--delivered"><?php  countDeliveryOrders() ?></p>
                                 <a href="delivered-orders.php" title="View Details">View</a>
                             </section>
                         </section>
@@ -77,28 +69,50 @@
                         <section class="box-orders">
                             <h3>Pick Up Orders</h3>
                             <section class="view-sales-details">
-                                <p class="text--pickUp"><?php countPickUpOrders('countPickUpOrder') ?></p>
+                                <p class="text--pickUp"><?php countPickUpOrders() ?></p>
                                 <a href="pick-up-orders.php" title="View Details">View</a>
                             </section>
                         </section>
                     </section>
+                     <!--Cancelled Order---->
+                     <section>
+                        <section class="box-orders">
+                            <h3>Cancelled Order</h3>
+                            <section class="view-sales-details">
+                                <p class="text--cancelled"><?php countCancelledOrders() ?></p>
+                                <a href="cancelled-orders.php" title="View Details">View</a>
+                            </section>
+                        </section>
+                    </section>
+                     <!--Cancelled Reservation---->
+                     <section>
+                        <section class="box-orders">
+                            <h3>Cancelled Reservation</h3>
+                            <section class="view-sales-details">
+                                <p class="text--cancelled"><?php countCancelledBooking() ?></p>
+                                <a href="cancelled-booking.php" title="View Details">View</a>
+                            </section>
+                        </section>
+                    </section>
+                </section>
+                <section class="sales-report-orders">
                      <!--POS Order---->
-                    <section>
+                     <section>
                         <section class="box-orders">
                             <h3>POS Orders</h3>
                             <section class="view-sales-details">
-                                <p class="text--total"><?php countPosOrders('countPosOrders')?></p>
+                                <p class="text--total"><?php countPosOrders()?></p>
                                 <a href="total-pos.php" title="View Details">View</a>
                             </section>
                         </section>
                     </section>
-                    <!--New Reservation---->
-                    <section>
+                     <!--Total Order---->
+                     <section>
                         <section class="box-orders">
-                            <h3>New Reservation</h3>
+                            <h3>Total Order</h3>
                             <section class="view-sales-details">
-                                <p class="text--active"><?php countActiveBooking('countActiveBooking') ?></p>
-                                <a href="reservation.php" title="View Details">View</a>
+                                <p class="text--total"><?php countTotalOrders();?></p>
+                                <a href="total-order.php" title="View Details">View</a>
                             </section>
                         </section>
                     </section>
@@ -107,18 +121,8 @@
                         <section class="box-orders">
                             <h3>Total Reservation</h3>
                             <section class="view-sales-details">
-                                <p class="text--total"><?php countTotalBooking('countTotalBooking') ?></p>
+                                <p class="text--total"><?php countTotalBooking() ?></p>
                                 <a href="total-booking.php" title="View Details">View</a>
-                            </section>
-                        </section>
-                    </section>
-                    <!--Cancelled Reservation---->
-                    <section>
-                        <section class="box-orders">
-                            <h3>Cancelled Reservation</h3>
-                            <section class="view-sales-details">
-                                <p class="text--cancelled"><?php countCancelledBooking('countCancelledBooking') ?></p>
-                                <a href="cancelled-booking.php" title="View Details">View</a>
                             </section>
                         </section>
                     </section>
@@ -127,11 +131,11 @@
                         <section class="box-orders">
                             <h3>Mang Macs App Customers</h3>
                             <section class="view-sales-details">
-                                <p class="text--active"><?php countCustomers('countCustomers') ?></p>
+                                <p class="text--active"><?php countCustomers() ?></p>
                                 <a href="customers.php" title="View Details">View</a>
                             </section>
                         </section>
-                    </section>
+                </section>
             </article>
             <article class="sales-order-container">
             <section class="sales-graph" style="position: relative;">

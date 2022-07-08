@@ -30,14 +30,23 @@ function insertUsers(){
             //check if username already exists
             if ($row->num_rows == 1) {
                 if ($uname == $fetch['uname']) {
-                    $GLOBALS['unameError'] =  "Username already exist.";
+                    //$GLOBALS['unameError'] =  "Username already exist.";
+                    $_SESSION['status'] = "Error";
+                    $_SESSION['status_code'] ="error";
+                    $_SESSION['message'] = "Username already exist.";
                 }
                 if ($email == $fetch['email']) {
-                    $GLOBALS['emailError'] =  "Email already exist.";
+                    //$GLOBALS['emailError'] =  "Email already exist.";
+                    $_SESSION['status'] = "Error";
+                    $_SESSION['status_code'] ="error";
+                    $_SESSION['message'] = "Email already exist.";
                 }
             }
             if (strlen($password) <= 8) {
-                $pwordError = "Password must contain at least 8 characters";
+                //$pwordError = "Password must contain at least 8 characters";
+                $_SESSION['status'] = "Error";
+                $_SESSION['status_code'] ="error";
+                $_SESSION['message'] = "Password must contain at least 8 characters";
             } else {
                 //insert user
                 $insertUser = $connect->prepare("INSERT INTO tblusers(id,fname,lname,uname,email,user_password,profile,position,created_at,verification_code)
@@ -107,16 +116,35 @@ function deleteUsers(){
                 //alter table id column
                 $alterTable = "ALTER TABLE users AUTO_INCREMENT = 1";
                 $alterTableId = $connect->query($alterTable);
-                if ($alterTableId) {
+                $_SESSION['status'] = "Successful";
+                $_SESSION['status_code'] ="success";
+                $_SESSION['message'] = "Delete user successfully";
+                header('Location:users.php');
+            }
+            else{
+                $_SESSION['status'] = "Error";
+                $_SESSION['status_code'] ="error";
+                $_SESSION['message'] = "Could not delete user";
+                header('Location:users.php');
+            }
+        }
+    }
+}
+function multiUsers(){
+    require 'public/connection.php';
+    if(isset($_SERVER["REQUEST_METHOD"]) == "POST"){
+        if(isset($_POST['btn-multi-delete'])){
+            $ids = $_POST['userIds'];
+            foreach($ids as $value){
+                $ids = $value;
+                $multiDeleteProd = $connect->prepare("DELETE FROM tblusers WHERE id=?");
+                $multiDeleteProd->bind_param('i',$ids);
+                $multiDeleteProd->execute();
+                if($multiDeleteProd){
                     $_SESSION['status'] = "Successful";
                     $_SESSION['status_code'] ="success";
-                    $_SESSION['message'] = "Delete user successfully";
-                    header('Location:users.php');
-                } else{
-                    $_SESSION['status'] = "Error";
-                    $_SESSION['status_code'] ="error";
-                    $_SESSION['message'] = "Could not delete user";
-                    header('Location:users.php');
+                    $_SESSION['message'] = "Delete product successfully";   
+                    header('Location:users.php?');
                 }
             }
         }
@@ -125,4 +153,5 @@ function deleteUsers(){
 insertUsers();
 editUsers();
 deleteUsers();
+multiUsers();
 ?>

@@ -16,8 +16,8 @@
         </li>
         <li title="Products">    
             <a class="text-white" href="products.php" data-toggle="collapse" data-target="#collapseProducts" role="button" aria-expanded="false">
-                <i class="fas fa-boxes icons"></i>
-                <span class="span">See Products <i class="fas fa-angle-down icons"></i></span>
+            <i class="fas fa-box icons"></i>
+                <span class="span">Products <i class="fas fa-angle-down icons"></i></span>
             </a>
             <div class="collapse" id="collapseProducts">
                 <div class="card card-body" style="background:#040720; padding:0;">
@@ -28,8 +28,8 @@
         </li>
         <li title="POS">    
             <a class="text-white" href="pos.php" data-toggle="collapse" data-target="#collapsePOS" role="button" aria-expanded="false">
-                <i class="fas fa-boxes icons"></i>
-                <span class="span">See POS <i class="fas fa-angle-down icons"></i></span>
+                <i class="fas fa-cash-register icons"></i>
+                <span class="span">POS <i class="fas fa-angle-down icons"></i></span>
             </a>
             <div class="collapse" id="collapsePOS">
                 <div class="card card-body" style="background:#040720; padding:0;">

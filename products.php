@@ -17,7 +17,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
     <link rel="icon" type="image/jpeg" href="assets/images/mang-macs-logo.jpg" sizes="70x70">
     <link rel="stylesheet" href="assets/css/main.css" type="text/css">
-   
     <title>Products</title>
 </head>
 
@@ -36,13 +35,14 @@
                 <article>
                     <div class="table-responsive table-container">
                         <div class="add-product">
-                            <button title="Add Product" type="button" class="btn btn-primary btn-add"
-                                data-toggle="modal" data-target="#addProducts">Add &nbsp;<i
-                                    class="fas fa-plus"></i></button>
+                            <button title="Add Product" type="button" class="btn btn-primary" data-toggle="modal" data-target="#addProducts">Add &nbsp;
+                                <i class="fas fa-plus"></i>
+                            </button>
                             <?php include 'assets/template/admin/addProduct.php'?>
-                            <br><br>
-                        </div>       
-                        <table id="example" class="table table-hover">
+                        </div> <br>
+                        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'])?>" method="POST">
+                           <?php include 'assets/template/admin/deleteProducts.php'?>
+                        <table id="example" class="table table-hover display">
                             <thead class="thead-dark">
                                 <tr>
                                     <th scope="col">#</th>
@@ -63,9 +63,10 @@
                                 while ($fetch = $displayProduct->fetch_assoc()) {
                                 ?>
                                 <tr>
+                                    
                                     <th scope="row"><?= $fetch['id'] ?></th>
                                     <td><?= $fetch['created_at'] ?></td>
-                                    <td><img src="<?= $fetch['productImage']?>" alt="image" width="50"></td>
+                                    <td><img src="<?= $fetch['productImage']?>" alt="image" width="50" class="img-products"></td>
                                     <td><?= $fetch['productName'] ?></td>
                                     <td><?= $fetch['productCategory'] ?></td>
                                     <td><?= $fetch['productVariation'] ?></td>
@@ -78,7 +79,7 @@
                                         <button value="<?= $fetch['productCategory']; ?>" title="Edit" type="button" class="btn btn-success" data-toggle="modal"
                                             data-target="#editProducts<?= $fetch['id']; ?>"  onclick="clickCategory(this)"><i
                                                 class="fas fa-edit"></i></button>    
-                                       <?php include 'assets/template/admin/editProduct.php'?>&emsp;            
+                                       <?php include 'assets/template/admin/addProduct.php'?>&emsp;            
                                         <button title="Delete" type="button" class="btn btn-danger" data-toggle="modal"
                                             data-target="#deleteProduct<?= $fetch['id']; ?>"><i
                                                 class="fas fa-trash"></i></button>
@@ -90,6 +91,7 @@
                                 ?>
                             </tbody>
                         </table>
+                        </form>
                     </div>
                 </article>
             </section>

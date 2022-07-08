@@ -6,13 +6,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
     <link rel="icon" type="image/jpeg" href="assets/images/mang-macs-logo.jpg" sizes="70x70">
     <link rel="stylesheet" href="assets/css/main.css" type="text/css">
     <title>Customers</title>
@@ -32,10 +33,10 @@
             <section>
                 <article>
                     <div class="table-responsive table-container">
-                        <div class="add-product">
-                            <a href="dashboard.php" class="btn btn-primary" title="Back to Dashboard">
-                                <i class="fa fa-arrow-left"></i> Back
-                            </a>
+                        <div class="filter-date">
+                            <h3>
+                                <a href="dashboard.php" title="Back"><i class="fa fa-arrow-circle-left"></i></a>
+                            </h3>
                             <form method="GET">
                                 <label>From Date:</label>
                                 <input type="date" name="startDate" value="<?php  echo $_GET['startDate']?>">&emsp;
@@ -88,9 +89,10 @@
                                     
                                     }
                                    else{
+                                    $date = date('Y-m-d');
                                     require 'public/connection.php';                       
-                                    $getTotalOrder = $connect->prepare("SELECT id,email_address,fname,lname,gender,birthdate,created_account,user_status FROM tblcustomers");
-                                    echo $connect->error;
+                                    $getTotalOrder = $connect->prepare("SELECT id,email_address,fname,lname,gender,birthdate,created_account,user_status FROM tblcustomers WHERE created_account=?");
+                                    $getTotalOrder->bind_param('s',$date);
                                     $getTotalOrder->execute();
                                     $getTotalOrder->bind_result($id,$email,$fname,$lname,$gender,$birthdate,$createdAccount,$userStatus);
                                     if($getTotalOrder){

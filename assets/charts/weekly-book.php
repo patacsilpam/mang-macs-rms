@@ -4,8 +4,8 @@
         error_reporting(0);
         $getWeeklyBook = $connect->query("SELECT DAYNAME(created_at) as 'weeks',WEEK(created_at) as 'numWeeks',
         SUM(guests) as 'guests' FROM tblreservation 
-        WHERE status='Reserved' AND week(created_at)=week(curdate()) AND YEAR(created_at)=YEAR(curdate())
-        GROUP BY day(created_at)");
+        WHERE status='Approve' AND week(created_at)=week(curdate()) AND YEAR(created_at)=YEAR(curdate())
+        GROUP BY day(created_at) ORDER BY created_at ASC");
         foreach ($getWeeklyBook as $displayWeeklyBook) {
             $weeksBook[] = $displayWeeklyBook['guests'];
             $weeklyBook[] = $displayWeeklyBook['weeks'];

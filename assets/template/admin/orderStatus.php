@@ -17,13 +17,14 @@
                     <input type="hidden" value="<?= $fetch['order_number'] ?>" name="orderNumber">
                     <input type="hidden" value="<?=$fetch['created_at']?>" name="orderDate">
                     <input type="hidden" value="<?= $fetch['email']?>" name="email">
+                    <input type="hidden" value="<?=$fetch['token']?>" name="token">
                     <select class="form-control" name="orderStatus">
                         <optgroup label="Deliver" class="deliver">
                             <option value="Pending" <?php if($fetch['order_status'] == "Pending") echo 'selected ? "selected"';?>>Pending</option>
                             <option value="Order Received" <?php if($fetch['order_status'] == "Order Received") echo 'selected ? "selected"';?>>Order Received</option>
                             <option value="Order Processing" <?php if($fetch['order_status'] == "Order Processing") echo 'selected ? "selected"';?>>Order Processing</option>
                             <option value="Out for Delivery" <?php if($fetch['order_status'] == "Out for Delivery") echo 'selected ? "selected"';?>>Out for Delivery</option>
-                            <option value="Order Completed" <?php if($fetch['order_status'] == "Order Completed")  echo 'selected ? "selected"'?>>Delivered</option>
+                            <option value="Order Completed" <?php if($fetch['order_status'] == "Order Completed")  echo 'selected ? "selected"'?>>Order Completed</option>
                         </optgroup>
                         <optgroup label="Pick Up" class="pickUp">
                             <option value="Pending" <?php if($fetch['order_status'] == "Pending") echo 'selected ? "selected"';?>>Pending</option>

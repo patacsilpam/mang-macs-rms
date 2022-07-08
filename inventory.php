@@ -35,59 +35,66 @@
                 <article>
                     <div class="table-responsive table-container">
                         <div class="add-product">
-                            <button title="Add" type="button" class="btn btn-primary btn-add" data-toggle="modal" data-target="#addInventory">Add &nbsp;<i class="fas fa-plus"></i></button>
-                            <?php require 'assets/template/admin/inventory.php' ?>
-                            <br><br>
-                        </div>
-                        <table id="example" class="table table-hover">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Purchased Date</th>
-                                    <th scope="col">EXP Date</th>
-                                    <th scope="col">Item Name</th>
-                                    <th scope="col">Item Purchased</th>
-                                    <th scope="col">Item Stock</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                $selectInventory = "SELECT * FROM tblinventory";
-                                $displayInventory = $connect->query($selectInventory);
-                                while ($fetch = $displayInventory->fetch_assoc()) {
-                                    $today = date('y-m-d');
-                                    $expiredDate = $fetch['expiration_date'];
-                                    $offset = strtotime("+1 day");
-                                    $endDate = date($expiredDate, $offset);
-                                    $todayDate = new DateTime($today);
-                                    $exp = new DateTime($endDate);
-                                    if ($exp <= $todayDate) {
-                                        $highligtRow = "#ff4444";
-                                    }
-                                    if ($exp > $todayDate) {
-                                        $highligtRow = "#ffffff";
-                                    }
-                                ?>
-                                    <tr style="background: <?php echo $highligtRow; ?>;">
-                                        <th scope="row"><?= $fetch['id'] ?></th>
-                                        <td><?= date('F d, Y',strtotime($fetch['created_at'])) ?></td>
-                                        <td><?= date('F d, Y',strtotime($fetch['expiration_date'])) ?></td>
-                                        <td><?= $fetch['product'] ?></td>
-                                        <td><?= $fetch['quantityPurchased'] ?></td>
-                                        <td><?= $fetch['quantityInStock'] ?></td>
-                                        <td style="display: flex;">
-                                            <span><button title="Edit" type="button" class="btn btn-success" data-toggle="modal" data-target="#editInventory<?= $fetch['id'] ?>"><i class="fas fa-edit"></i></button></span>
-                                            <?php require 'assets/template/admin/inventory.php' ?>&emsp;
-                                            <span><button title="Delete" type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteInventory<?= $fetch['id'] ?>"><i class="fas fa-trash"></i></button></span>
-                                        </td>
+                            <button title="Add Product" type="button" class="btn btn-primary btn-add" data-toggle="modal" data-target="#addInventory">Add &nbsp;
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <?php include 'assets/template/admin/inventory.php'?>
+                        </div> <br>
+                        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'])?>" method="POST">
+                            <table id="example" class="table table-hover">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Purchased Date</th>
+                                        <th scope="col">EXP Date</th>
+                                        <th scope="col">Item Name</th>
+                                        <th scope="col">Item Purchased</th>
+                                        <th scope="col">Item Stock</th>
+                                        <th scope="col">Action</th>
                                     </tr>
-                                <?php
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $selectInventory = "SELECT * FROM tblinventory";
+                                    $displayInventory = $connect->query($selectInventory);
+                                    while ($fetch = $displayInventory->fetch_assoc()) {
+                                        $today = date('y-m-d');
+                                        $expiredDate = $fetch['expiration_date'];
+                                        $offset = strtotime("+1 day");
+                                        $endDate = date($expiredDate, $offset);
+                                        $todayDate = new DateTime($today);
+                                        $exp = new DateTime($endDate);
+                                        if ($exp <= $todayDate) {
+                                            $highligtRow = "#ff4444";
+                                        }
+                                        if ($exp > $todayDate) {
+                                            $highligtRow = "#ffffff";
+                                        }
+                                    ?>
+                                        <tr style="background: <?php echo $highligtRow; ?>;">
+                                            <th scope="row"><?= $fetch['id'] ?></th>
+                                            <td><?= date('F d, Y',strtotime($fetch['created_at'])) ?></td>
+                                            <td><?= date('F d, Y',strtotime($fetch['expiration_date'])) ?></td>
+                                            <td><?= $fetch['product'] ?></td>
+                                            <td><?= $fetch['quantityPurchased'] ?></td>
+                                            <td><?= $fetch['quantityInStock'] ?></td>
+                                            <td style="display: flex;">
+                                                <?php require 'assets/template/admin/editStocks.php' ?>&emsp;
+                                                <button title="View" type="button" class="btn btn-primary" data-toggle="modal" data-target="#viewStocks<?= $fetch['id']; ?>">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>&emsp;
+                                                <span><button title="Edit" type="button" class="btn btn-success" data-toggle="modal" data-target="#editInventory<?= $fetch['id'] ?>"><i class="fas fa-edit"></i></button></span>
+                                                <?php require 'assets/template/admin/inventory.php' ?>&emsp;
+                                                <span><button title="Delete" type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteInventory<?= $fetch['id'] ?>"><i class="fas fa-trash"></i></button></span>
+                                            </td>
+                                        </tr>
+                                    <?php
 
-                                }
-                                ?>
-                            </tbody>
-                        </table>
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                        </form>
                     </div>
                 </article>
             </section>

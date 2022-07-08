@@ -7,13 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="Orders" content="Mang Macs-Orders">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
     <link rel="icon" type="image/jpeg" href="assets/images/mang-macs-logo.jpg" sizes="70x70">
     <link rel="stylesheet" href="assets/css/main.css" type="text/css">
     <title>Orders</title>
@@ -53,7 +54,8 @@
                                 <?php
                                     require 'public/connection.php';
                                     $getOrders = "SELECT tblcustomerorder.order_number,tblcustomerorder.id,
-                                    tblorderdetails.created_at,tblcustomerorder.customer_name,tblorderdetails.order_status,
+                                    tblcustomerorder.token,tblorderdetails.created_at,
+                                    tblcustomerorder.customer_name,tblorderdetails.order_status,
                                     tblorderdetails.order_type,tblcustomerorder.total_amount,tblorderdetails.required_date,
                                     tblorderdetails.required_time,tblcustomerorder.email
                                     FROM tblcustomerorder LEFT JOIN tblorderdetails 
@@ -82,8 +84,9 @@
                                     <td><?=$fetch['total_amount']?></td>
                                     <td><?=$fetch['required_date']?><br><?=$fetch['required_time']?></td>
                                     <td>
-                                        <a href='order_summary.php?order_number=<?= $fetch['order_number'];?>'
-                                            title="View Order Details">View <i class="fas fa-arrow-circle-right"></i></a>
+                                        <a href='order_summary.php?order_number=<?= $fetch['order_number'];?>' title="View Order Details">
+                                            <button class="btn btn-primary"><i class="fas fa-eye"></i></button>
+                                        </a>
                                     </td>
                                 </tr>
                                 <?php 

@@ -6,7 +6,7 @@
         $getWeek = $connect->query("SELECT DAYNAME(created_at) as 'weeks',WEEK(created_at) as 'numWeeks',
         SUM(price * quantity) as 'totalSales' FROM tblorderdetails 
         WHERE order_status='Order Completed' OR week(created_at)=week(curdate()) AND YEAR(created_at)=YEAR(curdate())
-        GROUP BY day(created_at)");
+        GROUP BY day(created_at)  ORDER BY created_at ASC");
         foreach ($getWeek as $displayWeek) {
             $strWeeks[] = $displayWeek['weeks'];
             $weeklySales[] = $displayWeek['totalSales'];

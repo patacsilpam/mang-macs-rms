@@ -99,6 +99,36 @@
         </div>
     </div>
 </div>
+<!-- View Users -->
+<div class="modal fade" id="viewStocks<?= $fetch['id']; ?>" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">User Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <div>
+            <div class="d-flex justify-content-center">
+            </div>
+            <div>
+                <p>Purchased Date: <?=date('F d, Y h:i:s',strtotime($fetch['created_at']));?></p>
+                <p>Expiration Date: <?=date('F d, Y h:i:s',strtotime($fetch['expiration_date']))?></p>
+                <p>Item Name: <?=$fetch['product']?></p>
+                <p>Quantity Purchased: <?=$fetch['quantityPurchased']?></p>
+                <p>Quantity Stock: <?=$fetch['quantityInStock']?></p>
+                <p>Status: <?=$fetch['status']?></p>
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 <!--Delete-->
 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST">
     <div class="modal fade" id="deleteInventory<?= $fetch['id']; ?>" tabindex="-1" aria-labelledby="exampleModalLabel"
