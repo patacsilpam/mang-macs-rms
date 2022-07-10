@@ -28,11 +28,11 @@ function updateVerificationCode(){
                         $mail->isSMTP();
                         $mail->Host = 'smtp.gmail.com';
                         $mail->SMTPAuth = true;
-                        $mail->Username = 'mangmacsmarinerospizzahouse@gmail.com';
-                        $mail->Password = 'uihz grau bhyt qikw';
+                        $mail->Username = '';
+                        $mail->Password = '';
                         $mail->SMTPSecure = 'tls';
                         $mail->Port = 587;
-                        $mail->setFrom('mangmacsmarinerospizzahouse@gmail.com', "Mang Mac's Marinero");
+                        $mail->setFrom('', "Mang Mac's Marinero");
                         $mail->addAddress($email);
                         $mail->isHTML(true);
                         $mail->Subject = "Your Mang Mac's reset password code";
