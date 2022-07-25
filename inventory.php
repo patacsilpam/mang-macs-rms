@@ -79,12 +79,9 @@
                                             <td><?= $fetch['quantityPurchased'] ?></td>
                                             <td><?= $fetch['quantityInStock'] ?></td>
                                             <td style="display: flex;">
-                                                <?php require 'assets/template/admin/editStocks.php' ?>&emsp;
-                                                <button title="View" type="button" class="btn btn-primary" data-toggle="modal" data-target="#viewStocks<?= $fetch['id']; ?>">
-                                                    <i class="fas fa-eye"></i>
-                                                </button>&emsp;
-                                                <span><button title="Edit" type="button" class="btn btn-success" data-toggle="modal" data-target="#editInventory<?= $fetch['id'] ?>"><i class="fas fa-edit"></i></button></span>
-                                                <?php require 'assets/template/admin/inventory.php' ?>&emsp;
+                                                <?php require 'assets/template/admin/editStocks.php' ?>
+                                                <span><button title="View" type="button" class="btn btn-primary mr-3" data-toggle="modal" data-target="#viewStocks<?= $fetch['id']; ?>"><i class="fas fa-eye"></i></button></span>
+                                                <span><button title="Edit" type="button" class="btn btn-success mr-3" data-toggle="modal" data-target="#editInventory<?= $fetch['id'] ?>"><i class="fas fa-edit"></i></button></span>
                                                 <span><button title="Delete" type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteInventory<?= $fetch['id'] ?>"><i class="fas fa-trash"></i></button></span>
                                             </td>
                                         </tr>

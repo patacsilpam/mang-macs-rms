@@ -14,12 +14,6 @@ function updatePassword(){
             if (empty($currentPassword) || empty($newPassword) || empty($confirmPassword)) {
                 echo "Fill out all fields.";
             }
-            if (strlen($newPassword) < 8) {
-                $GLOBALS['newPwordError'] = "Password must contain at least 8 characters"; //check the length of new password field
-            }
-            if (strlen($confirmPassword) < 8) {
-                $GLOBALS['confirmPwordError'] =  "Password must contain at least 8 characters"; //check the length of confirm password field
-            }
             if ($newPassword === $confirmPassword) {
                 $check_admin_password = $connect->prepare("SELECT * FROM tblusers WHERE email=?"); //check password
                 $check_admin_password->bind_param('s', $email);

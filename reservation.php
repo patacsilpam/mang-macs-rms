@@ -51,7 +51,8 @@
                             <tbody>
                                 <?php
                                     require 'public/connection.php';
-                                    $queryReservation = $connect->query("SELECT * FROM tblreservation WHERE remove_status='Not Removed'");
+                                    $time = date('h:i a');
+                                    $queryReservation = $connect->query("SELECT * FROM tblreservation WHERE scheduled_date >= CURDATE() AND scheduled_time >= '$time'");
                                     while($fetch = $queryReservation->fetch_assoc()){
                                    ?>
                                 <tr>
@@ -62,7 +63,7 @@
                                     <td><?= $fetch['email']?></td>
                                     <td><?= $fetch['guests']?></td>
                                     <td>
-                                       Confirm
+                                        <input type="text"  class="order-status" value="<?=$fetch['status']?>">
                                         <button title="Edit" type="button" class="btn btn-transparent"
                                             data-toggle="modal" data-target="#editUsers<?= $fetch['id'] ?>"><i
                                                 class="fas fa-edit" style="color: blue;"></i></button>
@@ -89,6 +90,7 @@
     <script src="assets/js/sidebar-menu-active.js"></script>
     <script src="assets/js/activePage.js"></script>
     <script src="assets/js/table.js"></script>
+    <script src="assets/js/highlight-order-status.js"></script>
 </body>
 
 </html>

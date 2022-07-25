@@ -12,12 +12,7 @@
             <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'])?>" method="POST">
                 <div class="modal-body">
                     <label for="">Change Order Status</label><br>
-                    <input type="hidden" value="<?= $fetch['order_type']?>" name="orderType">
-                    <input type="hidden" value="<?= $fetch['customer_name']?>" name="customerName">
-                    <input type="hidden" value="<?= $fetch['order_number'] ?>" name="orderNumber">
-                    <input type="hidden" value="<?=$fetch['created_at']?>" name="orderDate">
-                    <input type="hidden" value="<?= $fetch['email']?>" name="email">
-                    <input type="hidden" value="<?=$fetch['token']?>" name="token">
+                    
                     <select class="form-control" name="orderStatus">
                         <optgroup label="Deliver" class="deliver">
                             <option value="Pending" <?php if($fetch['order_status'] == "Pending") echo 'selected ? "selected"';?>>Pending</option>
@@ -34,10 +29,6 @@
                             <option value="Order Completed" <?php if($fetch['order_status'] == "Order Completed")  echo 'selected ? "selected"'?>>Order Completed</option>
                         </optgroup>
                     </select>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary" name="btn-update">Save changes</button>
                 </div>
             </form>
         </div>

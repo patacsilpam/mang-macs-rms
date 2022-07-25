@@ -75,7 +75,7 @@
                                         tblcustomerorder.customer_name,tblorderdetails.product_name,tblorderdetails.product_variation,
                                         tblorderdetails.quantity,tblorderdetails.price,tblorderdetails.price * tblorderdetails.quantity as 'subtotal',
                                         tblorderdetails.add_ons,tblorderdetails.order_type 
-                                        FROM tblorderdetails LEFT JOIN tblcustomerorder ON tblorderdetails.customer_id = tblcustomerorder.customer_id
+                                        FROM tblorderdetails LEFT JOIN tblcustomerorder ON tblorderdetails.order_number = tblcustomerorder.order_number
                                         WHERE tblorderdetails.created_at BETWEEN (?) AND (?) and tblorderdetails.order_status=? AND tblorderdetails.order_type=?");
                                         echo $connect->error;
                                         $getTotalOrder->bind_param('ssss',$startDate,$endDate,$orderStatus,$orderType);
@@ -110,7 +110,7 @@
                                         tblcustomerorder.customer_name,tblorderdetails.product_name,tblorderdetails.product_variation,
                                         tblorderdetails.quantity,tblorderdetails.price,tblorderdetails.price * tblorderdetails.quantity as 'subtotal',
                                         tblorderdetails.add_ons,tblorderdetails.order_type 
-                                        FROM tblorderdetails LEFT JOIN tblcustomerorder ON tblorderdetails.customer_id = tblcustomerorder.customer_id
+                                        FROM tblorderdetails LEFT JOIN tblcustomerorder ON tblorderdetails.order_number = tblcustomerorder.order_number
                                         WHERE tblorderdetails.created_at LIKE (?) and tblorderdetails.order_status=? AND tblorderdetails.order_type=?");
                                         $getTotalOrder->bind_param('sss',$date,$orderStatus,$orderType);
                                         $getTotalOrder->execute();

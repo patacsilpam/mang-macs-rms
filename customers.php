@@ -89,10 +89,8 @@
                                     
                                     }
                                    else{
-                                    $date = date('Y-m-d');
                                     require 'public/connection.php';                       
-                                    $getTotalOrder = $connect->prepare("SELECT id,email_address,fname,lname,gender,birthdate,created_account,user_status FROM tblcustomers WHERE created_account=?");
-                                    $getTotalOrder->bind_param('s',$date);
+                                    $getTotalOrder = $connect->prepare("SELECT id,email_address,fname,lname,gender,birthdate,created_account,user_status FROM tblcustomers");
                                     $getTotalOrder->execute();
                                     $getTotalOrder->bind_result($id,$email,$fname,$lname,$gender,$birthdate,$createdAccount,$userStatus);
                                     if($getTotalOrder){

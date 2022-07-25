@@ -24,17 +24,27 @@
                         </div>
                         <div class="mt-2">
                             <label for="product">Item Name</label>
-                            <input type="text" class="form-control" name="product" placeholder="Enter Product" required>
+                            <select id="inventory" class="form-control"  name="product">
+                                <option value="">Select item</option>
+                            <?php 
+                                    require_once 'public/connection.php';
+                                    $getItem = $connect->prepare("SELECT code,productName,productCategory,productVariation FROM tblproducts  ORDER BY productName ASC");
+                                    $getItem->execute();
+                                    $getItem->bind_result($code,$productName,$productCategory,$productVariation);
+                                    $getItem->fetch();
+                                    while($getItem->fetch()){
+                                        ?>
+                                            <option value="<?=$code."=".$productName?>"><?=$productName?></option>
+                                           
+                                        <?php
+                                    }
+                            ?>
+                            </select>
                         </div>
                         <div class="mt-2">
                             <label for="quantity">Item Purchase</label>
                             <input type="number" class="form-control" name="quantityPurchased"
                                 placeholder="Enter Quantity Purchased" required>
-                        </div>
-                        <div class="mt-2">
-                            <label for="quantity">Item Stock</label>
-                            <input type="number" class="form-control" name="quantityInStock"
-                                placeholder="Enter Quantity In Stock" required>
                         </div>
                 </div>
             </div>
@@ -62,6 +72,7 @@
                 <div class="input-form">
                     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST">
                         <input type="hidden" name="id" value="<?=$fetch['id']?>">
+                        <input type="hidden" name="code" value="<?=$fetch['code']?>">
                         <div class="mt2">
                             <label for="expirationDate">Purchased Date</label>
                             <input type="date" id="purchasedDate" name="purchasedDate" class="form-control"
@@ -78,17 +89,11 @@
                                 value="<?=$fetch['product']?>" required>
                         </div>
                         <div class="mt-2">
-                            <label for="quantity">Quantity Purchase</label>
+                            <label for="quantity">Add/Remove Quantity Purchased</label>
                             <input type="number" class="form-control" name="quantityPurchased"
-                                placeholder="Enter Quantity Purchased" value="<?= $fetch['quantityPurchased']?>"
+                                placeholder="Enter Quantity Purchased"
                                 required>
-                        </div>
-                        <div class="mt-2">
-                            <label for="quantity">Quantity In Stock</label>
-                            <input type="number" class="form-control" name="quantityInStock"
-                                placeholder="Enter Quantity Purchased" value="<?= $fetch['quantityInStock']?>" required>
-                        </div>
-                        
+                        </div>    
                 </div>
             </div>
             <div class="modal-footer">
@@ -119,7 +124,6 @@
                 <p>Item Name: <?=$fetch['product']?></p>
                 <p>Quantity Purchased: <?=$fetch['quantityPurchased']?></p>
                 <p>Quantity Stock: <?=$fetch['quantityInStock']?></p>
-                <p>Status: <?=$fetch['status']?></p>
             </div>
         </div>
       </div>
@@ -143,10 +147,12 @@
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="id" value="<?= $fetch['id']; ?>">
+                    <input type="hidden" name="code" value="<?= $fetch['code']; ?>">
+                    <input type="hidden" name="purchased" value="<?= $fetch['quantityPurchased']; ?>">
                     <h4>Delete</h4>
                     <div class="modal-body-container">
                         <i class="fas fa-exclamation-circle fa-3x icon-warning"></i><br>
-                        <p class="icon-text-warning">Are you sure you want to delete the product that you selected?</p>
+                        <p class="icon-text-warning">Are you sure you want to delete this item?</p>
                     </div>
                 </div>
                 <div class="modal-footer">

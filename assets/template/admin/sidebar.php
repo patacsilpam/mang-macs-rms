@@ -44,6 +44,10 @@
         <li title="Users">
             <a href="users.php"><i class="fas fa-users-cog icons"></i><span class="span">Users</span></a>
         </li>
+        <hr style="width:100%;text-align:left;margin-left:0; background:#65656b; opacity:0.5;">
+        <li title="Report">
+            <a href="report.php"><i class="fas fa-file icons"></i><span class="span">Report</span></a>
+        </li>
     </ul>
 </div>
 </div>

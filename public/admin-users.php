@@ -5,7 +5,6 @@ if (!isset($_SESSION['loggedIn'])) {
 }
 date_default_timezone_set('Asia/Manila');
 $unameError = $emailError = $pwordError = "";
-//add users
 function insertUsers(){
     require 'public/connection.php';
     if(isset($_SERVER["REQUEST_METHOD"]) == "POST"){
@@ -42,13 +41,8 @@ function insertUsers(){
                     $_SESSION['message'] = "Email already exist.";
                 }
             }
-            if (strlen($password) <= 8) {
-                //$pwordError = "Password must contain at least 8 characters";
-                $_SESSION['status'] = "Error";
-                $_SESSION['status_code'] ="error";
-                $_SESSION['message'] = "Password must contain at least 8 characters";
-            } else {
-                //insert user
+            //if validation is correct insert data values to database
+            else {
                 $insertUser = $connect->prepare("INSERT INTO tblusers(id,fname,lname,uname,email,user_password,profile,position,created_at,verification_code)
                 VALUES(?,?,?,?,?,?,?,?,?,?)");
                 $insertUser->bind_param('issssssssi', $id, $fname, $lname, $uname, $email, $passwordHash, $profile, $position, $created_at, $verification_code);

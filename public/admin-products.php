@@ -20,7 +20,7 @@ function insertProducts(){
             $preparationTime = $_POST['preparedTime'];
             $productImage = basename($_FILES['imageProduct']['name'] ?? '');
             $imageTemp = $_FILES['imageProduct']['tmp_name'] ?? '';
-            $imageServerUrl = "http://192.168.1.70:8080/mang-macs-admin-web/assets/img-products/".$productImage;
+            $imageServerUrl = "http://10.68.253.181/mang-macs-admin-web/assets/img-products/".$productImage;
             $created_at = date('Y-m-d h:i:s');
             $imageFolderPath = "assets/img-products/".$productImage;
             move_uploaded_file($imageTemp,$imageFolderPath);
@@ -122,7 +122,7 @@ function updateProducts(){
             $editImageProduct = basename($_FILES['editImageProduct']['name'] ?? '');
             $editImageProductTemp = $_FILES["editImageProduct"]["tmp_name"] ?? '';
             $imageFolderPath = "assets/img-products/".$editImageProduct;
-            $imageServerUrl = "http://192.168.1.70:8080/mang-macs-admin-web/assets/img-products/".$editImageProduct;
+            $imageServerUrl = "http://10.68.253.181/mang-macs-admin-web/assets/img-products/".$editImageProduct;
             $edited_at = date('Y-m-d h:i:s');
             //update product
             if  ($editImageProduct  != '') {
@@ -199,56 +199,29 @@ function updateProductStocks(){
     require 'public/connection.php';
     if(isset($_SERVER["REQUEST_METHOD"]) == "POST"){
         if(isset($_POST['btn-update-stocks'])){
-            $productName = $_POST['productName'];
-            $size = $_POST['size'];
+            $id = $_POST['ids'];
             $stock = $_POST['stocks'];
-            foreach($productName as $key => $nameCode){
-                $newSize = $size[$key];
-                $newProductName = $nameCode;
-                $newStock = $stock[$key];
-                $updateNoStock = $connect->prepare("UPDATE tblproducts SET stocks=? WHERE productName=? AND productVariation=?");
-                $updateNoStock->bind_param('iss',$newStock,$newProductName,$newSize);
-                $updateNoStock->execute();
-                if($updateNoStock){
-                    $_SESSION['status'] = "Successful";
-                    $_SESSION['status_code'] ="success";
-                    $_SESSION['message'] = "Update stock successfully";   
-                    header('Location:available-menu.php?');
-                } else{
-                    $_SESSION['status'] = "Error";
-                    $_SESSION['status_code'] ="error";
-                    $_SESSION['message'] = "Could not update product";
-                    header('Location:available-menu.php?false');
-                }
+            $updateNoStock = $connect->prepare("UPDATE tblproducts SET stocks=? WHERE id=?");
+            $updateNoStock->bind_param('ii',$stock,$id);
+            $updateNoStock->execute();
+            if($updateNoStock){
+                $_SESSION['status'] = "Successful";
+                $_SESSION['status_code'] ="success";
+                $_SESSION['message'] = "Update stock successfully";   
+                header('Location:available-menu.php?');
+            } else{
+                $_SESSION['status'] = "Error";
+                $_SESSION['status_code'] ="error";
+                $_SESSION['message'] = "Could not update product";
+                header('Location:available-menu.php?false');
             }
         }
     }
 }
-function multiDeleteProduct(){
-    require 'public/connection.php';
-    if(isset($_SERVER["REQUEST_METHOD"]) == "POST"){
-        if(isset($_POST['btn-multi-delete'])){
-            $ids = $_POST['ids'];
-            foreach($ids as $value){
-                $ids = $value;
-                if(!empty($ids)){
-                    $multiDeleteProd = $connect->prepare("DELETE FROM tblproducts WHERE id=?");
-                    $multiDeleteProd->bind_param('i',$ids);
-                    $multiDeleteProd->execute();
-                    if($multiDeleteProd){
-                        $_SESSION['status'] = "Successful";
-                        $_SESSION['status_code'] ="success";
-                        $_SESSION['message'] = "Delete product successfully";   
-                        header('Location:products.php?');
-                    }
-                }
-            }
-        }
-    }
-}
+
 insertProducts();
 updateProducts();
 deleteProducts();
 updateProductStocks();
-multiDeleteProduct()
+
 ?>

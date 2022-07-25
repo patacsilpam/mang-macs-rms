@@ -49,13 +49,13 @@
                         $getOrderSummary = $connect->prepare("SELECT tblcustomerorder.order_number,tblcustomerorder.customer_name,
                             tblorderdetails.created_at,tblorderdetails.required_date,tblorderdetails.required_time,
                             tblorderdetails.order_type,tblorderdetails.order_status,tblcustomerorder.email,
-                            tblcustomerorder.phone_number,tblcustomerorder.total_amount
+                            tblcustomerorder.phone_number,tblcustomerorder.total_amount,tblcustomerorder.delivery_fee
                             FROM tblcustomerorder LEFT JOIN tblorderdetails
                             ON tblcustomerorder.order_number = tblorderdetails.order_number
                             WHERE tblorderdetails.order_number=? LIMIT 1");
                         $getOrderSummary->bind_param('s',$getOrderNumber);
                         $getOrderSummary->execute();
-                        $getOrderSummary->bind_result($orderNumber,$customerName,$placedOn,$requiredDate,$requiredTime,$orderType,$orderStatus,$email,$phoneNumber,$totalAmount);
+                        $getOrderSummary->bind_result($orderNumber,$customerName,$placedOn,$requiredDate,$requiredTime,$orderType,$orderStatus,$email,$phoneNumber,$totalAmount,$deliveryFee);
                         while($getOrderSummary->fetch()){
                         $GLOBALS['totalAmount'] = $totalAmount;
                    ?>
@@ -69,7 +69,7 @@
                         <p><strong>Order Status:</strong> <?=$orderStatus?></p>
                         <p><strong>Email:</strong> <?=$email?></p>
                         <p><strong>Phone Number:</strong> <?=$phoneNumber?></p>
-                        <p><strong>Total Amount:</strong> <?=$totalAmount?></p>
+                        <p><strong>Total Amount:</strong> <?=$totalAmount + $deliveryFee?></p>
                         <p><strong><a href="view-payment.php?order_number=<?= $getOrderNumber?>">View Payment</a></strong></p>
                         <?php } ?>
                     </article>
@@ -124,16 +124,25 @@
                                         <td><?=$price?></td>
                                         <td><?=$variation?></td>
                                         <td><?=$addOns?></td>
-                                        <td><?=$subTotal = $price * $quantity;?></td>
+                                        <td><?=$subTotal = $price * $quantity;?>.00</td>
                                     </tr>
                                     <?php
                                     }
                                     
                                ?>
                                 </tbody>
-                                <tr>
-                                    <td col="7"><b>Total Amount</b>: <?= $totalAmount?></td>
-                                </tr>
+                               <tfoot>
+                                    <tr>
+                                        <td colspan="5"></td>
+                                        <td><b>Delivery Fee</b>: </td>
+                                        <td><?= $deliveryFee?>.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5"></td>
+                                        <td><b>Grand Total</b>: </td>
+                                        <td>₱ <?= $totalAmount?>.00</td>
+                                    </tr>
+                               </tfoot>
                             </table>
                         </div>
 

@@ -11,7 +11,7 @@ function updateProfile(){
             $uname = mysqli_real_escape_string($connect, $_POST['uname']);
             $adminImage = basename($_FILES['adminImage']['name'] ?? '');
             $adminImageTemp = $_FILES['adminImage']['tmp_name'] ?? '';
-            $imageserverUrl = "http://192.168.1.14/Mang-Macs-Management-System/assets/users-image/".$adminImage;
+            $imageserverUrl = "http://10.68.253.181/Mang-Macs-Management-System/assets/users-image/".$adminImage;
             $position = mysqli_real_escape_string($connect, $_POST['position']);
             //file upload path
             $targetFilePath =  "assets/users-image/".$adminImage;

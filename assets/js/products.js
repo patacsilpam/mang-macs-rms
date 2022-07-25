@@ -10,7 +10,8 @@ function changeVariation(sel) {
         for (let i = 0; i < noneCategoryList.length; i++) {
             noneCategoryList[i].style.display = 'none';
         }
-    } else {
+    } 
+    else {
         let noneCategoryList = document.querySelectorAll('.noCategoryPrice');
         for (let i = 0; i < pizzaList.length; i++) {
             for (let i = 0; i < pizzaList.length; i++) {
@@ -19,7 +20,7 @@ function changeVariation(sel) {
             for (let i = 0; i < noneCategoryList.length; i++) {
                 noneCategoryList[i].style.display = 'block';
             }
-        }
+    }
         //display fields of bilao price if selected
         if (sel.value == "Carbonara Bilao" || sel.value == "Palabok Bilao" || sel.value == "Pancit Bilao(Bihon Guisado)" || sel.value == "Pancit Bilao(Canton Bihon)" || sel.value == "Spaghetti Bilao") {
             let noneCategoryList = document.querySelectorAll('.noCategoryPrice');

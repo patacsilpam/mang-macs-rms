@@ -66,7 +66,7 @@
                                             <td><?= $fetch['email'] ?></td>
                                             <td><?= $fetch['position'] ?></td>
                                             <td style="display: flex;">
-                                                <span><button title="Edit" type="button" class="btn btn-primary" data-toggle="modal" data-target="#showUsers<?= $fetch['id'] ?>"><i class="fas fa-edit"></i></button></span>&emsp;
+                                                <span><button title="View" type="button" class="btn btn-primary" data-toggle="modal" data-target="#showUsers<?= $fetch['id'] ?>"><i class="fas fa-eye"></i></button></span>&emsp;
                                                 <span><button title="Edit" type="button" class="btn btn-success" data-toggle="modal" data-target="#editUsers<?= $fetch['id'] ?>"><i class="fas fa-edit"></i></button></span>
                                                 <?php require 'assets/template/admin/users.php' ?>&emsp;
                                                 <span><button title="Delete" type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteUsers<?= $fetch['id'] ?>"><i class="fas fa-trash"></i></button></span>
@@ -97,6 +97,8 @@
             </script>
             <?php
             unset($_SESSION['status']);
+            unset($_SESSION['message']);
+            unset($_SESSION['status_code']);
         } ?>
     </div>
     <script src="assets/js/sidebar-menu-active.js"></script>

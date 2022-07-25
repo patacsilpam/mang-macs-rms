@@ -33,7 +33,7 @@ class PDF extends FPDF
     function viewTable($connect,$id,$createdAt,$fname,$lname,$guests,$schedDate,$schedTime)
     {
         if(isset($_GET['startDate']) && isset($_GET['endDate'])){      
-            $bookStatus = "Approve";
+            $bookStatus = "Reserved";
             $startDate = $_GET['startDate'];
             $endDate = $_GET['endDate'];
             $totalGuests = 0;
@@ -53,11 +53,11 @@ class PDF extends FPDF
                     $this->Ln();
                 }
             }
-            $this->Cell(10,10,'',1,0,'C');
-            $this->Cell(45,10,'',1,0,'C');
-            $this->Cell(45,10,'',1,0,'C');
+            $this->Cell(10,10,'',0,0,'C');
+            $this->Cell(45,10,'',0,0,'C');
+            $this->Cell(45,10,'',0,0,'C');
             $this->Cell(25,10,"Total Guests: $totalGuests", 1, 0, 'C');
-            $this->Cell(50, 10,'',1,0,'C' );
+            $this->Cell(50, 10,'',0,0,'C' );
         }
     }
     function Footer()

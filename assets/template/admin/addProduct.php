@@ -152,8 +152,8 @@
                 <option value="Pasta" <?php if ($fetch['productCategory'] == "Pasta") echo 'selected ? "selected"'; ?>>Pasta</option>
                 <option value="Palabok Bilao"  <?php if ($fetch['productCategory'] == "Palabok Bilao") echo 'selected ? "selected"'; ?>>Palabok Bilao</option>
                 <option value="Pancit" <?php if ($fetch['productCategory'] == "Pancit") echo 'selected ? "selected"'; ?>>Pancit</option>
-                <option value="Pancit Bilao(Bihon)" <?php if ($fetch['productCategory'] == "Pancit Bilao(Bihon)") echo 'selected ? "selected"'; ?>>Pancit Bilao(Bihon)</option>
-                <option value="Pancit Bilao(Canton)" <?php if ($fetch['productCategory'] == "Panict Bilao(Canton)") echo 'selected ? "selected"'; ?>>Pancit Bilao(Canton)</option>
+                <option value="Pancit Bilao(Bihon Guisado)" <?php if ($fetch['productCategory'] == "Pancit Bilao(Bihon Guisado)") echo 'selected ? "selected"'; ?>>Pancit Bilao(Bihon)</option>
+                <option value="Pancit Bilao(Canton Bihon)" <?php if ($fetch['productCategory'] == "Panict Bilao(Canton Bihon)") echo 'selected ? "selected"'; ?>>Pancit Bilao(Canton)</option>
                 <option value="Pizza" <?php if ($fetch['productCategory'] == "Pizza") echo 'selected ? "selected"'; ?>>Pizza</option>
                 <option value="Pork"  <?php if ($fetch['productCategory'] == "Pork") echo 'selected ? "selected"'; ?>>Pork</option>
                 <option value="Pigar Pigar" <?php if ($fetch['productCategory'] == "Pigar Pigar") echo 'selected ? "selected"'; ?>>Pigar Pigar</option>
@@ -213,7 +213,7 @@
           <p>Delete Product</p>
           <div class="modal-body-container">
             <i class="fas fa-exclamation-circle fa-3x icon-warning"></i><br>
-            <p class="icon-text-warning">Are you sure you want to delete the product(s) that you selected?</p>
+            <p class="icon-text-warning">Are you sure you want to delete this item?</p>
           </div>
         </div>
         <div class="modal-footer">

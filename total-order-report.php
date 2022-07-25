@@ -27,14 +27,14 @@ class PDF extends FPDF
     {
         $this->SetFont('Arial', 'B', 9);
         $this->Cell(10, 10, 'No.', 1, 0, 'C');
-        $this->Cell(30, 10, 'Created At', 1, 0, 'C');
+        $this->Cell(30, 10, 'Ordered Date', 1, 0, 'C');
         $this->Cell(50, 10, 'Customer Name', 1, 0, 'C');
-        $this->Cell(40, 10, 'Product', 1, 0, 'C');
+        $this->Cell(40, 10, 'Food', 1, 0, 'C');
+        $this->Cell(22, 10, 'Order Type', 1, 0, 'C');
         $this->Cell(17, 10, 'Variation', 1, 0, 'C');
         $this->Cell(17, 10, 'Quantity', 1, 0, 'C');
-        $this->Cell(15, 10, 'Price', 1, 0, 'C');
-        $this->Cell(30, 10, 'Add Ons', 1, 0, 'C');
-        $this->Cell(22, 10, 'Order Type', 1, 0, 'C');
+        $this->Cell(20, 10, 'Unit Price', 1, 0, 'C');
+        $this->Cell(25, 10, 'Total Amount', 1, 0, 'C');
         $this->Ln();
     }
     function viewTable($connect,$id,$createdAt,$customerName,$product,$variation,$quantity,$price,$subtotal,$addOns,$orderType) {
@@ -46,7 +46,7 @@ class PDF extends FPDF
             tblcustomerorder.customer_name,tblorderdetails.product_name,tblorderdetails.product_variation,
             tblorderdetails.quantity,tblorderdetails.price,tblorderdetails.price * tblorderdetails.quantity as 'subtotal',
             tblorderdetails.add_ons,tblorderdetails.order_type 
-            FROM tblorderdetails LEFT JOIN tblcustomerorder ON tblorderdetails.customer_id = tblcustomerorder.customer_id
+            FROM tblorderdetails LEFT JOIN tblcustomerorder ON tblorderdetails.order_number = tblcustomerorder.order_number
             WHERE tblorderdetails.created_at BETWEEN (?) AND (?) and tblorderdetails.order_status='Order Completed'");
             echo $connect->error;
             $getTotalOrder->bind_param('ss',$startDate,$endDate);
@@ -60,15 +60,16 @@ class PDF extends FPDF
                     $this->Cell(30, 10, $createdAt, 1, 0, 'C');
                     $this->Cell(50, 10, $customerName, 1, 0, 'C');
                     $this->Cell(40, 10, $product, 1, 0, 'C');
+                    $this->Cell(22, 10, $orderType, 1, 0, 'C');
                     $this->Cell(17, 10, $variation, 1, 0, 'C');
                     $this->Cell(17, 10, $quantity, 1, 0, 'C');
-                    $this->Cell(15, 10, $price, 1, 0, 'C');
-                    $this->Cell(30, 10, $addOns, 1, 0, 'C');
-                    $this->Cell(22, 10, $orderType, 1, 0, 'C');
+                    $this->Cell(20, 10, $price.".00", 1, 0, 'C');
+                    $this->Cell(25, 10, $price * $quantity.".00", 1, 0, 'C');
                     $this->Ln();
                 }
             }
-            $this->Cell(40, 10, "Total Sales: PHP $totalAmount.00", 1, 0, 'C');
+            $this->Cell(186, 10, "", 0, 0, 'C');
+            $this->Cell(45, 10, "Total Sales: PHP $totalAmount.00", 1, 0, 'C');
         
         } 
     }

@@ -47,7 +47,7 @@
                             </thead>
                             <tbody>
                                 <?php
-                                    $getProductCategory = $connect->prepare("SELECT id,productCategory,productName,productVariation,stocks FROM tblproducts GROUP BY productName");
+                                    $getProductCategory = $connect->prepare("SELECT id,productCategory,productName,productVariation,stocks FROM tblproducts");
                                     $getProductCategory->execute();
                                     $getProductCategory->store_result();
                                     $getProductCategory->bind_result($id,$productCategory,$productName,$productVariation,$stocks);
@@ -58,7 +58,7 @@
                                             <td><?=$productCategory?></td>
                                             <td><?=$productName?></td>
                                             <td><?=$productVariation?></td>
-                                            <td><small>Starts from </small><?=$stocks?></td>
+                                            <td><?=$stocks?></td>
                                             <td>
                                             <button title="View" type="button" class="btn btn-primary" data-toggle="modal"
                                             data-target="#viewStocks<?= $id; ?>"><i

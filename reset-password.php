@@ -35,9 +35,9 @@ require 'public/admin-signup.php';
                 ?>
                 <input type="hidden" value="<?=$email?>">
                 <label for="password">New Password</label>
-                <input type="password" class="form-control form togglePassword" id="password" name="newPassword" placeholder="Enter new password" required minlength="8">
+                <input type="password" class="form-control form togglePassword" id="password" name="newPassword" placeholder="Enter new password" required>
                 <label for="confirmPassword">Confirm Password</label>
-                <input type="password" class="form-control form togglePassword" id=" confirmPassword" name="confirmPassword" placeholder="Confrim password" required minlength="8">
+                <input type="password" class="form-control form togglePassword" id=" confirmPassword" name="confirmPassword" placeholder="Confrim password" required>
                 <strong class="text-danger msg-Error"><?php if ($pwordError) echo $pwordError ?></strong>
                 <strong class="text-danger msg-Error"><?php if ($confirmPwordError) echo $confirmPwordError ?></strong>
                 <div class="inline-checkbox"><input type="checkbox" class="checkbox" onclick="toggle(this)">Show Password</div>

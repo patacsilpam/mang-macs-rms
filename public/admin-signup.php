@@ -9,6 +9,7 @@ function updateVerificationCode(){
     if($_SERVER["REQUEST_METHOD"] == "POST"){
     if (isset($_POST['btn-continue'])) {
         $email = mysqli_real_escape_string($connect, $_POST['email']); 
+        $logo = "https://i.ibb.co/CMq6CXs/logo.png";
         if (!empty($email)) {
             $getUserRecord = $connect->prepare("SELECT * FROM tblusers WHERE email=?");
             $getUserRecord->bind_param('s', $email);
@@ -38,7 +39,7 @@ function updateVerificationCode(){
                         $mail->Subject = "Your Mang Mac's reset password code";
                         $mail->Body = "<main style='background: #ffffff; width: 350px; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); padding: 1rem;'>
                         <header style='display: flex; align-items: center;'>
-                            <img src='logo.png' width='100' alt='mang-macs-logo'>
+                            <img src='$logo' width='100' alt='mang-macs-logo'>
                             <h1 style='font-size: .9rem;  font-family: Arial, Helvetica, sans-serif;'> Mang Mac's Foodshop</h1>
                         </header>
                         <article>
@@ -119,9 +120,6 @@ function resetPassword(){
                 }
             } else {
                 $GLOBALS['confirmPwordError'] = "Password do not match.";
-            }
-            if (strlen($confirmPassword < 8)) {
-                $GLOBALS['pwordError'] = "Your new password must contain at least 8 characters.";
             }
         }
     }

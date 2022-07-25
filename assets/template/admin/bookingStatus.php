@@ -23,12 +23,12 @@
                     <input type="hidden" value="<?=$fetch['token']?>" name="token">
                     <div class="form-check">
                         <div>
-                            <input class="form-check-input" type="radio" name="bookStatus" value="Approve" <?php if($fetch['status'] == "Approve"){ echo "checked=checked";} ?> style="height:15px; width:15px">
-                            <label class="form-check-label">Approve</label>
+                            <input class="form-check-input" type="radio" name="bookStatus" value="Reserved" <?php if($fetch['status'] == "Reserved"){ echo "checked=checked";} ?> style="height:15px; width:15px">
+                            <label class="form-check-label">Reserved</label>
                         </div>
                         <div>
                             <input class="form-check-input" type="radio" name="bookStatus" value="Not Available" <?php if($fetch['status'] == "Not Available"){ echo "checked=checked";} ?> style="height:15px; width:15px">
-                            <label class="form-check-label">Cancel</label>
+                            <label class="form-check-label">Not Available</label>
                         </div>
                     </div>
                 </div>
@@ -54,8 +54,9 @@
             </div>
             <div class="modal-body">
                 <p>Customer Name: <?=$fetch['fname']." ".$fetch['lname']?></p>
+                <p>Email: <?=$fetch['email']?></p>
                 <p>No. of Guests: <?=$fetch['guests']?></p>
-                <p>Date: <?=$fetch['scheduled_date']?></p>
+                <p>Date: <?= date('D,F d, Y',strtotime($fetch['scheduled_date']))?></p>
                 <p>Time: <?=$fetch['scheduled_time']?></p>
                 <strong>Confirm Table Reservation</strong>
                 <div class="form-check">
@@ -69,12 +70,12 @@
                     <input type="hidden" value="<?= $fetch['refNumber']?>" name="refNumber">
                     <input type="hidden" value="<?=$fetch['token']?>" name="token">
                     <div>
-                        <input class="form-check-input" type="radio" name="bookStatus" value="Approve" <?php if($fetch['status'] == "Approve"){ echo "checked=checked";} ?> style="height:15px; width:15px">
-                        <label class="form-check-label">Approve</label>
+                        <input class="form-check-input" type="radio" name="bookStatus" value="Reserved" <?php if($fetch['status'] == "Reserved"){ echo "checked=checked";} ?> style="height:15px; width:15px">
+                        <label class="form-check-label">Reserved</label>
                     </div>
                     <div>
                         <input class="form-check-input" type="radio" name="bookStatus" value="Not Available" <?php if($fetch['status'] == "Not Available"){ echo "checked=checked";} ?> style="height:15px; width:15px">
-                        <label class="form-check-label">Cancel</label>
+                        <label class="form-check-label">Not Available</label>
                     </div>
                 </div>
             </div>

@@ -278,6 +278,25 @@ sup {
     justify-content: space-evenly;
 }
 
+.order-status{
+    width: 130px;
+    height: 30px;
+    border-radius: 5px;
+    padding: 0;
+    margin: 10px 0;
+    font-size: .8rem;
+    text-align: center;
+    background-color: transparent;
+    word-break: break-all; 
+}
+.order-button{
+    padding: 3px;
+    border-radius: 5px;
+    border-color:transparent;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
 .input-cart,
 .input-name {
     border: transparent;
@@ -421,13 +440,17 @@ input.checkbox {
     align-items: center;
     margin: 20px 10px;
 }
-
+.icon-forward{
+    padding: 3px;
+    font-size: 1.4rem;
+    color: #89898f;
+}
 .icon-eye {
     cursor: pointer;
     display: flex;
     align-self: flex-end;
     position: relative;
-    top: -27px;
+    top: -25px;
     left: 435px;
 }
 

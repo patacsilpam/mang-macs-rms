@@ -11,24 +11,22 @@
       <div class="modal-body">
        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST">
         <p>Product Name: <input type="text" class="bg-transparent" value="<?=$productName?>" name="productName" style="border:none; outline:none;"></p>
-        <p>Stocks</p>
+        <p>Stocks <input type="hidden" class="bg-transparent" value="<?=$productVariation?>" name="productCategory" style="border:none; outline:none;"></p>
         <?php
               require 'public/connection.php';
-              $getStocks = $connect->prepare("SELECT productVariation,stocks FROM tblproducts WHERE productName=?");
-              $getStocks->bind_param('s',$productName);
+              $getStocks = $connect->prepare("SELECT id,productVariation,stocks FROM tblproducts WHERE productName=? AND id=?");
+              $getStocks->bind_param('si',$productName,$id);
               $getStocks->execute();
               $getStocks->store_result();
-              $getStocks->bind_result($variations,$stock);
-              while($getStocks->fetch()){
+              $getStocks->bind_result($ids,$variations,$stock);
+              $getStocks->fetch();
                   ?>
-                      <div class="mt-3">
-                          <input type="hidden" class="bg-transparent" value="<?=$productName?>" name="productName[]">
-                          <input type="text" class="bg-transparent border-0 sizes" value="<?=$variations?>" name="size[]">
-                          <input type="number" class="form-control  mt-2" value="<?=$stock?>" name="stocks[]" placeholder="Enter Stocks">
-                      </div>
-                  <?php
-              }
-        
+                  <div class="mt-3">
+                    <input type="hidden" class="bg-transparent" value="<?=$ids?>" name="ids">
+                    <input type="text" class="bg-transparent border-0 sizes" value="<?=$variations?>" name="size">
+                    <input type="number" class="form-control  mt-2" value="<?=$stock?>" name="stocks" placeholder="Enter Stocks">
+                  </div>
+            <?php
         ?>
       </div>
       <div class="modal-footer">
@@ -51,22 +49,19 @@
       </div>
       <div class="modal-body">
         <p>Product Name: <?=$productName?></p>
-        <?php
+        <?php 
               require 'public/connection.php';
-              $getStocks = $connect->prepare("SELECT productVariation,stocks FROM tblproducts WHERE productName=?");
-              $getStocks->bind_param('s',$productName);
+              $getStocks = $connect->prepare("SELECT productVariation,stocks FROM tblproducts WHERE productName=? AND id=?");
+              $getStocks->bind_param('si',$productName,$id);
               $getStocks->execute();
               $getStocks->store_result();
               $getStocks->bind_result($variations,$stock);
-              while($getStocks->fetch()){
-                  ?>
-                      <div class="mt-3">
-                          <input type="text" class="bg-transparent border-0 sizes" value="<?=$variations?>" disabled>
-                          <input type="number" class="form-control  mt-2" value="<?=$stock?>" name="stocks" disabled>
-                      </div>
-                  <?php
-              }
-        
+                ?>
+                    <div class="mt-3">
+                        <input type="text" class="bg-transparent border-0 sizes" value="<?=$variations?>" disabled>
+                        <input type="number" class="form-control  mt-2" value="<?=$stock?>" name="stocks" disabled>
+                     </div>
+              <?php
         ?>
       </div>
       <div class="modal-footer">

@@ -15,6 +15,7 @@ function updateBookStatus(){
             $schedDate = date('M-d-Y',strtotime($_POST['schedDate']));
             $schedTime = $_POST['schedTime'];
             $notifDate = date('d-m-y h:i:s');
+            $logo = "https://i.ibb.co/CMq6CXs/logo.png";
             require 'php-mailer/vendor/autoload.php';
             $mail = new PHPMailer;
             $mail->isSMTP();
@@ -27,9 +28,9 @@ function updateBookStatus(){
             $mail->setFrom('mangmacsmarinerospizzahouse@gmail.com', "Mang Mac's Marinero");
             $mail->addAddress($email);
             $mail->isHTML(true);
-            if($bookStatus == "Approve"){
-                $updateBookStatus = $connect->prepare("UPDATE tblreservation SET status=?,notif_date=? WHERE id=?");
-                $updateBookStatus->bind_param('ssi',$bookStatus,$notifDate,$id);
+            if($bookStatus == "Reserved"){
+                $updateBookStatus = $connect->prepare("UPDATE tblreservation SET status=? WHERE id=?");
+                $updateBookStatus->bind_param('si',$bookStatus,$id);
                 $updateBookStatus->execute();
                 if($updateBookStatus){
                     function pushNotifcation($sendTo,$data){
@@ -65,7 +66,7 @@ function updateBookStatus(){
                         <div class='container' style='padding: 1rem;'>
                         <div style='display: flex; flex-direction: column; align-items: center;'>
                             <div class='logo-section'>
-                                <img src='assets/images/logo.png' width='50'>
+                                <img src='$logo' width='50'>
                                 <strong>Mang Macs's Food Shop</strong>
                             </div>
                             <div class='icon-section' style='padding: 1rem;'>
@@ -112,8 +113,8 @@ function updateBookStatus(){
                 }
             }
             else{
-                $updateBookStatus = $connect->prepare("UPDATE tblreservation SET status=?,notif_date=? WHERE id=?");
-                $updateBookStatus->bind_param('ssi',$bookStatus,$notifDate,$id);
+                $updateBookStatus = $connect->prepare("UPDATE tblreservation SET status=? WHERE id=?");
+                $updateBookStatus->bind_param('si',$bookStatus,$id);
                 $updateBookStatus->execute();
                 if($updateBookStatus){
                     function pushNotifcation($sendTo,$data){
@@ -150,7 +151,7 @@ function updateBookStatus(){
                         <div class='container' style='padding: 1rem;'>
                         <div style='display: flex; flex-direction: column; align-items: center;'>
                             <div class='logo-section'>
-                                <img src='assets/images/logo.png' width='50'>
+                                <img src='$logo' width='50'>
                                 <strong>Mang Macs's Food Shop</strong>
                             </div>
                             <div class='icon-section' style='padding: 1rem;'>

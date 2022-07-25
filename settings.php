@@ -35,71 +35,13 @@
             <section>
                 <article>
                     <div class="settings-container">        
-                        <!--Users Container--->
-                        <div class="users-container" style="overflow-x:auto;">
-                            <h4>Employee</h4>
-                            <div>
-                                <?php
-                                //message box
-                                if (isset($_GET['update-successfully'])) {
-                                ?>
-                                <small style="width:30%" class="alert alert-success msg-Success">User successfully
-                                    updated.</small>
-                                <?php
-                                }
-                                if ($unameError) {
-                                ?>
-                                <small style="width:30%" class="alert alert-danger msg-Error">Username already
-                                    exists.</small>
-                                <?php
-                                }
-                                ?>
-                            </div>
-                            <table class="display table" style="width:100%">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Name of Employee</th>
-                                        <th>Employee</th>
-                                        <th>Position</th>
-                                        <th>Salary</th>
-                                        <th>Date Registered</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    $selectProduct = "SELECT * FROM tblusers";
-                                    $displayProduct = $connect->query($selectProduct);
-                                    while ($fetch = $displayProduct->fetch_assoc()) {
-                                    ?>
-                                    <tr>
-                                        <td><?= $fetch['id'] ?></td>
-                                        <td><?= $fetch['fname'] . ' ' . $fetch['lname'] ?></td>
-                                        <td><?= $fetch['uname'] ?></td>
-                                        <td><?= $fetch['position'] ?></td>
-                                        <td><?= $fetch['salary'] ?></td>
-                                        <td><?= $fetch['created_at'] ?></td>
-                                        <td style="display: flex;">
-                                            <span><button title="Edit" type="button" class="btn btn-success"
-                                                    data-toggle="modal" data-target="#editSalary<?= $fetch['id'] ?>"><i
-                                                        class="fas fa-edit"></i></button></span>
-                                            <?php require 'assets/template/admin/users.php' ?>&emsp;
-                                        </td>
-                                    </tr>
-                                    <?php
-                                    }
-                                    ?>
-                                </tbody>
-                            </table>
-                        </div>
                     
                         <div class="payment-container">
                             <!--Reservation Container--->
                             <div class="reservation-container">
                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST">
                                     <div>
-                                        <h3>Delivery Charge</h3>
+                                        <h3>Delivery Fee</h3>
                                         <input type="number" class="form-control" name="deliveryChange"
                                             placeholder="Delivery Charge (ex. 50)" value="<?= $deliveryChange; ?>"
                                             required>

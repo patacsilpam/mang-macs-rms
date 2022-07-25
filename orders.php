@@ -42,47 +42,55 @@
                                     <th scope="col">#</th>
                                     <th scope="col">Ordered Date</th>
                                     <th scope="col">Account Name</th>
-                                    <th scope="col">Status</th>
                                     <th scope="col">Order Type</th>
-                                    <th scope="col">Total Order Amount</th>
+                                    <th scope="col">Total Amount</th>
                                     <th scope="col">Required Date</th>
+                                    <th scope="col">Status</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
                             <!---->
-                            <tbody>
+                            <tbody id="trans_separate">
                                 <?php
                                     require 'public/connection.php';
                                     $getOrders = "SELECT tblcustomerorder.order_number,tblcustomerorder.id,
                                     tblcustomerorder.token,tblorderdetails.created_at,
                                     tblcustomerorder.customer_name,tblorderdetails.order_status,
                                     tblorderdetails.order_type,tblcustomerorder.total_amount,tblorderdetails.required_date,
-                                    tblorderdetails.required_time,tblcustomerorder.email
+                                    tblorderdetails.required_time,tblcustomerorder.email,tblcustomerorder.delivery_fee
                                     FROM tblcustomerorder LEFT JOIN tblorderdetails 
                                     ON tblorderdetails.order_number = tblcustomerorder.order_number
                                     WHERE tblorderdetails.order_status = 'Pending' OR tblorderdetails.order_status = 'Order Received'
                                     OR tblorderdetails.order_status = 'Order Processing' OR tblorderdetails.order_status = 'Out for Delivery'
                                     OR tblorderdetails.order_status = 'Ready for Pick Up' 
-                                    GROUP BY tblcustomerorder.id ORDER BY id DESC";
+                                    GROUP BY tblorderdetails.order_number ORDER BY tblorderdetails.created_at DESC";
                                     $displayOrders = $connect->query($getOrders);
+                                    echo $connect->error;
                                     while($fetch = $displayOrders->fetch_assoc()){
                                    ?>
                                 <tr>
-                                    <th scope="row"><?=$fetch['id']?></th>
+                                    <th scope="row">#<?=$fetch['order_number']?></th>
                                     <td><?=$fetch['created_at']?></td>
                                     <td><?=$fetch['customer_name']?></td>
-                                    <td width="150">
-                                        <span class="flex">
-                                            <?=$fetch['order_status']?>
-                                            <button value="<?=$fetch['order_type']?>" onclick="btnOrderType(this)" title="Edit" type="button" class="btn btn-transparent" data-toggle="modal" data-target="#editUsers<?= $fetch['order_number'] ?>">
-                                                 <i class="fas fa-edit" style="color: blue;"></i>
-                                            </button>
-                                            <?php include 'assets/template/admin/orderStatus.php' ?>
-                                        </span>
-                                    </td>
                                     <td><?=$fetch['order_type']?></td>
-                                    <td><?=$fetch['total_amount']?></td>
+                                    <td><?=$fetch['total_amount'] + $fetch['delivery_fee']?></td>
                                     <td><?=$fetch['required_date']?><br><?=$fetch['required_time']?></td>
+                                    <td width="150">
+                                       <span>
+                                            <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'])?>" method="POST">
+                                                <input type="hidden" value="<?= $fetch['order_type']?>" name="orderType">
+                                                <input type="hidden" value="<?= $fetch['customer_name']?>" name="customerName">
+                                                <input type="hidden" value="<?= $fetch['order_number'] ?>" name="orderNumber">
+                                                <input type="hidden" value="<?=$fetch['created_at']?>" name="orderDate">
+                                                <input type="hidden" value="<?= $fetch['email']?>" name="email">
+                                                <input type="hidden" value="<?=$fetch['token']?>" name="token">
+                                                <input type="hidden"  name="id">
+                                                <input type="hidden" value="<?=$fetch['total_amount']?>" name="sales">
+                                                <input type="text" value="<?=$fetch['order_status']?>" class="order-status"  name="orderStatus"/>
+                                                <button type="submit"  name="btn-update" class="order-button" title="Click for next step">Next Step <i class="far fa-arrow-alt-circle-right icon-forward"></i></button>
+                                            </form>
+                                       </span>
+                                    </td>
                                     <td>
                                         <a href='order_summary.php?order_number=<?= $fetch['order_number'];?>' title="View Order Details">
                                             <button class="btn btn-primary"><i class="fas fa-eye"></i></button>
@@ -104,6 +112,7 @@
     <script src="assets/js/sidebar-menu-active.js"></script>
     <script src="assets/js/activePage.js"></script>
     <script src="assets/js/table.js"></script>
+    <script src="assets/js/highlight-order-status.js"></script>
 </body>
 
 </html>

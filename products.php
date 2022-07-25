@@ -41,7 +41,6 @@
                             <?php include 'assets/template/admin/addProduct.php'?>
                         </div> <br>
                         <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'])?>" method="POST">
-                           <?php include 'assets/template/admin/deleteProducts.php'?>
                         <table id="example" class="table table-hover display">
                             <thead class="thead-dark">
                                 <tr>

@@ -31,9 +31,8 @@
                             <option value="Staff">Staff</option>
                         </select>
                         <label for="password">Password</label>
-                        <input type="password" class="form-control" name="password" id="password" placeholder="Password"
-                            required>
-                        <i class="bi bi-eye-slash icon-eye" id="togglePassword"></i>
+                        <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
+                        <i class="fa fa-eye text-muted icon-eye" id="togglePassword"></i>
                 </div>
             </div>
             <div class="modal-footer">
@@ -137,7 +136,7 @@
                     <p>Delete</p>
                     <div class="modal-body-container">
                         <i class="fas fa-exclamation-circle fa-3x icon-warning"></i><br>
-                        <p class="icon-text-warning">Are you sure you want to delete the user that you selected?</p>
+                        <p class="icon-text-warning">Are you sure you want to delete this user?</p>
                     </div>
                 </div>
                 <div class="modal-footer">

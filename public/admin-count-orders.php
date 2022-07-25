@@ -7,19 +7,24 @@ function countActiveOrders(){
     $shipped = "Order Processing";
     $readyForPickUp = "Ready For Pick Up";
     $outForDelivery = "Out for Delivery";
-    $count = $connect->prepare("SELECT COUNT(*) as 'active_orders' FROM tblorderdetails WHERE order_status=? OR order_status=? OR order_status=? OR order_status=? OR order_status=?");
+    $count = $connect->prepare("SELECT COUNT(*) as 'active_orders' FROM tblorderdetails WHERE order_status=? OR order_status=? OR order_status=? OR order_status=? OR order_status=? GROUP BY order_number");
     $count->bind_param('sssss',$pending,$orderReceived,$shipped,$readyForPickUp,$outForDelivery);
     $count->execute();
     $row = $count->get_result();
     $fetch = $row->fetch_assoc();
-    echo $countActiveOrder = $fetch['active_orders']; 
+    if(isset($fetch['active_orders'])){
+        echo $countActiveOrder = $fetch['active_orders']; 
+    }
+    else{
+        echo 0;
+    }
 }
 //count new table reservation
 function countActiveBooking(){
     require 'public/connection.php';
-    $removeStatus = "Not Removed";
-    $count = $connect->prepare("SELECT COUNT(*) as 'active_booking' FROM tblreservation WHERE remove_status=?");
-    $count->bind_param('s',$removeStatus);
+    $time = date('h:i a');
+    $count = $connect->prepare("SELECT COUNT(*) as 'active_booking' FROM tblreservation WHERE scheduled_date >= CURDATE() AND scheduled_time >=?");
+    $count->bind_param('s',$time);
     $count->execute();
     $row = $count->get_result();
     $fetch = $row->fetch_assoc();
@@ -102,9 +107,9 @@ function countTotalOrders(){
     $orderCompleted = "Order Completed";
     $date = date('Y-m-d');
     $count = $connect->prepare("SELECT COUNT(*) as 'dailyOrders',
-    (SELECT COUNT(*) FROM tblorderdetails WHERE order_status=?) as 'totalOrders'
+    (SELECT COUNT(*) FROM tblorderdetails WHERE created_at=? AND order_status=?) as 'totalOrders'
     FROM tblorderdetails WHERE created_at=? AND order_status=?");
-    $count->bind_param('sss',$orderCompleted,$date,$orderCompleted);
+    $count->bind_param('ssss',$date,$orderCompleted,$date,$orderCompleted);
     $count->execute();
     $row = $count->get_result();
     $fetch = $row->fetch_assoc();
@@ -114,12 +119,12 @@ function countTotalOrders(){
 //count total table reservation 
 function countTotalBooking(){
     require 'public/connection.php';
-    $status = "Approve";
+    $status = "Reserved";
     $date = date('Y-m-d');
     $count = $connect->prepare("SELECT COUNT(*) as 'dailyBooking',
-    (SELECT COUNT(*) FROM tblreservation) as 'totalBooking' 
+    (SELECT COUNT(*) FROM tblreservation WHERE created_at=? AND status=?) as 'totalBooking' 
     FROM tblreservation  WHERE created_at=? AND status=?");
-    $count->bind_param('ss',$date,$status);
+    $count->bind_param('ssss',$date,$status,$date,$status);
     $count->execute();
     $row = $count->get_result();
     $fetch = $row->fetch_assoc();
@@ -130,14 +135,17 @@ function countTotalBooking(){
 function countCustomers(){
     require 'public/connection.php';
     $date = date('Y-m-d');
-    $count = $connect->prepare("SELECT COUNT(*) as 'dailyCustomers',
+    /*$count = $connect->prepare("SELECT COUNT(*) as 'dailyCustomers',
     (SELECT COUNT(*) FROM tblcustomers) as 'totalCustomers'
     FROM tblcustomers WHERE created_account=?");
-    $count->bind_param('s',$date);
+    $count->bind_param('s',$date);*/
+    $count = $connect->prepare("SELECT COUNT(*) as 'dailyCustomers' FROM tblcustomers");
+    //$count->bind_param('s',$date);
     $count->execute();
     $row = $count->get_result();
     $fetch = $row->fetch_assoc();
-    echo $countCustomers = $fetch['dailyCustomers']."/".$fetch['totalCustomers'];
+   // echo $countCustomers = $fetch['dailyCustomers']."/".$fetch['totalCustomers'];
+    echo $countCustomers = $fetch['dailyCustomers'];
 }
 
 ?>
