@@ -64,11 +64,8 @@
                                         $endDate = date($expiredDate, $offset);
                                         $todayDate = new DateTime($today);
                                         $exp = new DateTime($endDate);
-                                        if ($exp <= $todayDate) {
-                                            $highligtRow = "#ff4444";
-                                        }
                                         if ($exp > $todayDate) {
-                                            $highligtRow = "#ffffff";
+                                            $highligtRow = "#e6dccc";
                                         }
                                     ?>
                                         <tr style="background: <?php echo $highligtRow; ?>;">
@@ -79,7 +76,7 @@
                                             <td><?= $fetch['quantityPurchased'] ?></td>
                                             <td><?= $fetch['quantityInStock'] ?></td>
                                             <td style="display: flex;">
-                                                <?php require 'assets/template/admin/editStocks.php' ?>
+                                                <?php require 'assets/template/admin/inventory.php' ?>
                                                 <span><button title="View" type="button" class="btn btn-primary mr-3" data-toggle="modal" data-target="#viewStocks<?= $fetch['id']; ?>"><i class="fas fa-eye"></i></button></span>
                                                 <span><button title="Edit" type="button" class="btn btn-success mr-3" data-toggle="modal" data-target="#editInventory<?= $fetch['id'] ?>"><i class="fas fa-edit"></i></button></span>
                                                 <span><button title="Delete" type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteInventory<?= $fetch['id'] ?>"><i class="fas fa-trash"></i></button></span>
@@ -98,19 +95,93 @@
         </main>
         <!--Sidebar-->
         <?php include 'assets/template/admin/sidebar.php'?>
-        <?php if(isset($_SESSION['status']) && isset($_SESSION['status']) != ""){
+         <!--Insert sweet alert message-->
+         <?php if(isset($_GET['inserted'])){
             ?>
             <script>
                 swal({
-                    title: "<?php echo $_SESSION['status']; ?>",
-                    text: "<?php echo $_SESSION['message']; ?>",
-                    icon: "<?php echo $_SESSION['status_code']; ?>",
+                    title: "Successful",
+                    text: "Insert new item successfully",
+                    icon: "success",
                     button: "Ok",
                     });
             </script>
             <?php
-            unset($_SESSION['status']);
-        } ?>
+        }
+        //error sweet alert message
+        else{
+            if(isset($_GET['error'])){
+                ?>
+                <script>
+                    swal({
+                        title: "Error",
+                        text: "Could not insert item.",
+                        icon: "error",
+                        button: "Ok",
+                        });
+                </script>
+            <?php
+            }
+        }
+        ?>
+       
+        <?php
+        if(isset($_GET['updated'])){
+             //update sweet alert message
+            ?>
+             <script>
+                swal({
+                    title: "Successful",
+                    text: "Update item successfully",
+                    icon: "success",
+                    button: "Ok",
+                    });
+            </script>
+            <?php
+        }
+        else{
+            if(isset($_GET['update_item_error'])){
+                ?>
+                <script>
+                    swal({
+                        title: "Error",
+                        text: "Could not update item.",
+                        icon: "error",
+                        button: "Ok",
+                        });
+                </script>
+                <?php
+            }
+        }
+        ?>
+        <?php
+        if(isset($_GET['deleted'])){
+            ?>
+             <script>
+               swal({
+                    title: "Successful",
+                    text: "Delete item successfully",
+                    icon: "success",
+                    button: "Ok",
+                    });
+            </script>
+            <?php
+        }
+        else{
+            if(isset($_GET['delete_item_error'])){
+            ?>
+            <script>
+                swal({
+                    title: "Error",
+                    text: "Could not delete item.",
+                    icon: "error",
+                    button: "Ok",
+                    });
+            </script>
+            <?php
+            }
+        }
+        ?>
     </div>
     <script src="assets/js/sidebar-menu-active.js"></script>
     <script src="assets/js/activePage.js"></script>

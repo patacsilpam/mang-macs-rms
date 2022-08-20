@@ -7,3 +7,18 @@ togglePassword.addEventListener('click', function(e) {
     // toggle the eye / eye slash icon
     this.classList.toggle('fa-eye-slash');
 });
+//hide password input
+function clickPos(position){
+    let hidePassword = document.querySelectorAll('.hide-password');
+    let i;
+    if(position.value == "Admin"){
+       for(i = 0 ; i<hidePassword.length; i++){
+            hidePassword[i].style.display = "none";
+       }
+    }
+    else{
+        for(i = 0 ; i<hidePassword.length; i++){
+            hidePassword[i].style.display = "block";
+        }
+    }
+}

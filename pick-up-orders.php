@@ -23,7 +23,7 @@
     <div class="grid-container">
         <!--Navigation-->
         <header class="nav-container">
-            <h3>Pick Up Orders</h3>
+            <h5>Pick Up Orders (<?php echo date('F d, Y')?>)</h5>
             <ul class="nav-list">
                 <?php include 'assets/template/admin/navbar.php' ?>
             </ul>

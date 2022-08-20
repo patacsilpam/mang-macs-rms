@@ -23,7 +23,7 @@
     <div class="grid-container">
         <!--Navigation-->
         <header class="nav-container">
-            <h3>Cancelled Orders</h3>
+            <h5>Cancelled Orders (<?php echo date('F d, Y')?>)</h5>
             <ul class="nav-list">
                 <?php include 'assets/template/admin/navbar.php' ?>
             </ul>

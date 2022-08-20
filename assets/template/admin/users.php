@@ -109,6 +109,10 @@
                             <option value="Staff"
                                 <?php if ($fetch['position'] == "Staff") echo 'selected ? "selected"'; ?>>Staff</option>
                         </select>
+                        <div class="hide-password">
+                            <label>Change Password</label>
+                            <input type="text" class="form-control" name="password" placeholder="Change Password">
+                        </div>
                 </div>
             </div>
             <div class="modal-footer">

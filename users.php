@@ -67,8 +67,8 @@
                                             <td><?= $fetch['position'] ?></td>
                                             <td style="display: flex;">
                                                 <span><button title="View" type="button" class="btn btn-primary" data-toggle="modal" data-target="#showUsers<?= $fetch['id'] ?>"><i class="fas fa-eye"></i></button></span>&emsp;
-                                                <span><button title="Edit" type="button" class="btn btn-success" data-toggle="modal" data-target="#editUsers<?= $fetch['id'] ?>"><i class="fas fa-edit"></i></button></span>
-                                                <?php require 'assets/template/admin/users.php' ?>&emsp;
+                                                <span><button title="Edit" type="button" class="btn btn-success" data-toggle="modal" data-target="#editUsers<?= $fetch['id'] ?>" onclick="clickPos(this)" value="<?=$fetch['position']?>"><i class="fas fa-edit"></i></button></span>
+                                                <?php include 'assets/template/admin/users.php' ?>&emsp;
                                                 <span><button title="Delete" type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteUsers<?= $fetch['id'] ?>"><i class="fas fa-trash"></i></button></span>
                                             </td>
                                         </tr>
@@ -85,21 +85,104 @@
         </main>
         <!--Sidebar-->
         <?php include 'assets/template/admin/sidebar.php'?>
-        <?php if(isset($_SESSION['status']) && isset($_SESSION['status']) != ""){
-            ?>
-            <script>
-                swal({
-                    title: "<?php echo $_SESSION['status']; ?>",
-                    text: "<?php echo $_SESSION['message']; ?>",
-                    icon: "<?php echo $_SESSION['status_code']; ?>",
-                    button: "Ok",
-                    });
-            </script>
-            <?php
-            unset($_SESSION['status']);
-            unset($_SESSION['message']);
-            unset($_SESSION['status_code']);
-        } ?>
+        <?php 
+            if(isset($_GET['inserted'])){
+                ?>
+                <script>
+                    swal({
+                        title: "Successful",
+                        text: "Insert new user successfully",
+                        icon: "success",
+                        button: "Ok",
+                        });
+                </script>
+                <?php
+            }
+            else if(isset($_GET['username_already_exist'])){
+                ?>
+                 <script>
+                    swal({
+                        title: "Error",
+                        text: "Username already exist",
+                        icon: "error",
+                        button: "Ok",
+                        });
+                </script>
+                <?php
+            }
+            else{
+                if(isset($_GET['email_already_exist'])){
+                ?>
+                <script>
+                   swal({
+                       title: "Error",
+                       text: "Email already exist",
+                       icon: "error",
+                       button: "Ok",
+                       });
+               </script>
+               <?php
+                }
+            }
+        ?>
+        <!--Update alert message-->
+        <?php
+            if(isset($_GET['updated'])){
+                ?>
+                <script>
+                    swal({
+                        title: "Successful",
+                        text: "Update user successfully",
+                        icon: "success",
+                        button: "Ok",
+                        });
+                </script>
+                <?php
+            }
+            else{
+                if(isset($_GET['update_user_error'])){
+                ?>
+                <script>
+                   swal({
+                       title: "Error",
+                       text: "Could not update item",
+                       icon: "error",
+                       button: "Ok",
+                       });
+               </script>
+               <?php
+                }
+            }
+        ?>
+         <!--Delete alert message-->
+         <?php
+            if(isset($_GET['deleted'])){
+                ?>
+                <script>
+                    swal({
+                        title: "Successful",
+                        text: "Delete user successfully",
+                        icon: "success",
+                        button: "Ok",
+                        });
+                </script>
+                <?php
+            }
+            else{
+                if(isset($_GET['delete_user_error'])){
+                ?>
+                <script>
+                   swal({
+                       title: "Error",
+                       text: "Could not delete item",
+                       icon: "error",
+                       button: "Ok",
+                       });
+               </script>
+               <?php
+                }
+            }
+        ?>
     </div>
     <script src="assets/js/sidebar-menu-active.js"></script>
     <script src="assets/js/activePage.js"></script>

@@ -20,11 +20,11 @@ function updateOrderStatus(){
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = '';
-            $mail->Password = '';
+            $mail->Username = 'mangmacsmarinerospizzahouse@gmail.com';
+            $mail->Password = 'uihz grau bhyt qikw';
             $mail->SMTPSecure = 'tls';
             $mail->Port = 587;
-            $mail->setFrom('', "Mang Mac's Marinero");
+            $mail->setFrom('mangmacsmarinerospizzahouse@gmail.com', "Mang Mac's Marinero");
             $mail->addAddress($email);
             $mail->isHTML(true);
             //update delivery order status to order received

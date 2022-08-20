@@ -24,22 +24,7 @@
                         </div>
                         <div class="mt-2">
                             <label for="product">Item Name</label>
-                            <select id="inventory" class="form-control"  name="product">
-                                <option value="">Select item</option>
-                            <?php 
-                                    require_once 'public/connection.php';
-                                    $getItem = $connect->prepare("SELECT code,productName,productCategory,productVariation FROM tblproducts  ORDER BY productName ASC");
-                                    $getItem->execute();
-                                    $getItem->bind_result($code,$productName,$productCategory,$productVariation);
-                                    $getItem->fetch();
-                                    while($getItem->fetch()){
-                                        ?>
-                                            <option value="<?=$code."=".$productName?>"><?=$productName?></option>
-                                           
-                                        <?php
-                                    }
-                            ?>
-                            </select>
+                            <input type="text" class="form-control" name="product" placeholder="Enter item name" required>
                         </div>
                         <div class="mt-2">
                             <label for="quantity">Item Purchase</label>

@@ -7,27 +7,7 @@
     <div class="dropdown-menu dropdown-bell-icon" aria-labelledby="dropdownMenuLink">
         <a class="dropdown-item" href="inventory.php">
         <?php
-            $getExpDate = "SELECT * FROM tblinventory WHERE expiration_date < now()";
-            $displayExpDate = $connect->query($getExpDate);
-            if ($displayExpDate) {
-                while ($fetchItem = $displayExpDate->fetch_assoc()) {
-                    $expDate = date('F d, Y', strtotime($fetchItem['created_at']));
-                    $timeLapse = round(abs(strtotime(date('y-m-d')) - strtotime($fetchItem['expiration_date'])) / (60 * 60 * 24), 0);
-            ?>
-            <div class="dropdown-notif">
-                <b>Expired</b>
-                <p class="text-dark">The item<i>( <?= $fetchItem['product'] ?> )</i> you purchased from <br> <?= $expDate ?>
-                    has expired.</p>
-                <?php if ($timeLapse > 0) {
-                            echo 'Expired '. $timeLapse . '<small> days ago</small>';
-                        } else {
-                            echo '<small> Expired today</small>';
-                        } ?>
-                <hr>
-            </div>
-            <?php
-                }
-            }
+            //display product that is about to expire
             $getAboutToExp = "SELECT * FROM tblinventory WHERE expiration_date BETWEEN curdate() + 1 AND DATE_ADD(curdate(), INTERVAL 6 DAY)";
             $displayAboutToExp = $connect->query($getAboutToExp);
             if ($displayAboutToExp) {

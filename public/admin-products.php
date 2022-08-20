@@ -31,10 +31,7 @@ function insertProducts(){
             $row = $check_product_name ->get_result();
             $fetch = $row->fetch_assoc();
             if($row->num_rows > 0){
-                $_SESSION['status'] = "Error";
-                $_SESSION['status_code'] ="error";
-                $_SESSION['message'] = "Product already exist.";
-            
+                header('Location:products.php?error');
             }
              //insert pizza if selected
             else if($productCategory == "Pizza"){
@@ -48,15 +45,9 @@ function insertProducts(){
                     $insertProduct->bind_param('issssiiisss', $newId,$code, $productName, $productCategory, $newPizzaSize,$stocks,$newPizzaPrice, $preparationTime,$mainIngredients,$imageServerUrl, $created_at);
                     $insertProduct->execute();
                     if ($insertProduct) {
-                        $_SESSION['status'] = "Successful";
-                        $_SESSION['status_code'] ="success";
-                        $_SESSION['message'] = "Insert new product successfully";
-                        header('Location:products.php');
+                        header('Location:products.php?inserted');
                     } else{
-                        $_SESSION['status'] = "Error";
-                        $_SESSION['status_code'] ="error";
-                        $_SESSION['message'] = "Could not insert product";
-                        header('Location:products.php');
+                        header('Location:products.php?error');
                     }
                 }
             }
@@ -72,15 +63,9 @@ function insertProducts(){
                     $insertProduct->bind_param('issssiiisss', $newId,$code, $productName, $productCategory, $newBilaoSize,$stocks,$newBilaoPrice, $preparationTime,$mainIngredients,$imageServerUrl, $created_at);
                     $insertProduct->execute();
                     if ($insertProduct) {
-                        $_SESSION['status'] = "Successful";
-                        $_SESSION['status_code'] ="success";
-                        $_SESSION['message'] = "Insert new product successfully";
-                        header('Location:products.php');
+                        header('Location:products.php?inserted');
                     } else{
-                        $_SESSION['status'] = "Error";
-                        $_SESSION['status_code'] ="error";
-                        $_SESSION['message'] = "Could not insert product";
-                        header('Location:products.php');
+                        header('Location:products.php?error');
                     }
                 }
             }
@@ -94,15 +79,9 @@ function insertProducts(){
                 $insertProduct->bind_param('issssiiisss', $ids,$code, $productName, $productCategory, $noCategorySize,$stocks,$noCategoryPrice, $preparationTime,$mainIngredients,$imageServerUrl, $created_at);
                 $insertProduct->execute();
                 if ($insertProduct) {
-                    $_SESSION['status'] = "Successful";
-                    $_SESSION['status_code'] ="success";
-                    $_SESSION['message'] = "Insert new product successfully";
-                    header('Location:products.php');
+                    header('Location:products.php?inserted');
                 } else{
-                    $_SESSION['status'] = "Error";
-                    $_SESSION['status_code'] ="error";
-                    $_SESSION['message'] = "Could not insert product";
-                    header('Location:products.php');
+                    header('Location:products.php?error');
                 }
             }
         }
@@ -131,15 +110,9 @@ function updateProducts(){
                 $updateProduct->execute();
                 if ($updateProduct) {
                     move_uploaded_file($editImageProductTemp,$imageFolderPath);
-                    $_SESSION['status'] = "Successful";
-                    $_SESSION['status_code'] ="success";
-                    $_SESSION['message'] = "Update product successfully";
-                    header('Location:products.php');
+                    header('Location:products.php?updated');
                 } else{
-                    $_SESSION['status'] = "Error";
-                    $_SESSION['status_code'] ="error";
-                    $_SESSION['message'] = "Could not update product";
-                    header('Location:products.php');
+                    header('Location:products.php?error');
                 }
             } else {
                 //check image product
@@ -155,15 +128,11 @@ function updateProducts(){
                 $updateProduct->bind_param('sssiisssi', $editProductName, $editProductCategory, $editProductVariation,$editPrice,$editPreparationTime,$editMainIngredients,$editProductImage, $edited_at, $id);
                 $updateProduct->execute();
                 if ($updateProduct) {
-                    $_SESSION['status'] = "Successful";
-                    $_SESSION['status_code'] ="success";
-                    $_SESSION['message'] = "Update product successfully";
-                    header('Location:products.php?');
+                    
+                    header('Location:products.php?updated');
                 } else{
-                    $_SESSION['status'] = "Error";
-                    $_SESSION['status_code'] ="error";
-                    $_SESSION['message'] = "Could not update product";
-                    header('Location:products.php');
+                  
+                    header('Location:products.php?error');
                 }
             }
         }
@@ -181,15 +150,9 @@ function deleteProducts(){
             $alterTable = "ALTER TABLE tblproducts AUTO_INCREMENT=1";
             $alter = $connect->query($alterTable);
             if ($alter) {
-                $_SESSION['status'] = "Successful";
-                $_SESSION['status_code'] ="success";
-                $_SESSION['message'] = "Delete product successfully";   
-                header('Location:products.php?');
+                header('Location:products.php?deleted');
             }  else{
-                $_SESSION['status'] = "Error";
-                $_SESSION['status_code'] ="error";
-                $_SESSION['message'] = "Could not delete item";
-                header('Location:products.php');
+                header('Location:products.php?error');
             }
         }
     }
@@ -204,16 +167,10 @@ function updateProductStocks(){
             $updateNoStock = $connect->prepare("UPDATE tblproducts SET stocks=? WHERE id=?");
             $updateNoStock->bind_param('ii',$stock,$id);
             $updateNoStock->execute();
-            if($updateNoStock){
-                $_SESSION['status'] = "Successful";
-                $_SESSION['status_code'] ="success";
-                $_SESSION['message'] = "Update stock successfully";   
-                header('Location:available-menu.php?');
+            if($updateNoStock){ 
+                header('Location:available-menu.php?update_stock');
             } else{
-                $_SESSION['status'] = "Error";
-                $_SESSION['status_code'] ="error";
-                $_SESSION['message'] = "Could not update product";
-                header('Location:available-menu.php?false');
+                header('Location:available-menu.php?update_product_error');
             }
         }
     }

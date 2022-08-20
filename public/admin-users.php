@@ -29,16 +29,10 @@ function insertUsers(){
             //check if username already exists
             if ($row->num_rows == 1) {
                 if ($uname == $fetch['uname']) {
-                    //$GLOBALS['unameError'] =  "Username already exist.";
-                    $_SESSION['status'] = "Error";
-                    $_SESSION['status_code'] ="error";
-                    $_SESSION['message'] = "Username already exist.";
+                    header('Location:users?username_already_exist');
                 }
                 if ($email == $fetch['email']) {
-                    //$GLOBALS['emailError'] =  "Email already exist.";
-                    $_SESSION['status'] = "Error";
-                    $_SESSION['status_code'] ="error";
-                    $_SESSION['message'] = "Email already exist.";
+                    header('Location:users?email_already_exist');
                 }
             }
             //if validation is correct insert data values to database
@@ -48,15 +42,9 @@ function insertUsers(){
                 $insertUser->bind_param('issssssssi', $id, $fname, $lname, $uname, $email, $passwordHash, $profile, $position, $created_at, $verification_code);
                 $insertUser->execute();
                 if ($insertUser) {
-                    $_SESSION['status'] = "Successful";
-                    $_SESSION['status_code'] ="success";
-                    $_SESSION['message'] = "Insert new user successfully";
-                    header('Location:users.php');
+                    header('Location:users.php?inserted');
                 } else{
-                    $_SESSION['status'] = "Error";
-                    $_SESSION['status_code'] ="error";
-                    $_SESSION['message'] = "Could not insert user";
-                    header('Location:products.php');
+                    header('Location:products.php?error');
                 }
             } 
         }
@@ -72,6 +60,8 @@ function editUsers(){
             $uname = mysqli_real_escape_string($connect, $_POST['uname']);
             $email = mysqli_real_escape_string($connect, $_POST['email']);
             $position = mysqli_real_escape_string($connect, $_POST['position']);
+            $password = mysqli_real_escape_string($connect,$_POST['password']);
+            $passwordHash = password_hash($password,PASSWORD_DEFAULT);
             $created_at = date('y-m-d h:i:s');
             //check username and email
             $check_uname_email = $connect->prepare("SELECT * FROM tblusers WHERE uname=? OR email=?");
@@ -80,19 +70,13 @@ function editUsers(){
             $row = $check_uname_email->get_result();
             $fetch = $row->fetch_assoc();
             if ($row->num_rows == 1) {
-                $updateUser = $connect->prepare("UPDATE tblusers SET fname=?,lname=?,uname=?,email=?,position=? WHERE id=?");
-                $updateUser->bind_param('sssssi', $fname, $lname, $uname, $email, $position, $id);
+                $updateUser = $connect->prepare("UPDATE tblusers SET fname=?,lname=?,uname=?,email=?,user_password=?,position=? WHERE id=?");
+                $updateUser->bind_param('ssssssi', $fname, $lname, $uname, $email,$passwordHash,$position, $id);
                 $updateUser->execute();
                 if ($updateUser) {
-                    $_SESSION['status'] = "Successful";
-                    $_SESSION['status_code'] ="success";
-                    $_SESSION['message'] = "Update user successully";
-                    header('Location:users.php');
+                    header('Location:users.php?updated');
                 } else{
-                    $_SESSION['status'] = "Error";
-                    $_SESSION['status_code'] ="error";
-                    $_SESSION['message'] = "Could not update user";
-                    header('Location:users.php');
+                    header('Location:users.php?update_user_error');
                 }
             }
         }
@@ -110,42 +94,16 @@ function deleteUsers(){
                 //alter table id column
                 $alterTable = "ALTER TABLE users AUTO_INCREMENT = 1";
                 $alterTableId = $connect->query($alterTable);
-                $_SESSION['status'] = "Successful";
-                $_SESSION['status_code'] ="success";
-                $_SESSION['message'] = "Delete user successfully";
-                header('Location:users.php');
+                header('Location:users.php?deleted');
             }
             else{
-                $_SESSION['status'] = "Error";
-                $_SESSION['status_code'] ="error";
-                $_SESSION['message'] = "Could not delete user";
-                header('Location:users.php');
+                header('Location:users.php?delete_user_error');
             }
         }
     }
 }
-function multiUsers(){
-    require 'public/connection.php';
-    if(isset($_SERVER["REQUEST_METHOD"]) == "POST"){
-        if(isset($_POST['btn-multi-delete'])){
-            $ids = $_POST['userIds'];
-            foreach($ids as $value){
-                $ids = $value;
-                $multiDeleteProd = $connect->prepare("DELETE FROM tblusers WHERE id=?");
-                $multiDeleteProd->bind_param('i',$ids);
-                $multiDeleteProd->execute();
-                if($multiDeleteProd){
-                    $_SESSION['status'] = "Successful";
-                    $_SESSION['status_code'] ="success";
-                    $_SESSION['message'] = "Delete product successfully";   
-                    header('Location:users.php?');
-                }
-            }
-        }
-    }
-}
+
 insertUsers();
 editUsers();
 deleteUsers();
-multiUsers();
 ?>

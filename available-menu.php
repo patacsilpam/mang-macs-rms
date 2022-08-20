@@ -60,6 +60,7 @@
                                             <td><?=$productVariation?></td>
                                             <td><?=$stocks?></td>
                                             <td>
+                                            <?php include 'assets/template/admin/editStocks.php'; ?> 
                                             <button title="View" type="button" class="btn btn-primary" data-toggle="modal"
                                             data-target="#viewStocks<?= $id; ?>"><i
                                                 class="fas fa-eye"></i></button>&emsp;

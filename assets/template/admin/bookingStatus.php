@@ -27,7 +27,7 @@
                             <label class="form-check-label">Reserved</label>
                         </div>
                         <div>
-                            <input class="form-check-input" type="radio" name="bookStatus" value="Not Available" <?php if($fetch['status'] == "Not Available"){ echo "checked=checked";} ?> style="height:15px; width:15px">
+                            <input class="form-check-input" type="radio" name="bookStatus" value="Cancelled" <?php if($fetch['status'] == "Cancelled"){ echo "checked=checked";} ?> style="height:15px; width:15px">
                             <label class="form-check-label">Not Available</label>
                         </div>
                     </div>
@@ -74,7 +74,7 @@
                         <label class="form-check-label">Reserved</label>
                     </div>
                     <div>
-                        <input class="form-check-input" type="radio" name="bookStatus" value="Not Available" <?php if($fetch['status'] == "Not Available"){ echo "checked=checked";} ?> style="height:15px; width:15px">
+                        <input class="form-check-input" type="radio" name="bookStatus" value="Cancelled" <?php if($fetch['status'] == "Cancelled"){ echo "checked=checked";} ?> style="height:15px; width:15px">
                         <label class="form-check-label">Not Available</label>
                     </div>
                 </div>
@@ -87,31 +87,3 @@
     </div>
 </div>
 </form>
-<!-- Remove Table  -->
-<div class="modal fade" id="deleteUsers<?= $fetch['id'] ?>" tabindex="-1" role="dialog"
-    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle">Table Reservation</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'])?>" method="POST">
-                <div class="modal-body">
-                    <input type="hidden" value="<?=$fetch['id']?>" name="id">
-                    <p>Remove</p>
-                    <div class="modal-body-container">
-                        <i class="fas fa-exclamation-circle fa-3x icon-warning"></i><br>
-                        <p class="icon-text-warning">Are you sure you want to remove this list from table?</p>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-danger" name="btn-deleteTable">Remove</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>

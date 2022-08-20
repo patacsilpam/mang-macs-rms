@@ -71,7 +71,7 @@
                                     <td><?= $fetch['productVariation'] ?></td>
                                     <td>₱ <?= $fetch['price'] ?></td>
                                     <td><?= $fetch['preparationTime']?>mins</td>
-                                    <td style="display: flex;">
+                                    <td style="display: flex;"> 
                                         <button title="View" type="button" class="btn btn-primary" data-toggle="modal"
                                             data-target="#viewProduct<?= $fetch['id']; ?>"><i
                                                 class="fas fa-eye"></i></button>&emsp;
@@ -97,19 +97,105 @@
         </main>
         <!--Sidebar-->
         <?php include 'assets/template/admin/sidebar.php'?>
-        <?php if(isset($_SESSION['status']) && isset($_SESSION['status']) != ""){
+        <!--Insert sweet alert message-->
+        <?php if(isset($_GET['inserted'])){
             ?>
             <script>
                 swal({
-                    title: "<?php echo $_SESSION['status']; ?>",
-                    text: "<?php echo $_SESSION['message']; ?>",
-                    icon: "<?php echo $_SESSION['status_code']; ?>",
+                    title: "Successful",
+                    text: "Insert new product successfully",
+                    icon: "success",
                     button: "Ok",
                     });
             </script>
             <?php
-            unset($_SESSION['status']);
-        } ?>
+        }
+        //error sweet alert message
+        else{
+            if(isset($_GET['product_already_exist'])){
+                ?>
+                <script>
+                    swal({
+                        title: "Error",
+                        text: "Product already exist.",
+                        icon: "error",
+                        button: "Ok",
+                        });
+                </script>
+            <?php
+            }
+        }
+        ?>
+       
+        <?php
+        if(isset($_GET['updated'])){
+             //update sweet alert message
+            ?>
+             <script>
+                swal({
+                    title: "Successful",
+                    text: "Update product successfully",
+                    icon: "success",
+                    button: "Ok",
+                    });
+            </script>
+            <?php
+        }
+        else if(isset($_GET['update_stock'])){
+            ?>
+            <script>
+                swal({
+                    title: "Successful",
+                    text: "Update stock successfully",
+                    icon: "success",
+                    button: "Ok",
+                    });
+            </script>
+            <?php
+        }
+        else{
+            if(isset($_GET['update_product_error'])){
+                ?>
+                <script>
+                    swal({
+                        title: "Error",
+                        text: "Could not update product.",
+                        icon: "error",
+                        button: "Ok",
+                        });
+                </script>
+                <?php
+            }
+        }
+        ?>
+        <?php
+        if(isset($_GET['deleted'])){
+            ?>
+             <script>
+               swal({
+                    title: "Successful",
+                    text: "Delete product successfully",
+                    icon: "success",
+                    button: "Ok",
+                    });
+            </script>
+            <?php
+        }
+        else{
+            if(isset($_GET['delete_product_error'])){
+            ?>
+            <script>
+                swal({
+                    title: "Error",
+                    text: "Could not delete product.",
+                    icon: "error",
+                    button: "Ok",
+                    });
+            </script>
+            <?php
+            }
+        }
+        ?>
     </div>
     <script src="assets/js/sidebar-menu-active.js"></script>
     <script src="assets/js/activePage.js"></script>

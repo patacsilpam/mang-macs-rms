@@ -7,10 +7,7 @@ if (!isset($_SESSION['loggedIn'])) {
 }
 date_default_timezone_set('Asia/Manila');
 //display notification
-$countNotif = "SELECT COUNT(*) FROM
-            (SELECT * FROM tblinventory WHERE expiration_date < now()
-            UNION
-            SELECT * FROM tblinventory WHERE expiration_date BETWEEN curdate() + 1 AND DATE_ADD(curdate(), INTERVAL 6 DAY)) tblinventory ";
+$countNotif = "SELECT COUNT(*) FROM tblinventory WHERE expiration_date BETWEEN curdate() + 1 AND DATE_ADD(curdate(), INTERVAL 6 DAY)";
 $displayNotif = $connect->query($countNotif);
 $fetchNotif = $displayNotif->fetch_row();
 //
@@ -49,21 +46,12 @@ function insertStocks(){
                     $insertInventory->bind_param('issssiiis', $id,$code,$expirationDate, $created_at, $strProduct,$quantityPurchased,$totalStock,$quantitySold, $status);
                     $insertInventory->execute();
                     if ($insertInventory) {
-                        $_SESSION['status'] = "Successful";
-                        $_SESSION['status_code'] ="success";
-                        $_SESSION['message'] = "Insert new item successfully";
-                        header('Location:inventory.php');
+                        header('Location:inventory.php?inserted');
                     } else{
-                        $_SESSION['status'] = "Error";
-                        $_SESSION['status_code'] ="error";
-                        $_SESSION['message'] = "Could not insert item";
-                        header('Location:inventory.php');
+                        header('Location:inventory.php?error');
                     }
                 } else{
-                    $_SESSION['status'] = "Error";
-                    $_SESSION['status_code'] ="error";
-                    $_SESSION['message'] = "Could not insert item";
-                    header('Location:inventory.php');
+                    header('Location:inventory.php?error');
                 }
             }
              //insert non existent product in table inventory
@@ -73,15 +61,9 @@ function insertStocks(){
             $insertInventory->bind_param('issssiiis', $id,$code,$expirationDate, $created_at, $strProduct,$quantityPurchased,$quantityInStock,$quantitySold, $status);
             $insertInventory->execute();
             if ($insertInventory) {
-                $_SESSION['status'] = "Successful";
-                $_SESSION['status_code'] ="success";
-                $_SESSION['message'] = "Insert new item successfully";
-                header('Location:inventory.php');
+                header('Location:inventory.php?inserted');
             } else{
-                $_SESSION['status'] = "Error";
-                $_SESSION['status_code'] ="error";
-                $_SESSION['message'] = "Could not insert item";
-                header('Location:inventory.php');
+                header('Location:inventory.php?item_error');
             }
         }      
         }
@@ -118,15 +100,9 @@ function updateStocks(){
                 $updateInventory->execute();
               
                 if ($updateInventory) {
-                    $_SESSION['status'] = "Successful";
-                    $_SESSION['status_code'] ="success";
-                    $_SESSION['message'] = "Update item successfully";
-                    header('Location:inventory.php');
+                    header('Location:inventory.php?updated');
                 }  else{
-                    $_SESSION['status'] = "Error";
-                    $_SESSION['status_code'] ="error";
-                    $_SESSION['message'] = "Could not update item";
-                    header('Location:inventory.php');
+                    header('Location:inventory.php?update_item_error');
                 }
             }
         }
@@ -158,22 +134,22 @@ function deleteStocks(){
                     $alterTable = "ALTER TABLE tblinventory AUTO_INCREMENT = 1";
                     $alterTableId = $connect->query($alterTable);
                     if ($alterTableId) {
-                        $_SESSION['status'] = "Successful";
-                        $_SESSION['status_code'] ="success";
-                        $_SESSION['message'] = "Delete item successfully";
-                        header('Location:inventory.php');
+                        header('Location:inventory.php?deleted');
                     } else{
-                        $_SESSION['status'] = "Error";
-                        $_SESSION['status_code'] ="error";
-                        $_SESSION['message'] = "Could not delete item";
-                        header('Location:inventory.php');
+                        header('Location:inventory.php?delete_item_error');
                     }
                 }
             }
         }
     }
 }
+function autoDeletion(){
+    require 'public/connection.php';
+    $autoDelProduct = $connect->prepare("DELETE FROM tblinventory WHERE expiration_date < CURDATE()");
+    $autoDelProduct->execute();
+}
 insertStocks();
 updateStocks();
 deleteStocks();
+autoDeletion();
 ?>

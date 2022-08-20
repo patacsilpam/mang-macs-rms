@@ -51,8 +51,8 @@
                             <tbody>
                                 <?php
                                     require 'public/connection.php';
-                                    $time = date('h:i a');
-                                    $queryReservation = $connect->query("SELECT * FROM tblreservation WHERE scheduled_date >= CURDATE() AND scheduled_time >= '$time'");
+                                    $queryReservation = $connect->query("SELECT * FROM tblreservation WHERE scheduled_date >=CURDATE() 
+                                    AND status != 'Cancelled' ORDER BY scheduled_date AND scheduled_time  ASC");
                                     while($fetch = $queryReservation->fetch_assoc()){
                                    ?>
                                 <tr>
@@ -73,7 +73,6 @@
                                         <button title="View Details" type="button" class="btn btn-primary" data-toggle="modal"
                                             data-target="#viewTable<?= $fetch['id']; ?>"><i
                                                 class="fas fa-eye"></i></button>  
-                                        <button title="Remove" type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteUsers<?= $fetch['id'] ?>"><i class="fas fa-trash"></i></button>
                                     </td>
                                 </tr>
                                 <?php

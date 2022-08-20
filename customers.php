@@ -23,7 +23,7 @@
     <div class="grid-container">
         <!--Navigation-->
         <header class="nav-container">
-            <h3>Customers</h3>
+            <h5>Customers (<?php echo date('F d, Y')?>)</h5>
             <ul class="nav-list">
                 <?php include 'assets/template/admin/navbar.php' ?>
             </ul>
@@ -102,7 +102,7 @@
                                                 <td><?= $fname." ".$lname?></td>
                                                 <td><?= $gender?></td>
                                                 <td><?= $birthdate?></td>
-                                                <td><?= date('F d, Y',strtotime($createdAccount))?></td>
+                                                <td><?= date('F D, Y',strtotime($createdAccount))?></td>
                                                 <td><?= $userStatus?></td>
                                             </tr>
                                             <?php

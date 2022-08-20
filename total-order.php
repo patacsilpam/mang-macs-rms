@@ -15,14 +15,14 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
     <link rel="icon" type="image/jpeg" href="assets/images/mang-macs-logo.jpg" sizes="70x70">
     <link rel="stylesheet" href="assets/css/main.css" type="text/css">
-    <title>Completed Total Orders</title>
+    <title>Total Orders</title>
 </head>
 
 <body>
     <div class="grid-container">
         <!--Navigation-->
         <header class="nav-container">
-            <h3>Completed Total Orders</h3>
+            <h5>Total Orders (<?php echo date('F d, Y')?>)</h5>
             <ul class="nav-list">
                 <?php include 'assets/template/admin/navbar.php' ?>
             </ul>
