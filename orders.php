@@ -60,7 +60,7 @@ require 'public/admin-orders.php'
                                     FROM tblcustomerorder LEFT JOIN tblorderdetails 
                                     ON tblorderdetails.order_number = tblcustomerorder.order_number
                                     WHERE tblorderdetails.order_status != 'Order Completed'
-                                     ORDER BY required_date AND required_time ASC;";
+                                    ORDER BY STR_TO_DATE(CONCAT(tblorderdetails.required_date,' ',tblorderdetails.required_time),'%Y-%m-%d %h:%i %p') ASC";
                                     $displayOrders = $connect->query($getOrders);
                                     while($fetch = $displayOrders->fetch_assoc()){
                                    ?>

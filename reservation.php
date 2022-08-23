@@ -37,7 +37,7 @@
                         <table id="example" class="table table-hover">
                             <thead class="thead-dark">
                                 <tr>
-                                    <th scope="col">#</th>
+                                    <th scope="col">Booking No.</th>
                                     <th scope="col">Date</th>
                                     <th scope="col">Date Schedule</th>
                                     <th scope="col">Name</th>
@@ -51,12 +51,15 @@
                             <tbody>
                                 <?php
                                     require 'public/connection.php';
-                                    $queryReservation = $connect->query("SELECT * FROM tblreservation WHERE scheduled_date >=CURDATE() 
-                                    AND status != 'Cancelled' ORDER BY scheduled_date AND scheduled_time  ASC");
+                                    date_default_timezone_set("Asia/Manila");
+                                    $queryReservation = $connect->query("SELECT * FROM tblreservation 
+                                    WHERE STR_TO_DATE(CONCAT(scheduled_date,' ', scheduled_time),'%Y-%m-%d %h:%i %p') 
+                                    >= DATE_SUB(now(),INTERVAL 30 minute) AND status != 'Cancelled' AND status != 'No Shows'
+                                    ORDER BY STR_TO_DATE(CONCAT(scheduled_date,' ', scheduled_time),'%Y-%m-%d %h:%i %p') ASC");
                                     while($fetch = $queryReservation->fetch_assoc()){
                                    ?>
                                 <tr>
-                                    <td><?= $fetch['id']?></td>
+                                    <td><?= $fetch['refNumber']?></td>
                                     <td><?= $fetch['created_at']?></td>
                                     <td><?= $fetch['scheduled_date']?> <br> <?=$fetch['scheduled_time']?></td>
                                     <td><?= $fetch['fname'] ?> <?=$fetch['lname']?></td>
