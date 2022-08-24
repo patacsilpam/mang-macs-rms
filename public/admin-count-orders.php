@@ -2,13 +2,10 @@
 //count ongoing orders
 function countActiveOrders(){
     require 'public/connection.php';
-    $pending = "Pending";
-    $orderReceived = "Order Received";
-    $shipped = "Order Processing";
-    $readyForPickUp = "Ready For Pick Up";
-    $outForDelivery = "Out for Delivery";
-    $count = $connect->prepare("SELECT SUM(COUNT(DISTINCT order_number)) OVER() as 'active_orders' FROM tblorderdetails WHERE order_status=? OR order_status=? OR order_status=? OR order_status=? OR order_status=? GROUP BY order_number");
-    $count->bind_param('sssss',$pending,$orderReceived,$shipped,$readyForPickUp,$outForDelivery);
+    $orderStatus = "Order Completed";
+    $orderType = "Dine In";
+    $count = $connect->prepare("SELECT SUM(COUNT(DISTINCT order_number)) OVER() as 'active_orders' FROM tblorderdetails WHERE order_status != ? AND order_type != ? GROUP BY order_number");
+    $count->bind_param('ss',$orderStatus,$orderType);
     $count->execute();
     $row = $count->get_result();
     $fetch = $row->fetch_assoc();

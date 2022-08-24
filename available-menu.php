@@ -81,19 +81,7 @@
         </main>
         <!--Sidebar-->
         <?php include 'assets/template/admin/sidebar.php'?>
-        <?php if(isset($_SESSION['status']) && isset($_SESSION['status']) != ""){
-            ?>
-            <script>
-                swal({
-                    title: "<?php echo $_SESSION['status']; ?>",
-                    text: "<?php echo $_SESSION['message']; ?>",
-                    icon: "<?php echo $_SESSION['status_code']; ?>",
-                    button: "Ok",
-                    });
-            </script>
-            <?php
-            unset($_SESSION['status']);
-        } ?>
+        <?php require_once 'public/admin-alert-product.php'?>
     </div>
     <script src="assets/js/sidebar-menu-active.js"></script>
     <script src="assets/js/activePage.js"></script>

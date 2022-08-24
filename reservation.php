@@ -52,16 +52,23 @@
                                 <?php
                                     require 'public/connection.php';
                                     date_default_timezone_set("Asia/Manila");
-                                    $queryReservation = $connect->query("SELECT * FROM tblreservation 
-                                    WHERE STR_TO_DATE(CONCAT(scheduled_date,' ', scheduled_time),'%Y-%m-%d %h:%i %p') 
-                                    >= DATE_SUB(now(),INTERVAL 30 minute) AND status != 'Cancelled' AND status != 'No Shows'
-                                    ORDER BY STR_TO_DATE(CONCAT(scheduled_date,' ', scheduled_time),'%Y-%m-%d %h:%i %p') ASC");
+                                    $queryReservation = $connect->query("SELECT DISTINCT(tblreservation.refNumber),tblreservation.id, 
+                                    tblreservation.token,tblorderdetails.created_at, tblreservation.fname,tblreservation.lname,
+                                    tblreservation.guests,tblreservation.status,
+                                    tblorderdetails.order_status, tblorderdetails.order_type,
+                                    tblorderdetails.required_date, tblorderdetails.required_time, tblreservation.email 
+                                    FROM tblreservation LEFT JOIN tblorderdetails ON 
+                                    tblreservation.refNumber = tblorderdetails.order_number 
+                                    WHERE tblorderdetails.order_status != 'Order Completed' 
+                                    AND tblorderdetails.order_type = 'Dine In' 
+                                    ORDER BY STR_TO_DATE(CONCAT(tblorderdetails.required_date,' ',
+                                    tblorderdetails.required_time),'%Y-%m-%d %h:%i %p') ASC");
                                     while($fetch = $queryReservation->fetch_assoc()){
                                    ?>
                                 <tr>
                                     <td><?= $fetch['refNumber']?></td>
                                     <td><?= $fetch['created_at']?></td>
-                                    <td><?= $fetch['scheduled_date']?> <br> <?=$fetch['scheduled_time']?></td>
+                                    <td><?= $fetch['required_date']?> <br> <?=$fetch['required_time']?></td>
                                     <td><?= $fetch['fname'] ?> <?=$fetch['lname']?></td>
                                     <td><?= $fetch['email']?></td>
                                     <td><?= $fetch['guests']?></td>
@@ -73,9 +80,9 @@
                                         <?php include 'assets/template/admin/bookingStatus.php' ?>
                                     </td>
                                     <td>
-                                        <button title="View Details" type="button" class="btn btn-primary" data-toggle="modal"
-                                            data-target="#viewTable<?= $fetch['id']; ?>"><i
-                                                class="fas fa-eye"></i></button>  
+                                        <a href='reservation_summary.php?order_number=<?= $fetch['refNumber'];?>' title="View Order Details">
+                                            <button class="btn btn-primary"><i class="fas fa-eye"></i></button>
+                                        </a>
                                     </td>
                                 </tr>
                                 <?php

@@ -99,8 +99,9 @@ function updateOrderStatus(){
                                     <p>".$orderType."</p>
                                 </div>
                             </div>";
-                        $getOrders = $connect->prepare("SELECT tblcustomerorder.customer_name,tblcustomerorder.customer_address,
-                        tblcustomerorder.phone_number,tblorderdetails.product_name,tblorderdetails.product_variation,
+                        $getOrders = $connect->prepare("SELECT tblcustomerorder.customer_name,tblcustomerorder.total_amount,
+                        tblcustomerorder.customer_address,tblcustomerorder.phone_number,
+                        tblorderdetails.product_name,tblorderdetails.product_variation,
                         tblorderdetails.quantity,tblorderdetails.price,tblorderdetails.add_ons,tblorderdetails.product_image
                         FROM tblcustomerorder LEFT JOIN tblorderdetails
                         ON tblcustomerorder.order_number = tblorderdetails.order_number
@@ -108,10 +109,10 @@ function updateOrderStatus(){
                         echo $connect->error;
                         $getOrders->bind_param('s',$orderNumber);
                         $getOrders->execute();
-                        $getOrders->bind_result($customerName,$customerAddress,$phoneNumber,$product,$variation,$quantity,$price,$addOns,$productImage);
+                        $getOrders->bind_result($customerName,$totalAmount,$customerAddress,$phoneNumber,$product,$variation,$quantity,$price,$addOns,$productImage);
                         $totalAmount="";
                         while($getOrders->fetch()){
-                            $totalAmount = $price * $quantity;
+                            $totalAmount += $deliveryFee;
                             $mail->Body .= "<div>
                             <div style='display: flex; flex-direction: row;'>
                                 <div>
@@ -136,8 +137,6 @@ function updateOrderStatus(){
                             <div>
                                 <h3>Delivery Details</h3>
                                 <p><span style='margin: 0 55px 0 0;' '>Recepient Name:</span><span>$customerName</span></p>
-                                <p><span style='margin: 0 60px 0 0;' '>Address:</span><span>$customerAddress</span></p>
-                                <p><span style='margin: 0 55px 0 0;' '>Phone Number:</span><span>$phoneNumber</span></p>
                             <div>
                             <div style='text-align:center'>
                                 <p>from</p></br>
@@ -296,8 +295,6 @@ function updateOrderStatus(){
                             <div>
                                 <h3>Delivery Details</h3>
                                 <p><span style='margin: 0 55px 0 0;' '>Recepient Name:</span><span>$customerName</span></p>
-                                <p><span style='margin: 0 60px 0 0;' '>Addresss:</span><span>$customerAddress</span></p>
-                                <p><span style='margin: 0 55px 0 0;' '>Phone Number:</span><span>$phoneNumber</span></p>
                             <div>
                             <div style='text-align:center'>
                                 <p>from</p></br>
@@ -312,6 +309,16 @@ function updateOrderStatus(){
                 }
                 else{
                     $changeOrderStatus="Order Completed";
+                    $id = $_POST['id'];
+                    $fullname = $_SESSION['fname']." ".$_SESSION['lname'];
+                    $sales = $_POST['sales'];
+                    $userType = "Admin";
+                    $reportDate = date('Y-m-d h:i:s');
+                    //insert report sale
+                    $insertSale = $connect->prepare("INSERT INTO tblreport(id,fullname,sales,user_type,report_date) VALUES(?,?,?,?,?)");
+                    echo $connect->error;
+                    $insertSale->bind_param('isiss',$id,$fullname,$sales,$userType,$reportDate);
+                    $insertSale->execute();
                     $OrderStatus = $connect->prepare("UPDATE tblorderdetails SET order_status=?,completed_time=?,notif_date=? WHERE order_number=?");
                     $OrderStatus->bind_param('ssss',$changeOrderStatus,$completedTime,$notifDate,$orderNumber);
                     $OrderStatus->execute();
@@ -417,8 +424,6 @@ function updateOrderStatus(){
                             <div>
                                 <h3>Delivery Details</h3>
                                 <p><span style='margin: 0 55px 0 0;' '>Recepient Name:</span><span>$customerName</span></p>
-                                <p><span style='margin: 0 60px 0 0;' '>Addresss:</span><span>$customerAddress</span></p>
-                                <p><span style='margin: 0 55px 0 0;' '>Phone Number:</span><span>$phoneNumber</span></p>
                             <div>
                             <div style='text-align:center'>
                                 <p>from</p></br>
@@ -507,17 +512,16 @@ function updateOrderStatus(){
                             </div>";
                         $getOrders = $connect->prepare("SELECT tblcustomerorder.customer_name,tblcustomerorder.customer_address,
                         tblcustomerorder.phone_number,tblorderdetails.product_name,tblorderdetails.product_variation,
-                        tblorderdetails.quantity,tblorderdetails.price,tblorderdetails.add_ons,tblorderdetails.product_image
+                        tblorderdetails.quantity,tblorderdetails.price,tblorderdetails.add_ons,tblorderdetails.product_image,
+                        tblcustomerorder.total_amount,tblcustomerorder.delivery_fee
                         FROM tblcustomerorder LEFT JOIN tblorderdetails
                         ON tblcustomerorder.order_number = tblorderdetails.order_number
                         WHERE tblorderdetails.order_number=?");
                         echo $connect->error;
                         $getOrders->bind_param('s',$orderNumber);
                         $getOrders->execute();
-                        $getOrders->bind_result($customerName,$customerAddress,$phoneNumber,$product,$variation,$quantity,$price,$addOns,$productImage);
-                        $totalAmount="";
+                        $getOrders->bind_result($customerName,$customerAddress,$phoneNumber,$product,$variation,$quantity,$price,$addOns,$productImage,$totalAmount,$deliveryFee);
                         while($getOrders->fetch()){
-                            $totalAmount = $price * $quantity;
                             $mail->Body .= "<div>
                             <div style='display: flex; flex-direction: row;'>
                                 <div>
@@ -534,6 +538,10 @@ function updateOrderStatus(){
                         </div><hr style='border:0.3px solid #dbdbdb;'>";
                         }
                         $mail->Body .= " 
+                            <div style='display:flex; flex-direction: row; align-items: center;'>
+                                <h3>Delivery Fee:</h3>
+                                <p><span>$deliveryFee</span><span>.00</span></p>
+                            </div>
                             <div style='display:flex; flex-direction: row; align-items: center;'>
                                 <h3>Total Amount:</h3>
                                 <p><span>$totalAmount</span><span>.00</span></p>
@@ -628,15 +636,14 @@ function updateOrderStatus(){
                             </div>";
                         $getOrders = $connect->prepare("SELECT tblcustomerorder.customer_name,tblcustomerorder.customer_address,
                         tblcustomerorder.phone_number,tblorderdetails.product_name,tblorderdetails.product_variation,
-                        tblorderdetails.quantity,tblorderdetails.price,tblorderdetails.add_ons,tblorderdetails.product_image
+                        tblorderdetails.quantity,tblorderdetails.price,tblorderdetails.add_ons,tblorderdetails.product_image,
+                        tblcustomerorder.total_amount,tblcustomerorder.delivery_fee
                         FROM tblcustomerorder LEFT JOIN tblorderdetails
                         ON tblcustomerorder.order_number = tblorderdetails.order_number
                         WHERE tblorderdetails.order_number=?");
-                        echo $connect->error;
                         $getOrders->bind_param('s',$orderNumber);
                         $getOrders->execute();
-                        $getOrders->bind_result($customerName,$customerAddress,$phoneNumber,$product,$variation,$quantity,$price,$addOns,$productImage);
-                        $totalAmount="";
+                        $getOrders->bind_result($customerName,$customerAddress,$phoneNumber,$product,$variation,$quantity,$price,$addOns,$productImage,$totalAmount,$deliveryFee);
                         while($getOrders->fetch()){
                             $totalAmount = $price * $quantity;
                             $mail->Body .= "<div>
@@ -656,6 +663,10 @@ function updateOrderStatus(){
                         }
                         $mail->Body .= " 
                             <div style='display:flex; flex-direction: row; align-items: center;'>
+                                <h3>Delivery Fee:</h3>
+                                <p><span>$deliveryFee</span><span>.00</span></p>
+                            </div>
+                            <div style='display:flex; flex-direction: row; align-items: center;'>
                                 <h3>Total Amount:</h3>
                                 <p><span>$totalAmount</span><span>.00</span></p>
                             </div>
@@ -663,6 +674,8 @@ function updateOrderStatus(){
                             <div>
                                 <h3>Delivery Details</h3>
                                 <p><span style='margin: 0 55px 0 0;' '>Recepient Name:</span><span>$customerName</span></p>
+                                <p><span style='margin: 0 60px 0 0;' '>Address:</span><span>$customerAddress</span></p>
+                                <p><span style='margin: 0 55px 0 0;' '>Phone Number:</span><span>$phoneNumber</span></p>
                             
                             <div>
                             <div style='text-align:center'>
@@ -686,6 +699,7 @@ function updateOrderStatus(){
                             $reportDate = date('Y-m-d h:i:s');
                             //insert report sale
                             $insertSale = $connect->prepare("INSERT INTO tblreport(id,fullname,sales,user_type,report_date) VALUES(?,?,?,?,?)");
+                            echo $connect->error;
                             $insertSale->bind_param('isiss',$id,$fullname,$sales,$userType,$reportDate);
                             $insertSale->execute();
                             //update order status
@@ -759,14 +773,15 @@ function updateOrderStatus(){
                                 </div>";
                             $getOrders = $connect->prepare("SELECT tblcustomerorder.customer_name,tblcustomerorder.customer_address,
                             tblcustomerorder.phone_number,tblorderdetails.product_name,tblorderdetails.product_variation,
-                            tblorderdetails.quantity,tblorderdetails.price,tblorderdetails.add_ons,tblorderdetails.product_image
+                            tblorderdetails.quantity,tblorderdetails.price,tblorderdetails.add_ons,tblorderdetails.product_image,
+                            tblcustomerorder.total_amount,tblcustomerorder.delivery_fee
                             FROM tblcustomerorder LEFT JOIN tblorderdetails
                             ON tblcustomerorder.order_number = tblorderdetails.order_number
                             WHERE tblorderdetails.order_number=?");
                             echo $connect->error;
                             $getOrders->bind_param('s',$orderNumber);
                             $getOrders->execute();
-                            $getOrders->bind_result($customerName,$customerAddress,$phoneNumber,$product,$variation,$quantity,$price,$addOns,$productImage);
+                            $getOrders->bind_result($customerName,$customerAddress,$phoneNumber,$product,$variation,$quantity,$price,$addOns,$productImage,$totalAmount,$deliveryFee);
                             $totalAmount="";
                             while($getOrders->fetch()){
                                 $totalAmount = $price * $quantity;
@@ -787,6 +802,10 @@ function updateOrderStatus(){
                             }
                             $mail->Body .= " 
                                 <div style='display:flex; flex-direction: row; align-items: center;'>
+                                    <h3>Delivery Fee:</h3>
+                                    <p><span>$deliveryFee</span><span>.00</span></p>
+                                </div>
+                                <div style='display:flex; flex-direction: row; align-items: center;'>
                                     <h3>Total Amount:</h3>
                                     <p><span>$totalAmount</span><span>.00</span></p>
                                 </div>
@@ -794,6 +813,8 @@ function updateOrderStatus(){
                                 <div>
                                     <h3>Delivery Details</h3>
                                     <p><span style='margin: 0 55px 0 0;' '>Recepient Name:</span><span>$customerName</span></p>
+                                    <p><span style='margin: 0 60px 0 0;' '>Address:</span><span>$customerAddress</span></p>
+                                    <p><span style='margin: 0 55px 0 0;' '>Phone Number:</span><span>$phoneNumber</span></p>
                                 <div>
                                 <div style='text-align:center'>
                                     <p>from</p></br>

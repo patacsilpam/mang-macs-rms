@@ -52,14 +52,14 @@ require 'public/admin-orders.php'
                             <tbody id="trans_separate">
                                 <?php
                                     require 'public/connection.php';
-                                    $getOrders = "SELECT tblcustomerorder.order_number,tblcustomerorder.id,
+                                    $getOrders = "SELECT DISTINCT(tblcustomerorder.order_number),tblcustomerorder.id,
                                     tblcustomerorder.token,tblorderdetails.created_at,
                                     tblcustomerorder.customer_name,tblorderdetails.order_status,
                                     tblorderdetails.order_type,tblcustomerorder.total_amount,tblorderdetails.required_date,
                                     tblorderdetails.required_time,tblcustomerorder.email
                                     FROM tblcustomerorder LEFT JOIN tblorderdetails 
                                     ON tblorderdetails.order_number = tblcustomerorder.order_number
-                                    WHERE tblorderdetails.order_status != 'Order Completed'
+                                    WHERE tblorderdetails.order_status != 'Order Completed' AND tblorderdetails.order_type != 'Dine In'
                                     ORDER BY STR_TO_DATE(CONCAT(tblorderdetails.required_date,' ',tblorderdetails.required_time),'%Y-%m-%d %h:%i %p') ASC";
                                     $displayOrders = $connect->query($getOrders);
                                     while($fetch = $displayOrders->fetch_assoc()){
