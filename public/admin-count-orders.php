@@ -2,10 +2,14 @@
 //count ongoing orders
 function countActiveOrders(){
     require 'public/connection.php';
-    $orderStatus = "Order Completed";
+    $orderCompleted = "Order Completed";
+    $orderReceived = "Order Received";
+    $orderCancelled = "Cancelled";
     $orderType = "Dine In";
-    $count = $connect->prepare("SELECT SUM(COUNT(DISTINCT order_number)) OVER() as 'active_orders' FROM tblorderdetails WHERE order_status != ? AND order_type != ? GROUP BY order_number");
-    $count->bind_param('ss',$orderStatus,$orderType);
+    $count = $connect->prepare("SELECT SUM(COUNT(DISTINCT order_number)) OVER() as 'active_orders' 
+    FROM tblorderdetails WHERE order_status != ? AND order_status!=? AND order_status!=? AND order_type != ?
+    GROUP BY order_number");
+    $count->bind_param('ssss',$orderCompleted,$orderReceived,$orderCancelled,$orderType);
     $count->execute();
     $row = $count->get_result();
     $fetch = $row->fetch_assoc();
@@ -16,13 +20,16 @@ function countActiveOrders(){
         echo 0;
     }
 }
-//count new table reservation
+//count new table reservation(pending and reserved)
 function countActiveBooking(){
     require 'public/connection.php';
     date_default_timezone_set("Asia/Manila");
-    $time = date('h:i a');
-    $count = $connect->prepare("SELECT COUNT(*) as 'active_booking' FROM tblreservation WHERE scheduled_date >= CURDATE()");
-   // $count->bind_param('s',$time);
+    $bookPending = "Pending";
+    $bookReserved = "Reserved";
+    $count = $connect->prepare("SELECT COUNT(*) as 'active_booking' FROM tblreservation 
+    WHERE  status=? AND status=? AND
+    STR_TO_DATE(CONCAT(scheduled_date,' ', scheduled_time),'%Y-%m-%d %h:%i %p') >= DATE_SUB(CURDATE(), INTERVAL 30 MINUTE)");
+    $count->bind_param('ss',$bookPending,$bookReserved);
     $count->execute();
     $row = $count->get_result();
     $fetch = $row->fetch_assoc();
@@ -33,83 +40,78 @@ function countActiveBooking(){
         echo 0;
    }
 }
+/*
+SELECT COUNT(*) as 'dailyDeliver', 
+(SELECT COUNT(*) FROM tblorderdetails WHERE order_status IN ('Order Completed','Order Received') AND order_type='Deliver') as 'totalDeliver'
+ FROM tblorderdetails WHERE order_status IN ('Order Completed','Order Received') AND order_type='Deliver' AND required_date='2022-08-24';
+*/
 //count delivery orders
 function countDeliveryOrders(){
     require 'public/connection.php';
-    $deliver = "Deliver";
-    $orderStatus = "Order Completed";
+    $orderType = "Deliver";
+    $orderCompleted = "Order Completed";
+    $orderReceived = "Order Received";
     $date = date('Y-m-d');
     $count = $connect->prepare("SELECT COUNT(*) as 'dailyDeliver', 
-    (SELECT COUNT(*) FROM tblorderdetails WHERE order_type=? AND order_status=?) as 'totalDeliver' 
-    FROM tblorderdetails WHERE created_at=? AND  order_type=? AND order_status=?");
-    $count->bind_param('sssss',$deliver,$orderStatus,$date,$deliver,$orderStatus);
+    (SELECT COUNT(*) FROM tblorderdetails WHERE order_status IN (?,?) AND order_type=?) as 'totalDeliver' 
+    FROM tblorderdetails WHERE order_status IN (?,?) AND order_type=? AND required_date=?");
+    echo $connect->error;
+    $count->bind_param('sssssss',$orderCompleted,$orderReceived,$orderType,$orderCompleted,$orderReceived,$orderType,$date);
     $count->execute();
     $row = $count->get_result();
-    $fetch = $row->fetch_assoc();
-    if($fetch['dailyDeliver'] > 0){
+    if($fetch = $row->fetch_assoc()){
         echo $countDeliver = $fetch['dailyDeliver']."/".$fetch['totalDeliver']; 
-    }
-    else{
-        echo 0;
-    }
+    } 
 }
 //count pick up orders
 function countPickUpOrders(){
     require 'public/connection.php';
-    $pickUp = "Pick Up";
-    $orderStatus = "Order Completed";
+    $orderType = "Pick Up";
+    $orderCompleted = "Order Completed";
+    $orderReceived = "Order Received";
     $date = date('Y-m-d');
     $count = $connect->prepare("SELECT COUNT(*) as 'dailyPickUp', 
-    (SELECT COUNT(*) FROM tblorderdetails WHERE order_type=? AND order_status=?) as 'totalPickUp' 
-    FROM tblorderdetails WHERE created_at=? AND  order_type=? AND order_status=?");
-    $count->bind_param('sssss',$pickUp,$orderStatus,$date,$pickUp,$orderStatus);
+    (SELECT COUNT(*) FROM tblorderdetails WHERE order_status IN (?,?) AND order_type=?) as 'totalPickUp' 
+    FROM tblorderdetails WHERE order_status IN (?,?) AND order_type=? AND required_date=?");
+    echo $connect->error;
+    $count->bind_param('sssssss',$orderCompleted,$orderReceived,$orderType,$orderCompleted,$orderReceived,$orderType,$date);
     $count->execute();
     $row = $count->get_result();
-    $fetch = $row->fetch_assoc();
-    if($fetch['dailyPickUp'] > 0){
-        echo $countPickUp = $fetch['dailyPickUp']."/".$fetch['totalPickUp']; 
-    }
-    else{
-        echo 0;
+    if( $fetch = $row->fetch_assoc()){
+        echo $countDeliver = $fetch['dailyPickUp']."/".$fetch['totalPickUp']; 
     }
 }
 //count cancelled orders
 function countCancelledOrders(){
     require 'public/connection.php';
+    $orderDeliver = "Deliver";
+    $orderPickUp = "Pick Up";
     $cancelled = "Cancelled";
     $date = date('Y-m-d');
     $count = $connect->prepare("SELECT COUNT(*) as 'dailyCancelled', 
-    (SELECT COUNT(*) FROM tblorderdetails WHERE order_status=?) as 'totalCancelled' 
-    FROM tblorderdetails WHERE created_at=? AND  order_status=?");
-    $count->bind_param('sss',$cancelled,$date,$cancelled);
+    (SELECT COUNT(*) FROM tblorderdetails WHERE order_type IN (?,?) AND order_status=?) as 'totalCancelled' 
+    FROM tblorderdetails WHERE order_type IN (?,?) AND order_status=? AND required_date=?");
+    $count->bind_param('sssssss',$orderDeliver,$orderPickUp,$cancelled,$orderDeliver,$orderPickUp,$cancelled,$date);
     $count->execute();
     $row = $count->get_result();
-    $fetch = $row->fetch_assoc();
-    if($fetch['dailyCancelled'] > 0){
+    if($fetch = $row->fetch_assoc()){
         echo $countCancelled = $fetch['dailyCancelled']."/".$fetch['totalCancelled']; 
     }
-    else{
-        echo 0;
-    }
-    
 }
 //count cancelled table reservation
 function countCancelledBooking(){
     require 'public/connection.php';
     $cancelled = "Cancelled";
+    $noShows = "No Shows";
     $date = date('Y-m-d');
     $count = $connect->prepare("SELECT COUNT(*) as 'dailyCancelled',
-    (SELECT COUNT(*) FROM tblreservation WHERE status=? AND scheduled_date=?)  as 'totalCancelled' 
-    FROM tblreservation WHERE status=? AND scheduled_date=?");
-    $count->bind_param('ssss',$cancelled,$date,$cancelled,$date);
+    (SELECT COUNT(*) FROM tblreservation WHERE status IN (?,?))  as 'totalCancelled' 
+    FROM tblreservation WHERE status IN (?,?) AND scheduled_date=?");
+    $count->bind_param('sssss',$cancelled,$noShows,$cancelled,$noShows,$date);
     $count->execute();
     $row = $count->get_result();
-    $fetch = $row->fetch_assoc();
-    if($fetch['dailyCancelled'] > 0){
+    if( $fetch = $row->fetch_assoc()){
         echo $countCancelledBooking = $fetch['dailyCancelled']."/".$fetch['totalCancelled']; 
-    }
-    else{
-        echo 0;
     }
 }
 
