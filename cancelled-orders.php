@@ -52,13 +52,12 @@
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Ordered Date</th>
-                                    <th scope="col">Customer ID</th>
+                                    <th scope="col">Customer Name</th>
                                     <th scope="col">Email</th>
                                     <th scope="col">Product</th>
                                     <th scope="col">Variation</th>
                                     <th scope="col">Quantity</th>
                                     <th scope="col">Price</th>
-                                    <th scope="col">Add Ons</th>
                                     <th scope="col">Order Type</th>
                                 </tr>
                             </thead>
@@ -66,33 +65,36 @@
                                 <?php
                                     require 'public/connection.php';
                                     $totalAmount="";
-                                    $orderStatus = "Cancelled";
-                                    if(isset($_GET['startDate']) && isset($_GET['endDate'])){           
+                                    
+                                    if(isset($_GET['startDate']) && isset($_GET['endDate'])){   
+                                        $orderDeliver = "Deliver";
+                                        $orderPickUp = "Pick Up"; 
+                                        $orderStatus = "Cancelled";     
                                         $startDate = $_GET['startDate'];
                                         $endDate = $_GET['endDate'];
-                                        $getTotalOrder = $connect->prepare("SELECT tblorderdetails.id,tblorderdetails.created_at,
+                                        $getTotalOrder = $connect->prepare("SELECT tblorderdetails.order_number,tblorderdetails.required_date,
                                         tblcustomerorder.customer_name,tblorderdetails.product_name,tblorderdetails.product_variation,
                                         tblorderdetails.quantity,tblorderdetails.price,tblorderdetails.price * tblorderdetails.quantity as 'subtotal',
                                         tblorderdetails.add_ons,tblorderdetails.order_type 
                                         FROM tblorderdetails LEFT JOIN tblcustomerorder ON tblorderdetails.order_number = tblcustomerorder.order_number
-                                        WHERE tblorderdetails.created_at BETWEEN (?) AND (?) and tblorderdetails.order_status=?");
+                                        WHERE tblorderdetails.order_type IN (?,?) AND tblorderdetails.order_status=? 
+                                        AND tblorderdetails.required_date  BETWEEN (?) AND (?)");
                                         echo $connect->error;
-                                        $getTotalOrder->bind_param('sss',$startDate,$endDate,$orderStatus);
+                                        $getTotalOrder->bind_param('sssss',$orderDeliver,$orderPickUp,$orderStatus,$startDate,$endDate);
                                         $getTotalOrder->execute();
-                                        $getTotalOrder->bind_result($id,$createdAt,$customerName,$product,$variation,$quantity,$price,$subtotal,$addOns,$orderType);
+                                        $getTotalOrder->bind_result($orderNumber,$requiredDate,$customerName,$product,$variation,$quantity,$price,$subtotal,$addOns,$orderType);
                                         if($getTotalOrder){
                                             while($getTotalOrder->fetch()){
                                                 ?>
                                                 <tr>
-                                                    <td><?= $id?></td>
-                                                    <td><?= $createdAt?></td>
+                                                    <td><?= $orderNumber?></td>
+                                                    <td><?= $requiredDate?></td>
                                                     <td><?= $customerName?></td>
                                                     <td><?= $product?></td>
                                                     <td><?= $variation?></td>
                                                     <td><?= $quantity?></td>
                                                     <td><?= $price?></td>
                                                     <td><?= $subtotal?></td>
-                                                    <td><?= $addOns?></td>
                                                     <td><?= $orderType?></td>
                                                 </tr>
                                                 <?php
@@ -103,6 +105,9 @@
                                         }
                                     
                                     } else{
+                                        $orderDeliver = "Deliver";
+                                        $orderPickUp = "Pick Up"; 
+                                        $orderStatus = "Cancelled";
                                         $date = date('Y-m-d');
                                         $getTotalOrder = $connect->prepare("SELECT tblorderdetails.id,tblorderdetails.created_at,
                                         tblcustomerorder.customer_name,tblorderdetails.product_name,tblorderdetails.product_variation,
