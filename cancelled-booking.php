@@ -51,33 +51,34 @@
                             <thead class="thead-dark">
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Date</th>
                                     <th scope="col">Date Schedule</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">No. of Guests</th>
+                                    <th scope="col">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
                                     require 'public/connection.php';    
-                                    $cancelled = "Cancelled";    
-                                    $notApproved = "Not Approve";     
-                                    if(isset($_GET['startDate']) && isset($_GET['endDate'])){           
+                                        
+                                    if(isset($_GET['startDate']) && isset($_GET['endDate'])){     
+                                        $cancelled = "Cancelled";    
+                                        $noShows = "No Shows";       
                                         $startDate = $_GET['startDate'];
                                         $endDate = $_GET['endDate'];
-                                        $getTotalOrder = $connect->prepare("SELECT id,created_at,customer_id,fname,lname,guests,scheduled_date,scheduled_time,status FROM tblreservation WHERE created_at BETWEEN (?) AND (?) HAVING status=? OR status=?");
-                                        $getTotalOrder->bind_param('ssss',$startDate,$endDate,$cancelled,$notApproved);
+                                        $getTotalOrder = $connect->prepare("SELECT refNumber,fname,lname,guests,scheduled_date,scheduled_time,status FROM tblreservation WHERE status IN (?,?) AND scheduled_date BETWEEN (?) AND (?)");
+                                        $getTotalOrder->bind_param('ssss',$cancelled,$notApproved,$startDate,$endDate);
                                         $getTotalOrder->execute();
-                                        $getTotalOrder->bind_result($id,$createdAt,$customerId,$fname,$lname,$guests,$schedDate,$schedTime,$bookStatus);
+                                        $getTotalOrder->bind_result($refNumber,$fname,$lname,$guests,$schedDate,$schedTime,$bookStatus);
                                         if($getTotalOrder){
                                             while($getTotalOrder->fetch()){
                                                 ?>
                                                 <tr>
-                                                    <td><?= $id?></td>
-                                                    <td><?= $createdAt?></td>
+                                                    <td><?= $refNumber?></td>
                                                     <td><?= $schedDate."  ".$schedTime?></td> 
                                                     <td><?= $fname." ".$lname?></td>
-                                                    <td><?= $guests?></td>    
+                                                    <td><?= $guests?></td>  
+                                                    <td><?=$bookStatus?></td>  
                                                 </tr>
                                                 <?php
                                             }
@@ -87,20 +88,23 @@
                                         }
                                     
                                     } else{
+                                        $cancelled = "Cancelled";    
+                                        $noShows = "No Shows"; 
                                         $date = date('Y-m-d');
-                                        $getTotalOrder = $connect->prepare("SELECT id,created_at,customer_id,fname,lname,guests,scheduled_date,scheduled_time,status FROM tblreservation WHERE created_at=? HAVING status=? OR status=?");
-                                        $getTotalOrder->bind_param('sss',$date,$cancelled,$notApproved);          
+                                        $getTotalOrder = $connect->prepare("SELECT refNumber,fname,lname,guests,scheduled_date,scheduled_time,status FROM tblreservation WHERE status IN (?,?) AND scheduled_date=?");
+                                        echo $connect->error;
+                                        $getTotalOrder->bind_param('sss',$cancelled,$noShows,$date);          
                                         $getTotalOrder->execute();
-                                        $getTotalOrder->bind_result($id,$createdAt,$customerId,$fname,$lname,$guests,$schedDate,$schedTime,$bookStatus);
+                                        $getTotalOrder->bind_result($refNumber,$fname,$lname,$guests,$schedDate,$schedTime,$bookStatus);
                                         if($getTotalOrder){
                                             while($getTotalOrder->fetch()){
                                                 ?>
                                                 <tr>
-                                                    <td><?= $id?></td>
-                                                    <td><?= $createdAt?></td>
+                                                    <td><?= $refNumber?></td>
                                                     <td><?= $schedDate." ".$schedTime?></td>
                                                     <td><?= $fname." ".$lname?></td>
-                                                    <td><?= $guests?></td>          
+                                                    <td><?= $guests?></td>  
+                                                    <td><?=$bookStatus?></td>          
                                                 </tr>
                                                 <?php
                                             }

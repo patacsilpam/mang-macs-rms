@@ -59,7 +59,8 @@ require 'public/admin-orders.php'
                                     tblorderdetails.required_time,tblcustomerorder.email
                                     FROM tblcustomerorder LEFT JOIN tblorderdetails 
                                     ON tblorderdetails.order_number = tblcustomerorder.order_number
-                                    WHERE tblorderdetails.order_status != 'Order Completed' AND tblorderdetails.order_type != 'Dine In'
+                                    WHERE tblorderdetails.order_status!='Order Completed' AND tblorderdetails.order_status!='Order Received' 
+                                    AND tblorderdetails.order_status!='Cancelled'  GROUP BY tblorderdetails.order_number 
                                     ORDER BY STR_TO_DATE(CONCAT(tblorderdetails.required_date,' ',tblorderdetails.required_time),'%Y-%m-%d %h:%i %p') ASC";
                                     $displayOrders = $connect->query($getOrders);
                                     while($fetch = $displayOrders->fetch_assoc()){

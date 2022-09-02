@@ -1,4 +1,7 @@
-<?php require 'public/admin-inventory.php';?>
+<?php 
+require 'public/admin-inventory.php';
+require 'public/admin-courier.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,6 +17,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
+    <script src="assets/js/setCourier.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
     <link rel="icon" type="image/jpeg" href="assets/images/mang-macs-logo.jpg" sizes="70x70">
@@ -46,7 +51,7 @@
                         <?php
                         require 'public/connection.php';
                         $getOrderNumber = $_GET['order_number'];
-                        $getOrderSummary = $connect->prepare("SELECT tblcustomerorder.order_number,tblcustomerorder.customer_name,
+                        $getOrderSummary = $connect->prepare("SELECT tblcustomerorder.order_number,tblcustomerorder.courier,tblcustomerorder.customer_name,
                             tblorderdetails.created_at,tblorderdetails.required_date,tblorderdetails.required_time,
                             tblorderdetails.order_type,tblorderdetails.order_status,tblcustomerorder.email,
                             tblcustomerorder.phone_number,tblcustomerorder.total_amount,tblcustomerorder.delivery_fee
@@ -55,7 +60,7 @@
                             WHERE tblorderdetails.order_number=? LIMIT 1");
                         $getOrderSummary->bind_param('s',$getOrderNumber);
                         $getOrderSummary->execute();
-                        $getOrderSummary->bind_result($orderNumber,$customerName,$placedOn,$requiredDate,$requiredTime,$orderType,$orderStatus,$email,$phoneNumber,$totalAmount,$deliveryFee);
+                        $getOrderSummary->bind_result($orderNumber,$courierName,$customerName,$placedOn,$requiredDate,$requiredTime,$orderType,$orderStatus,$email,$phoneNumber,$totalAmount,$deliveryFee);
                         while($getOrderSummary->fetch()){
                         $GLOBALS['totalAmount'] = $totalAmount;
                    ?>
@@ -64,6 +69,20 @@
                         <p><strong>Date Added:</strong> <?=$placedOn?></p>
                         <p><strong>Delivery Time:</strong> <?=$requiredDate." ". $requiredTime?></p>
                         <p><strong>Order Type:</strong> <?=$orderType; ?></p>
+                        <p>
+                            <div id="setCourier">
+                                <div style="display:flex; align-items:center; flex-direction:row;" >
+                                    <strong>Courier</strong>
+                                    <?php include 'assets/template/admin/setCourier.php' ?>
+                                    <button title="Edit" type="button" class="btn btn-transparent" data-toggle="modal" data-target="#setCourier<?=$orderNumber?>">
+                                        <i class="fas fa-edit" style="color: blue;"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </p>
+                        <p style="display:none;">
+                            <input type="text" value="<?=$orderType?>" id="courier">
+                        </p>
                     </article>
                     <article>
                         <p><strong>Order Status:</strong> <?=$orderStatus?></p>

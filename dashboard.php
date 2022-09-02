@@ -77,7 +77,7 @@
                      <!--Cancelled Order---->
                      <section>
                         <section class="box-orders">
-                            <h3>Cancelled Order</h3>
+                            <h3>Cancelled Orders</h3>
                             <section class="view-sales-details">
                                 <p class="text--cancelled"><?php countCancelledOrders() ?></p>
                                 <a href="cancelled-orders.php" title="View Details">View</a>
