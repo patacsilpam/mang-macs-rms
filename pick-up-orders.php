@@ -114,7 +114,7 @@
                                         tblorderdetails.quantity,tblorderdetails.price,tblorderdetails.price * tblorderdetails.quantity as 'subtotal',
                                         tblorderdetails.add_ons,tblorderdetails.order_type 
                                         FROM tblorderdetails LEFT JOIN tblcustomerorder ON tblorderdetails.order_number = tblcustomerorder.order_number
-                                        WHERE tblorderdetails.order_status IN (?,?) AND tblorderdetails.required_date LIKE (?) AND tblorderdetails.order_type=?");
+                                        WHERE tblorderdetails.order_status IN (?,?) AND tblorderdetails.required_date=? AND tblorderdetails.order_type=?");
                                         $getTotalOrder->bind_param('ssss',$orderCompleted,$orderReceived,$date,$orderType);
                                         $getTotalOrder->execute();
                                         $getTotalOrder->bind_result($orderNumber,$requiredDate,$customerName,$product,$variation,$quantity,$price,$subtotal,$addOns,$orderType);

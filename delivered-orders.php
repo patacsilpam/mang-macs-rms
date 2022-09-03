@@ -121,7 +121,7 @@
                                         tblorderdetails.quantity,tblorderdetails.price,tblorderdetails.price * tblorderdetails.quantity as 'subtotal',
                                         tblorderdetails.order_status,tblorderdetails.order_type 
                                         FROM tblorderdetails LEFT JOIN tblcustomerorder ON tblorderdetails.order_number = tblcustomerorder.order_number
-                                        WHERE  tblorderdetails.order_status IN (?,?) AND tblorderdetails.required_date LIKE (?) 
+                                        WHERE  tblorderdetails.order_status IN (?,?) AND tblorderdetails.required_date=? 
                                         HAVING  tblorderdetails.order_type=?
                                         ORDER BY required_date ASC");
                                         $getTotalOrder->bind_param('ssss',$orderCompleted,$orderReceived,$date,$orderType);
@@ -156,7 +156,10 @@
 
                           <tfoot>
                               <tr>
-                                <td colspan="11"> <b>Total Sales: ₱ <?= $totalAmount?>.00</b></td>
+                                    <td colspan="7"></td>
+                                    <td><b>Total Sales:  </b></td>
+                                    <td><b>₱ <?= $totalAmount?>.00</b> </td>
+                                    <td></td>
                               </tr>
                           </tfoot>
 

@@ -3,7 +3,7 @@
     require 'public/connection.php';
     error_reporting(0);
     $getdDailyBook = $connect->query("SELECT SUM(guests) as 'guests', YEAR(created_at) as 'year',DAY(created_at) as 'day'
-    FROM tblreservation WHERE status='Approve' AND YEAR(created_at) = YEAR(curdate()) 
+    FROM tblreservation WHERE status IN ('Reserved','Order Received') AND YEAR(created_at) = YEAR(curdate()) 
     AND MONTH(created_at) = MONTH(curdate()) 
     GROUP BY YEAR(created_at), DAY(created_at) 
     ORDER BY YEAR(created_at),MONTH(created_at),DAY(created_at)");

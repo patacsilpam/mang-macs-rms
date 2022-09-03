@@ -22,14 +22,17 @@ function updateBookStatus(){
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'mangmacsmarinerospizzahouse@gmail.com';
-            $mail->Password = 'uihz grau bhyt qikw';
+            $mail->Username = '';
+            $mail->Password = '';
             $mail->SMTPSecure = 'tls';
             $mail->Port = 587;
             $mail->setFrom('', "Mang Mac's Marinero");
             $mail->addAddress($email);
             $mail->isHTML(true);
             if($bookStatus == "Reserved"){
+                $updateOrderStatus = $connect->prepare("UPDATE tblorderdetails SET order_status=? WHERE order_number=?");
+                $updateOrderStatus->bind_param('ss',$bookStatus,$refNumber);
+                $updateOrderStatus->execute();
                 $updateBookStatus = $connect->prepare("UPDATE tblreservation SET status=? WHERE id=?");
                 $updateBookStatus->bind_param('si',$bookStatus,$id);
                 $updateBookStatus->execute();
@@ -215,7 +218,7 @@ function deleteTable(){
     $ids = array();
     $getId = $connect->query("SELECT * FROM tblreservation WHERE STR_TO_DATE(CONCAT(scheduled_date,' ',scheduled_time), '%Y-%m-%d %h:%i %p') AND status='Reserved'");
     while($fetch = $getId->fetch_assoc()){
-        $ids[] =  $fetch['id'];
+        $ids[] =  $fetch['refNumber'];
        
     }
     print_r($ids);

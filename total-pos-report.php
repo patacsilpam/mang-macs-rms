@@ -38,15 +38,16 @@ class PDF extends FPDF
     function viewTable($connect,$orderedDate,$idNumber,$products,$quantity,$price,$variation,$customerType,$total) {
         if(isset($_GET['startDate']) && isset($_GET['endDate'])){ 
             $totalAmount=0;
+            $orderStatus = "Completed";
             $startDate = $_GET['startDate'];
             $endDate = $_GET['endDate'];
             $getTotalOrder = $connect->prepare("SELECT tblpos.ordered_date,tblpos.pwd_senior_number,tblposorders.products,
             tblposorders.quantity, tblposorders.price,tblposorders.category,tblposorders.variation, 
             tblpos.customer_type,tblposorders.price*tblposorders.quantity as 'total'
             FROM tblpos LEFT JOIN tblposorders ON tblpos.id_number = tblposorders.id_number 
-            WHERE tblposorders.ordered_date BETWEEN (?) AND (?)");
-            echo $connect->error;
-            $getTotalOrder->bind_param('ss',$startDate,$endDate);
+            WHERE tblpos.status=? AND tblposorders.ordered_date BETWEEN (?) AND (?)
+            ORDER BY tblposorders.ordered_date ASC");
+            $getTotalOrder->bind_param('sss',$orderStatus,$startDate,$endDate);
             $getTotalOrder->execute();
             $getTotalOrder->bind_result($orderedDate,$idNumber,$products,$quantity,$price,$category,$variation,$customerType,$total);
             if($getTotalOrder){
@@ -63,6 +64,7 @@ class PDF extends FPDF
                     $this->Ln();
                 }
             } 
+            $this->Cell(125,10,'',0,0,'C');
             $this->Cell(50, 10, "Total Sales: PHP $totalAmount.00", 1, 0, 'C');
         } 
     }

@@ -64,7 +64,9 @@
                                     if(isset($_GET['startDate']) && isset($_GET['endDate'])){           
                                         $startDate = $_GET['startDate'];
                                         $endDate = $_GET['endDate'];
-                                        $getTotalOrder = $connect->prepare("SELECT id,email_address,fname,lname,gender,birthdate,created_account,user_status FROM tblcustomers WHERE created_account BETWEEN (?) AND (?)");
+                                        $getTotalOrder = $connect->prepare("SELECT id,email_address,fname,lname,gender,birthdate,created_account,user_status 
+                                        FROM tblcustomers WHERE created_account BETWEEN (?) AND (?)
+                                        ORDER BY created_at ASC");
                                         $getTotalOrder->bind_param('ss',$startDate,$endDate);
                                         $getTotalOrder->execute();
                                         $getTotalOrder->bind_result($id,$email,$fname,$lname,$gender,$birthdate,$createdAccount,$userStatus);
@@ -90,7 +92,8 @@
                                     }
                                    else{
                                     require 'public/connection.php';                       
-                                    $getTotalOrder = $connect->prepare("SELECT id,email_address,fname,lname,gender,birthdate,created_account,user_status FROM tblcustomers");
+                                    $getTotalOrder = $connect->prepare("SELECT id,email_address,fname,lname,gender,birthdate,created_account,user_status 
+                                    FROM tblcustomers ORDER BY created_account ASC");
                                     $getTotalOrder->execute();
                                     $getTotalOrder->bind_result($id,$email,$fname,$lname,$gender,$birthdate,$createdAccount,$userStatus);
                                     if($getTotalOrder){
@@ -102,7 +105,7 @@
                                                 <td><?= $fname." ".$lname?></td>
                                                 <td><?= $gender?></td>
                                                 <td><?= $birthdate?></td>
-                                                <td><?= date('F D, Y',strtotime($createdAccount))?></td>
+                                                <td><?= date('F d, Y',strtotime($createdAccount))?></td>
                                                 <td><?= $userStatus?></td>
                                             </tr>
                                             <?php

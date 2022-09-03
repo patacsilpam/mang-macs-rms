@@ -26,7 +26,7 @@ class PDF extends FPDF
     function headerTable()
     {
         $this->SetFont('Arial', 'B', 9);
-        $this->Cell(10, 10, 'No.', 1, 0, 'C');
+        $this->Cell(30, 10, 'No.', 1, 0, 'C');
         $this->Cell(30, 10, 'Ordered Date', 1, 0, 'C');
         $this->Cell(50, 10, 'Customer Name', 1, 0, 'C');
         $this->Cell(40, 10, 'Food', 1, 0, 'C');
@@ -40,25 +40,30 @@ class PDF extends FPDF
     function viewTable($connect,$id,$createdAt,$customerName,$product,$variation,$quantity,$price,$subtotal,$addOns,$orderType) {
         if(isset($_GET['startDate']) && isset($_GET['endDate'])){ 
             $totalAmount=0;
+            $orderCompleted = "Order Completed";
+            $orderReceived = "Order Received";
+            $reserved = "Reserved";
             $startDate = $_GET['startDate'];
             $endDate = $_GET['endDate'];
-            $getTotalOrder = $connect->prepare("SELECT tblorderdetails.id,tblorderdetails.created_at,
-            tblcustomerorder.customer_name,tblorderdetails.product_name,tblorderdetails.product_variation,
+            $getTotalOrder = $connect->prepare("SELECT tblorderdetails.order_number,tblorderdetails.required_date,
+            tblcustomerorder.customer_name,tblreservation.fname,tblreservation.lname,tblorderdetails.product_name,tblorderdetails.product_variation,
             tblorderdetails.quantity,tblorderdetails.price,tblorderdetails.price * tblorderdetails.quantity as 'subtotal',
             tblorderdetails.add_ons,tblorderdetails.order_type 
             FROM tblorderdetails LEFT JOIN tblcustomerorder ON tblorderdetails.order_number = tblcustomerorder.order_number
-            WHERE tblorderdetails.created_at BETWEEN (?) AND (?) and tblorderdetails.order_status='Order Completed'");
+            LEFT JOIN tblreservation ON tblorderdetails.order_number = tblreservation.refNumber
+            WHERE tblorderdetails.order_status IN (?,?,?)  AND tblorderdetails.required_date BETWEEN (?) AND (?)
+            ORDER BY tblorderdetails.required_date ASC");
             echo $connect->error;
-            $getTotalOrder->bind_param('ss',$startDate,$endDate);
+            $getTotalOrder->bind_param('sssss',$orderCompleted,$orderReceived,$reserved,$startDate,$endDate);
             $getTotalOrder->execute();
-            $getTotalOrder->bind_result($id,$createdAt,$customerName,$product,$variation,$quantity,$price,$subtotal,$addOns,$orderType);
+            $getTotalOrder->bind_result($orderNumber,$requiredDate,$customerName,$fname,$lname,$product,$variation,$quantity,$price,$subtotal,$addOns,$orderType);
             if($getTotalOrder){
                 while($getTotalOrder->fetch()){
                     $totalAmount+=$subtotal;
                     $this->SetFont('Arial', '', 8);
-                    $this->Cell(10, 10, $id, 1, 0, 'C');
-                    $this->Cell(30, 10, $createdAt, 1, 0, 'C');
-                    $this->Cell(50, 10, $customerName, 1, 0, 'C');
+                    $this->Cell(30, 10, $orderNumber, 1, 0, 'C');
+                    $this->Cell(30, 10, $requiredDate, 1, 0, 'C');
+                    $this->Cell(50, 10, $customerName."".$fname." ".$lname, 1, 0, 'C');
                     $this->Cell(40, 10, $product, 1, 0, 'C');
                     $this->Cell(22, 10, $orderType, 1, 0, 'C');
                     $this->Cell(17, 10, $variation, 1, 0, 'C');
@@ -68,7 +73,7 @@ class PDF extends FPDF
                     $this->Ln();
                 }
             }
-            $this->Cell(186, 10, "", 0, 0, 'C');
+            $this->Cell(206, 10, "", 0, 0, 'C');
             $this->Cell(45, 10, "Total Sales: PHP $totalAmount.00", 1, 0, 'C');
         
         } 

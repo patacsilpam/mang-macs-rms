@@ -37,9 +37,9 @@
                             <form method="GET">
                                 <label> Choose User Type</label>
                                 <select name="userType">
-                                    <option value="Admin">Admin</option>
-                                    <option value="Staff">Staff</option>
-                                    <option value="All">All</option>
+                                    <option value="Admin"<?php if(isset($_GET['userType']) == "Admin"){echo 'selected ? "selected"';}?>>Admin</option>
+                                    <option value="Staff"<?php if(isset($_GET['userType']) == "Staff"){echo 'selected ? "selected"';}?>>Staff</option>
+                                    <option value="All"<?php if(isset($_GET['userType']) == "All"){echo 'selected ? "selected"';}?>>All</option>
                                 </select>&emsp;
                                 <label>From Date:</label>
                                 <input type="date" name="startDate" value="<?php  echo $_GET['startDate']?>">&emsp;
@@ -73,7 +73,7 @@
                                         $userType = $_GET['userType'];        
                                         $startDate = $_GET['startDate'];
                                         $endDate = $_GET['endDate'];
-                                        $getTotalOrder = $connect->prepare("SELECT * FROM tblreport WHERE report_date BETWEEN (?) AND (?)");
+                                        $getTotalOrder = $connect->prepare("SELECT * FROM tblreport WHERE STR_TO_DATE(report_date,'%Y-%m-%d') BETWEEN (?) AND (?)");
                                         $getTotalOrder->bind_param('ss',$startDate,$endDate);
                                         $getTotalOrder->execute();
                                         $getTotalOrder->bind_result($id,$fullname,$sales,$userType,$reportDate);
@@ -102,7 +102,7 @@
                                             $userType = $_GET['userType'];       
                                             $startDate = $_GET['startDate'];
                                             $endDate = $_GET['endDate'];
-                                            $getTotalOrder = $connect->prepare("SELECT * FROM tblreport WHERE report_date BETWEEN (?) AND (?) AND user_type=?");
+                                            $getTotalOrder = $connect->prepare("SELECT * FROM tblreport WHERE STR_TO_DATE(report_date,'%Y-%m-%d') BETWEEN (?) AND (?) AND user_type=?");
                                             $getTotalOrder->bind_param('sss',$startDate,$endDate,$userType);
                                             $getTotalOrder->execute();
                                             $getTotalOrder->bind_result($id,$fullname,$sales,$userType,$reportDate);
@@ -128,8 +128,8 @@
                                                 }
                                         }
                                          else{
-                                            $date = date('Y-m-d');
-                                            $getTotalOrder = $connect->prepare("SELECT * FROM tblreport WHERE report_date=?");
+                                            $date = date('Y-m-d')."%";
+                                            $getTotalOrder = $connect->prepare("SELECT * FROM tblreport WHERE report_date LIKE (?)");
                                             $getTotalOrder->bind_param('s',$date);
                                             $getTotalOrder->execute();
                                             $getTotalOrder->bind_result($id,$fullname,$sales,$userType,$reportDate);

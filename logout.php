@@ -5,6 +5,7 @@
     unset($_SESSION['lname']);
     unset($_SESSION['uname']);
     unset($_SESSION['email']);
+    unset($_SESSION['loggedIn']);
     session_destroy();
     header('Location:login.php');
 ?> 

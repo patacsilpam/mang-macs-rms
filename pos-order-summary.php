@@ -119,9 +119,13 @@
                                     
                                ?>
                                 </tbody>
-                                <tr>
-                                    <td colspan="8"><b>Total Amount: </b>PHP <?= $total?>.00</td>
-                                </tr>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="6"></td>
+                                        <td><b>Total Amount: </b></td>
+                                        <td>PHP <?= $total?>.00</td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </article>

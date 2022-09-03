@@ -59,8 +59,7 @@
                                     tblorderdetails.required_date, tblorderdetails.required_time, tblreservation.email 
                                     FROM tblreservation LEFT JOIN tblorderdetails ON 
                                     tblreservation.refNumber = tblorderdetails.order_number 
-                                    WHERE tblreservation.status  = 'Pending' AND tblreservation.status = 'Reserved' 
-                                    AND tblorderdetails.order_type = 'Dine In' 
+                                    WHERE tblreservation.status IN ('Pending','Reserved') AND tblorderdetails.order_type = 'Dine In' 
                                     AND STR_TO_DATE(CONCAT(scheduled_date,' ', scheduled_time),'%Y-%m-%d %h:%i %p') >= DATE_SUB(CURDATE(), INTERVAL 30 MINUTE)
                                     ORDER BY STR_TO_DATE(CONCAT(tblorderdetails.required_date,' ',
                                     tblorderdetails.required_time),'%Y-%m-%d %h:%i %p') ASC");

@@ -54,36 +54,36 @@
                             <thead class="thead-dark">
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Booked Date</th>
-                                    <th scope="col">Customer ID</th>
-                                    <th scope="col">Email</th>
                                     <th scope="col">Name</th>
+                                    <th scope="col">Email</th>
                                     <th scope="col">Guests</th>
                                     <th scope="col">Scheduled Date</th>             
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                    require 'public/connection.php';   
-                                    $bookStatus = "Approve";
-                                    $removeStatus = "Remove";          
-                                    if(isset($_GET['startDate']) && isset($_GET['endDate'])){           
+                                    require 'public/connection.php';  
+                                    $totalGuests = 0;      
+                                    if(isset($_GET['startDate']) && isset($_GET['endDate'])){ 
+                                        $reserved = "Reserved";
+                                        $orderReceived = "Order Received";          
                                         $startDate = $_GET['startDate'];
                                         $endDate = $_GET['endDate'];
-                                        $getTotalOrder = $connect->prepare("SELECT id,created_at,customer_id,email,fname,lname,guests,scheduled_date,scheduled_time FROM tblreservation WHERE status=?  HAVING created_at BETWEEN (?) AND (?)");
+                                        $getTotalOrder = $connect->prepare("SELECT refNumber,email,fname,lname,guests,scheduled_date,scheduled_time 
+                                        FROM tblreservation WHERE status IN (?,?)  AND scheduled_date BETWEEN (?) AND (?)
+                                        ORDER BY STR_TO_DATE(CONCAT(scheduled_date,' ',scheduled_time),'%Y-%m-%d %h:%i %p') ASC");
                                         echo $connect->error;
-                                        $getTotalOrder->bind_param('sss',$bookStatus,$startDate,$endDate);
+                                        $getTotalOrder->bind_param('ssss',$reserved,$orderReceived,$startDate,$endDate);
                                         $getTotalOrder->execute();
-                                        $getTotalOrder->bind_result($id,$createdAt,$customerId,$email,$fname,$lname,$guests,$schedDate,$schedTime);
+                                        $getTotalOrder->bind_result($refNumber,$email,$fname,$lname,$guests,$schedDate,$schedTime);
                                         if($getTotalOrder){
                                             while($getTotalOrder->fetch()){
+                                                $totalGuests+=$guests;
                                                 ?>
                                                 <tr>
-                                                    <td><?= $id?></td>
-                                                    <td><?= $createdAt?></td>
-                                                    <td><?= $customerId?></td>
-                                                    <td><?= $email?></td>
+                                                    <td><?= $refNumber?></td>
                                                     <td><?= $fname." ".$lname?></td>
+                                                    <td><?= $email?></td>
                                                     <td><?= $guests?></td>
                                                     <td><?= $schedDate."  ".$schedTime?></td>     
                                                 </tr>
@@ -95,20 +95,23 @@
                                         }
                                     
                                     } else{
+                                        $reserved = "Reserved";
+                                        $orderReceived = "Order Received";
                                         $date = date('Y-m-d');
-                                        $getTotalOrder = $connect->prepare("SELECT id,created_at,customer_id,email,fname,lname,guests,scheduled_date,scheduled_time FROM tblreservation WHERE status=? AND created_at=?");
-                                        $getTotalOrder->bind_param('ss',$bookStatus,$date);        
+                                        $getTotalOrder = $connect->prepare("SELECT refNumber,email,fname,lname,guests,scheduled_date,scheduled_time 
+                                        FROM tblreservation WHERE status IN (?,?) AND scheduled_date=?
+                                        ORDER BY STR_TO_DATE(CONCAT(scheduled_date,' ',scheduled_time),'%Y-%m-%d %h:%i %p') ASC");
+                                        $getTotalOrder->bind_param('sss',$reserved,$orderReceived,$date);        
                                         $getTotalOrder->execute();
-                                        $getTotalOrder->bind_result($id,$createdAt,$customerId,$email,$fname,$lname,$guests,$schedDate,$schedTime);
+                                        $getTotalOrder->bind_result($refNumber,$email,$fname,$lname,$guests,$schedDate,$schedTime);
                                         if($getTotalOrder){
                                             while($getTotalOrder->fetch()){
+                                                $totalGuests+=$guests;
                                                 ?>
                                                 <tr>
-                                                    <td><?= $id?></td>
-                                                    <td><?= $createdAt?></td>
-                                                    <td><?= $customerId?></td>
-                                                    <td><?= $email?></td>
+                                                    <td><?= $refNumber?></td>
                                                     <td><?= $fname." ".$lname?></td>
+                                                    <td><?= $email?></td>
                                                     <td><?= $guests?></td>
                                                     <td><?= $schedDate." ".$schedTime?></td>    
                                                 </tr>
@@ -121,6 +124,13 @@
                                     }
                                  ?>
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3"></td>
+                                    <td><b> Total Guests: <?= $totalGuests?></b> </td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </article>

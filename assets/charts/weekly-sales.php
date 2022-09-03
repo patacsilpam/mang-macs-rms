@@ -3,10 +3,10 @@
         require 'public/connection.php';
         error_reporting(0);
         $firstDayOfWeek = date('F d',strtotime("sunday last week"));
-        $getWeek = $connect->query("SELECT DAYNAME(created_at) as 'weeks',WEEK(created_at) as 'numWeeks',
+        $getWeek = $connect->query("SELECT DAYNAME(required_date) as 'weeks',WEEK(required_date) as 'numWeeks',
         SUM(price * quantity) as 'totalSales' FROM tblorderdetails 
-        WHERE order_status='Order Completed' AND week(created_at)=week(curdate()) AND YEAR(created_at)=YEAR(curdate())
-        GROUP BY day(created_at)  ORDER BY created_at ASC");
+        WHERE order_status IN ('Order Completed','Order Received')  AND week(required_date)=week(curdate()) AND YEAR(required_date)=YEAR(curdate())
+        GROUP BY day(required_date)  ORDER BY required_date ASC");
         foreach ($getWeek as $displayWeek) {
             $strWeeks[] = $displayWeek['weeks'];
             $weeklySales[] = $displayWeek['totalSales'];

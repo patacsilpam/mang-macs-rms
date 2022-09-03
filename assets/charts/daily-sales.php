@@ -2,11 +2,11 @@
     <?php
     require 'public/connection.php';
     error_reporting(0);
-    $getDays = $connect->query("SELECT COUNT(product_name), YEAR(created_at) as 'year',DAY(created_at) as 'day',
+    $getDays = $connect->query("SELECT COUNT(product_name), YEAR(required_date) as 'year',DAY(required_date) as 'day',
     SUM(price*quantity) as 'totalSales' FROM tblorderdetails
-    WHERE order_status='Order Completed' AND YEAR(created_at) = YEAR(curdate()) 
-    AND MONTH(created_at) = MONTH(curdate()) GROUP BY YEAR(created_at),DAY(created_at) 
-    ORDER BY YEAR(created_at),MONTH(created_at),DAY(created_at)");
+    WHERE order_status IN ('Order Completed','Order Received') AND YEAR(required_date) = YEAR(curdate()) 
+    AND MONTH(required_date) = MONTH(required_date()) GROUP BY YEAR(required_date),DAY(required_date) 
+    ORDER BY YEAR(required_date),MONTH(required_date),DAY(required_date)");
   
     foreach ($getDays as $displayDays) {
        $days[] = $displayDays['day'];

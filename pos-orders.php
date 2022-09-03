@@ -56,7 +56,7 @@ require 'public/admin-pos.php'
                             <tbody>
                                 <?php
                                     require 'public/connection.php';
-                                    $status = "Running";
+                                    $status = "Processing";
                                     $getPos = $connect->prepare("SELECT id,id_number,pwd_senior_number,customer_type,ordered_date,total,discounted_price,amount_pay,status FROM tblpos WHERE status=?");
                                     echo $connect->error;
                                     $getPos->bind_param('s',$status);

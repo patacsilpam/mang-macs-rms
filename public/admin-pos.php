@@ -96,7 +96,7 @@ function insertCart(){
             $discountedPrice = $_POST['discountedPrice'];
             $noDiscount = "";
             $notPwdSenior = "";
-            $status = "Running";
+            $status = "Processing";
           
            foreach ($id as $index => $code) {
                 $ids = $code;
@@ -175,10 +175,21 @@ function updateOrderStatus(){
             $updateStatus->execute();
             if($updateStatus){
                 header('Location:pos-orders.php?true');
+                $id = null;
+                $fullname = $_SESSION['fname']." ".$_SESSION['lname'];
+                $sales = $_POST['sales'];
+                $userType = "Admin";
+                $reportDate = date('Y-m-d h:i:s');
+                //insert report sale
+                $insertSale = $connect->prepare("INSERT INTO tblreport(id,fullname,sales,user_type,report_date) VALUES(?,?,?,?,?)");
+                echo $connect->error;
+                $insertSale->bind_param('isiss',$id,$fullname,$sales,$userType,$reportDate);
+                $insertSale->execute();
             }
         }
     }
 }
+
 addToCart();
 insertCart();
 updateOrderStatus();

@@ -3,7 +3,7 @@
         require 'public/connection.php';
         error_reporting(0);
         $getMonthlyBook = $connect->query("SELECT SUM(guests)as 'guests',YEAR(created_at) as 'year',
-        MONTHNAME(created_at) as 'month' FROM tblreservation WHERE status='Approve' AND YEAR(created_at) = YEAR(curdate()) 
+        MONTHNAME(created_at) as 'month' FROM tblreservation WHERE status IN ('Reserved','Order Received') AND YEAR(created_at) = YEAR(curdate()) 
         GROUP BY YEAR(created_at) = YEAR(curdate()), MONTH(created_at) ORDER BY YEAR(created_at),MONTH(created_at)");
         foreach ($getMonthlyBook as $displayMonthlyBook) {
         $monthsBook[] = $displayMonthlyBook['guests'];

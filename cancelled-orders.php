@@ -78,7 +78,8 @@
                                         tblorderdetails.add_ons,tblorderdetails.order_type 
                                         FROM tblorderdetails LEFT JOIN tblcustomerorder ON tblorderdetails.order_number = tblcustomerorder.order_number
                                         WHERE tblorderdetails.order_type IN (?,?) AND tblorderdetails.order_status=? 
-                                        AND tblorderdetails.required_date  BETWEEN (?) AND (?)");
+                                        AND tblorderdetails.required_date  BETWEEN (?) AND (?)
+                                        ORDER BY STR_TO_DATE(CONCAT(required_date,' ',required_time),'%Y-%m-%d %h:%i %p') ASC");
                                         echo $connect->error;
                                         $getTotalOrder->bind_param('sssss',$orderDeliver,$orderPickUp,$orderStatus,$startDate,$endDate);
                                         $getTotalOrder->execute();
@@ -109,28 +110,28 @@
                                         $orderPickUp = "Pick Up"; 
                                         $orderStatus = "Cancelled";
                                         $date = date('Y-m-d');
-                                        $getTotalOrder = $connect->prepare("SELECT tblorderdetails.id,tblorderdetails.created_at,
+                                        $getTotalOrder = $connect->prepare("SELECT tblorderdetails.order_number,tblorderdetails.required_date,
                                         tblcustomerorder.customer_name,tblorderdetails.product_name,tblorderdetails.product_variation,
                                         tblorderdetails.quantity,tblorderdetails.price,tblorderdetails.price * tblorderdetails.quantity as 'subtotal',
                                         tblorderdetails.add_ons,tblorderdetails.order_type 
                                         FROM tblorderdetails LEFT JOIN tblcustomerorder ON tblorderdetails.order_number = tblcustomerorder.order_number
-                                        WHERE tblorderdetails.created_at LIKE (?) and tblorderdetails.order_status=?");
+                                        WHERE tblorderdetails.required_date=? and tblorderdetails.order_status=?
+                                        ORDER BY STR_TO_DATE(CONCAT(required_date,' ',required_time),'%Y-%m-%d %h:%i %p') ASC");
                                         $getTotalOrder->bind_param('ss',$date,$orderStatus);
                                         $getTotalOrder->execute();
-                                        $getTotalOrder->bind_result($id,$createdAt,$customerName,$product,$variation,$quantity,$price,$subtotal,$addOns,$orderType);
+                                        $getTotalOrder->bind_result($orderNumber,$requiredDate,$customerName,$product,$variation,$quantity,$price,$subtotal,$addOns,$orderType);
                                         if($getTotalOrder){
                                             while($getTotalOrder->fetch()){
                                                 ?>
                                                 <tr>
-                                                    <td><?= $id?></td>
-                                                    <td><?= $createdAt?></td>
+                                                    <td><?= $orderNumber?></td>
+                                                    <td><?= $requiredDate?></td>
                                                     <td><?= $customerName?></td>
                                                     <td><?= $product?></td>
                                                     <td><?= $variation?></td>
                                                     <td><?= $quantity?></td>
                                                     <td><?= $price?></td>
                                                     <td><?= $subtotal?></td>
-                                                    <td><?= $addOns?></td>
                                                     <td><?= $orderType?></td>
                                                 </tr>
                                                 <?php

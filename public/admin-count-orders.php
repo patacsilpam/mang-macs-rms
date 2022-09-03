@@ -40,11 +40,6 @@ function countActiveBooking(){
         echo 0;
    }
 }
-/*
-SELECT COUNT(*) as 'dailyDeliver', 
-(SELECT COUNT(*) FROM tblorderdetails WHERE order_status IN ('Order Completed','Order Received') AND order_type='Deliver') as 'totalDeliver'
- FROM tblorderdetails WHERE order_status IN ('Order Completed','Order Received') AND order_type='Deliver' AND required_date='2022-08-24';
-*/
 //count delivery orders
 function countDeliveryOrders(){
     require 'public/connection.php';
@@ -119,63 +114,54 @@ function countCancelledBooking(){
 //count total point of sales
 function countPosOrders(){
     require 'public/connection.php';
-    $status = "Settled";
+    $status = "Completed";
+    $date = date('Y-m-d');
     $count = $connect->prepare("SELECT SUM(COUNT(DISTINCT tblpos.id_number)) OVER() AS 'dailyPos',
     (SELECT SUM(COUNT(DISTINCT tblpos.id_number)) OVER() 
     FROM tblpos LEFT JOIN tblposorders ON 
     tblpos.id_number = tblposorders.id_number WHERE tblpos.status = ?) AS 'totalPos'
     FROM tblpos LEFT JOIN tblposorders ON 
-    tblpos.id_number = tblposorders.id_number WHERE tblpos.status = ?");
-    $count->bind_param('ss',$status,$status);
+    tblpos.id_number = tblposorders.id_number WHERE tblpos.status = ? AND tblpos.ordered_date=?");
+    $count->bind_param('sss',$status,$status,$date);
     $count->execute();
     $row = $count->get_result();
-    $fetch = $row->fetch_assoc();
-    if($fetch['dailyPos'] > 0){
+    if($fetch = $row->fetch_assoc()){
         echo $countPosOrders = $fetch['dailyPos']."/".$fetch['totalPos']; 
-    }
-    else{
-        echo 0;
     }
 }
 //count completed order
 function countTotalOrders(){
     require 'public/connection.php';
     $orderCompleted = "Order Completed";
+    $orderReceived = "Order Received";
+    $reserved = "Reserved";
     $date = date('Y-m-d');
     $count = $connect->prepare("SELECT COUNT(*) as 'dailyOrders',
-    (SELECT COUNT(*) FROM tblorderdetails WHERE created_at=? AND order_status=?) as 'totalOrders'
-    FROM tblorderdetails WHERE created_at=? AND order_status=?");
-    $count->bind_param('ssss',$date,$orderCompleted,$date,$orderCompleted);
+    (SELECT COUNT(*) FROM tblorderdetails WHERE order_status IN (?,?,?)) as 'totalOrders'
+    FROM tblorderdetails WHERE order_status IN (?,?,?) AND required_date=?");
+    $count->bind_param('sssssss',$orderCompleted,$orderReceived,$reserved,$orderCompleted,$orderReceived,$reserved,$date);
     $count->execute();
     $row = $count->get_result();
-    $fetch = $row->fetch_assoc();
-    if($fetch['dailyOrders'] > 0){
+    if($fetch = $row->fetch_assoc()){
         echo $countTotalOrder = $fetch['dailyOrders']."/".$fetch['totalOrders']; 
-    }
-    else{
-        echo 0;
     }
 }
 
 //count total table reservation 
 function countTotalBooking(){
     require 'public/connection.php';
-    $status = "Reserved";
+    $reserved = "Reserved";
+    $orderReceived = "Order Received";
     $date = date('Y-m-d');
     $count = $connect->prepare("SELECT COUNT(*) as 'dailyBooking',
-    (SELECT COUNT(*) FROM tblreservation WHERE created_at=? AND status=?) as 'totalBooking' 
-    FROM tblreservation  WHERE created_at=? AND status=?");
-    $count->bind_param('ssss',$date,$status,$date,$status);
+    (SELECT COUNT(*) FROM tblreservation WHERE status IN (?,?)) as 'totalBooking' 
+    FROM tblreservation WHERE status IN (?,?) AND scheduled_date=?");
+    $count->bind_param('sssss',$reserved,$orderReceived,$reserved,$orderReceived,$date);
     $count->execute();
     $row = $count->get_result();
-    $fetch = $row->fetch_assoc();
-    if($fetch['dailyBooking'] > 0){
+    if($fetch = $row->fetch_assoc()){
         echo $countActiveBooking = $fetch['dailyBooking']."/".$fetch['totalBooking'];  
     }
-    else{
-        echo 0;
-    }
-   
 }
 
 //count total users of mang mac's mobile app
