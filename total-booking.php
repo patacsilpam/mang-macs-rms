@@ -65,7 +65,7 @@
                                     require 'public/connection.php';  
                                     $totalGuests = 0;      
                                     if(isset($_GET['startDate']) && isset($_GET['endDate'])){ 
-                                        $reserved = "Reserved";
+                                        $reserved = "Finished";
                                         $orderReceived = "Order Received";          
                                         $startDate = $_GET['startDate'];
                                         $endDate = $_GET['endDate'];
@@ -95,7 +95,7 @@
                                         }
                                     
                                     } else{
-                                        $reserved = "Reserved";
+                                        $reserved = "Finished";
                                         $orderReceived = "Order Received";
                                         $date = date('Y-m-d');
                                         $getTotalOrder = $connect->prepare("SELECT refNumber,email,fname,lname,guests,scheduled_date,scheduled_time 

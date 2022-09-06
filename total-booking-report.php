@@ -33,7 +33,7 @@ class PDF extends FPDF
     {
         if(isset($_GET['startDate']) && isset($_GET['endDate'])){
             $totalGuests=0;
-            $orderCompleted = "Reserved";
+            $orderCompleted = "Finished";
             $orderReceived = "Order Received";          
             $startDate = $_GET['startDate'];
             $endDate = $_GET['endDate'];

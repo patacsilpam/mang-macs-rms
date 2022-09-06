@@ -42,7 +42,7 @@ class PDF extends FPDF
             $totalAmount=0;
             $orderCompleted = "Order Completed";
             $orderReceived = "Order Received";
-            $reserved = "Reserved";
+            $reserved = "Finished";
             $startDate = $_GET['startDate'];
             $endDate = $_GET['endDate'];
             $getTotalOrder = $connect->prepare("SELECT tblorderdetails.order_number,tblorderdetails.required_date,
@@ -51,7 +51,7 @@ class PDF extends FPDF
             tblorderdetails.add_ons,tblorderdetails.order_type 
             FROM tblorderdetails LEFT JOIN tblcustomerorder ON tblorderdetails.order_number = tblcustomerorder.order_number
             LEFT JOIN tblreservation ON tblorderdetails.order_number = tblreservation.refNumber
-            WHERE tblorderdetails.order_status IN (?,?,?)  AND tblorderdetails.required_date BETWEEN (?) AND (?)
+            WHERE tblorderdetails.order_status IN (?,?,?)  AND tblorderdetails.completed_time BETWEEN (?) AND (?)
             ORDER BY tblorderdetails.required_date ASC");
             echo $connect->error;
             $getTotalOrder->bind_param('sssss',$orderCompleted,$orderReceived,$reserved,$startDate,$endDate);

@@ -69,7 +69,7 @@
                                         $getTotalOrder = $connect->prepare("SELECT refNumber,fname,lname,guests,scheduled_date,scheduled_time,status 
                                         FROM tblreservation WHERE status IN (?,?) AND scheduled_date BETWEEN (?) AND (?)
                                         ORDER BY STR_TO_DATE(CONCAT(scheduled_date,' ',scheduled_time),'%Y-%m-%d %h:%i %p') ASC");
-                                        $getTotalOrder->bind_param('ssss',$cancelled,$notApproved,$startDate,$endDate);
+                                        $getTotalOrder->bind_param('ssss',$cancelled,$noShows,$startDate,$endDate);
                                         $getTotalOrder->execute();
                                         $getTotalOrder->bind_result($refNumber,$fname,$lname,$guests,$schedDate,$schedTime,$bookStatus);
                                         if($getTotalOrder){

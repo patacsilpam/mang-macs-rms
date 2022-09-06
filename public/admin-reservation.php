@@ -22,11 +22,11 @@ function updateBookStatus(){
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = '';
-            $mail->Password = '';
+            $mail->Username = 'mangmacspizzahouse@gmail.com';
+            $mail->Password = 'chaknqplsssfybtt'; //chak nqpl sssf ybtt
             $mail->SMTPSecure = 'tls';
             $mail->Port = 587;
-            $mail->setFrom('', "Mang Mac's Marinero");
+            $mail->setFrom('mangmacspizzahouse@gmail.com', "Mang Mac's Marinero");
             $mail->addAddress($email);
             $mail->isHTML(true);
             if($bookStatus == "Reserved"){
@@ -97,14 +97,10 @@ function updateBookStatus(){
                             <div style='display: flex; justify-content: space-between; margin: -20px 0;'>
                                 <p style='width:150px;'>Schedule:</p>
                                 <p>".$schedDate." ".$schedTime."</p>
-                            </div>
+                            </div> 
                             <div style='display: flex; justify-content: space-between;'>
-                                <p style='width:150px;'>Placed on:</p>
-                                <p>".$createAt." </p>
-                            </div>
-                            <div style='display: flex; justify-content: space-between;'>
-                                <p style='width:150px;'>Reminder</p>
-                                <p>Don't be an hour late, please. 
+                                <p style='width:150px;'>Reminder</p><br>
+                                <p style='text-align:center'>Don't be an hour late, please. 
                                 Your table reservation will be canceled 
                                 if you arrive more than 30 minutes late.</p>
                             </div>
@@ -117,13 +113,16 @@ function updateBookStatus(){
                         </div>
                     </div>
                     ";
-                    $mail->AltBody = 'FROM: mangmacsmarinerospizzahouse@gmail.com';
+                    $mail->AltBody = 'FROM: mangmacspizzahouse@gmail.com';
                     $mail->send();
                     header('Location:reservation.php');
                     //put another mail here
                 }
             }
-            else{
+            else if($bookStatus == "Cancelled"){
+                $updateOrderStatus = $connect->prepare("UPDATE tblorderdetails SET order_status=? WHERE order_number=?");
+                $updateOrderStatus->bind_param('ss',$bookStatus,$refNumber);
+                $updateOrderStatus->execute();
                 $updateBookStatus = $connect->prepare("UPDATE tblreservation SET status=? WHERE id=?");
                 $updateBookStatus->bind_param('si',$bookStatus,$id);
                 $updateBookStatus->execute();
@@ -156,7 +155,7 @@ function updateBookStatus(){
                             'body'=>"Hello $customerName,\nsorry, there is no available table for accomodation."
                         );
                         pushNotifcation($sendTo,$data);
-                    $mail->Subject = "Your reservation #".$refNumber." is not available";
+                        $mail->Subject = "Your reservation #".$refNumber." is not available";
                         $mail->Body = "
                         <div class='container' style='padding: 1rem;'>
                         <div style='display: flex; flex-direction: column; align-items: center;'>
@@ -170,7 +169,6 @@ function updateBookStatus(){
                             <div style='text-align: center;'>
                                 <p>Hello ".$customerName."</p>
                                 <h3>Sorry, there is no available table for accomodation.</h3> 
-                                <p>See you next time.&#128512;</p>
                             </div>
                         </div>
                         <hr style='border:0.3px solid #dbdbdb;'>
@@ -180,7 +178,7 @@ function updateBookStatus(){
                         <div style = 'style:display:flex; flex-direction:column;'>
                             <div style='display: flex; justify-content: space-between;'>
                                 <p style='width:150px;'>Booking Number:</p>
-                                <p>$refNumber</p>
+                                <p>".$refNumber."</p>
                             </div>
                             <div style='display: flex; justify-content: space-between; margin: -20px 0;'>
                                 <p style='width:150px;'>Guests:</p>
@@ -188,12 +186,8 @@ function updateBookStatus(){
                             </div>
                             <div style='display: flex; justify-content: space-between; margin: -20px 0;'>
                                 <p style='width:150px;'>Schedule:</p>
-                                <p>".$schedDate + $schedTime."</p>
-                            </div>
-                            <div style='display: flex; justify-content: space-between;'>
-                                <p style='width:150px;'>Placed on:</p>
-                                <p>".$createAt."</p>
-                            </div>
+                                <p>".$schedDate." ".$schedTime."</p>
+                            </div> 
                         </div>
                         <hr style='border:0.3px solid #dbdbdb;'>
                         <div style='text-align:center';>
@@ -203,34 +197,113 @@ function updateBookStatus(){
                         </div>
                     </div>
                     ";
-                    $mail->AltBody = '';
+                    $mail->AltBody = 'FROM: mangmacspizzahouse@gmail.com';
                     $mail->send();
-                    header('Location:reservation.php?updated');
+                    header('Location:reservation.php');
                 }
+            }
+            else{
+                $completedTime = date('Y-m-d h:i:s');
+                $updateOrderStatus = $connect->prepare("UPDATE tblorderdetails SET order_status=?,completed_time=? WHERE order_number=?");
+                $updateOrderStatus->bind_param('sss',$bookStatus,$completedTime,$refNumber);
+                $updateOrderStatus->execute();
+                $updateBookStatus = $connect->prepare("UPDATE tblreservation SET status=? WHERE id=?");
+                $updateBookStatus->bind_param('si',$bookStatus,$id);
+                $updateBookStatus->execute();
             }
         }
     }
 }
-function deleteTable(){
+function noShowsReservation(){
+    //update table reservation status to No shows when the customers did not arrive
     require 'public/connection.php';
     $reserved = 'Reserved';
     $noShows = 'No Shows';
-    $ids = array();
-    $getId = $connect->query("SELECT * FROM tblreservation WHERE STR_TO_DATE(CONCAT(scheduled_date,' ',scheduled_time), '%Y-%m-%d %h:%i %p') AND status='Reserved'");
+    $bookingNumber = array();
+    $email = array();
+    $customerName = array();
+    $guests = array();
+    $scheduledDate = array();
+    $getId = $connect->query("SELECT * FROM tblreservation WHERE STR_TO_DATE(CONCAT(scheduled_date,' ',scheduled_time), '%Y-%m-%d %h:%i %p') <= DATE_SUB(NOW(),INTERVAL 30 MINUTE) AND status='Reserved'");
     while($fetch = $getId->fetch_assoc()){
-        $ids[] =  $fetch['refNumber'];
-       
+        $bookingNumber[] =  $fetch['refNumber'];
+        $email[] = $fetch['email'];
+        $customerName[] = $fetch['fname']." ".$fetch['lname'];
+        $guests[] = $fetch['guests'];
+        $scheduledDate[] = $fetch['scheduled_date']." ".$fetch['scheduled_time'];
     }
-    print_r($ids);
-    $updateRemoveStat = "UPDATE tblreservation SET status='$noShows' 
-    WHERE STR_TO_DATE(CONCAT(scheduled_date,' ',scheduled_time), '%Y-%m-%d %h:%i %p')
-    < DATE_SUB(now(), INTERVAL 30 minute) AND status = '$reserved'";
-    $updateRemoveStat = mysqli_query($connect,$updateRemoveStat);
+   foreach($bookingNumber as $index => $orderNumber){
+        $newOrderNumber = $orderNumber;
+        $newEmail = $email[$index];
+        $newCustomerName = $customerName[$index];
+        $newGuests = $guests[$index];
+        $newSched = $scheduledDate[$index];
+        $logo = "https://i.ibb.co/CMq6CXs/logo.png";
+        $updateRemoveStat = $connect->prepare("UPDATE tblreservation SET status=? WHERE refNumber=?");
+        $updateRemoveStat->bind_param('ss',$noShows,$newOrderNumber);
+        echo $connect->error;
+        require 'php-mailer/vendor/autoload.php';
+        $mail = new PHPMailer;
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'mangmacspizzahouse@gmail.com';
+        $mail->Password = 'chaknqplsssfybtt'; //chak nqpl sssf ybtt
+        $mail->SMTPSecure = 'tls';
+        $mail->Port = 587;
+        $mail->setFrom('mangmacspizzahouse@gmail.com', "Mang Mac's Marinero");
+        $mail->addAddress($newEmail);
+        $mail->isHTML(true);
+        if($updateRemoveStat->execute()){
+            $mail->Subject = "Your reservation #".$newOrderNumber." is not available";
+            $mail->Body = "
+            <div class='container' style='padding: 1rem;'>
+            <div style='display: flex; flex-direction: column; align-items: center;'>
+                <div class='logo-section'>
+                    <img src='$logo' width='50'>
+                    <strong>Mang Macs's Food Shop</strong>
+                </div>
+                <div class='icon-section' style='padding: 1rem;'>
+                    <i class='fa-regular fa-circle-check'></i>
+                </div>
+                <div style='text-align: center;'>
+                    <p>Hello ".$newCustomerName."</p>
+                    <h3>Due to your delayed arrival on the scheduled date and time, we have now decided to cancel your table reservation.</h3> 
+                </div>
+            </div>
+            <hr style='border:0.3px solid #dbdbdb;'>
+            <div>
+                <strong>Booking Summary</strong>
+            </div>
+            <div style = 'style:display:flex; flex-direction:column;'>
+                <div style='display: flex; justify-content: space-between;'>
+                    <p style='width:150px;'>Booking Number:</p>
+                    <p>".$newOrderNumber."</p>
+                </div>
+                <div style='display: flex; justify-content: space-between; margin: -20px 0;'>
+                    <p style='width:150px;'>Guests:</p>
+                    <p>".$newGuests."</p>
+                </div>
+                <div style='display: flex; justify-content: space-between; margin: -20px 0;'>
+                    <p style='width:150px;'>Schedule:</p>
+                    <p>$newSched</p>
+                </div> 
+            </div>
+            <hr style='border:0.3px solid #dbdbdb;'>
+            <div style='text-align:center';>
+                <p>from</p></br>
+                <h3>Mang Mac' s Food Shop</h3></br>
+                <p>Zone 5, Barangay Sta. Lucia Bypass Road, Urdaneta, Philippines</p>
+            </div>
+        </div>
+        ";
+        $mail->AltBody = 'FROM: mangmacspizzahouse@gmail.com';
+        $mail->send();
+        header('Location:reservation.php');
+        }
+    }  
 }
 
 updateBookStatus();
-//deleteTable();
-
-
-
+noShowsReservation();
 ?>

@@ -29,8 +29,8 @@ function updateVerificationCode(){
                         $mail->isSMTP();
                         $mail->Host = 'smtp.gmail.com';
                         $mail->SMTPAuth = true;
-                        $mail->Username = '';
-                        $mail->Password = '';
+                        $mail->Username = 'mangmacspizzahouse@gmail.com';
+                        $mail->Password = 'chaknqplsssfybtt'; //chak nqpl sssf ybtt
                         $mail->SMTPSecure = 'tls';
                         $mail->Port = 587;
                         $mail->setFrom('', "Mang Mac's Marinero");

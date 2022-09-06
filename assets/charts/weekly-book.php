@@ -2,10 +2,10 @@
     <?php
         require 'public/connection.php';
         error_reporting(0);
-        $getWeeklyBook = $connect->query("SELECT DAYNAME(created_at) as 'weeks',WEEK(created_at) as 'numWeeks',
+        $getWeeklyBook = $connect->query("SELECT DAYNAME(scheduled_date) as 'weeks',WEEK(scheduled_date) as 'numWeeks',
         SUM(guests) as 'guests' FROM tblreservation 
-        WHERE status IN ('Reserved','Order Received') AND week(created_at)=week(curdate()) AND YEAR(created_at)=YEAR(curdate())
-        GROUP BY day(created_at) ORDER BY created_at ASC");
+        WHERE status IN ('Finished','Order Received') AND week(scheduled_date)=week(curdate()) AND YEAR(scheduled_date)=YEAR(curdate())
+        GROUP BY day(scheduled_date) ORDER BY scheduled_date ASC");
         foreach ($getWeeklyBook as $displayWeeklyBook) {
             $weeksBook[] = $displayWeeklyBook['guests'];
             $weeklyBook[] = $displayWeeklyBook['weeks'];

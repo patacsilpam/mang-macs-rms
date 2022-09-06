@@ -58,7 +58,7 @@
                                     <th scope="col">Quantity</th>
                                     <th scope="col">Price</th>
                                     <th scope="col">Subtotal</th>
-                                    <th scope="col">Order Type</th>
+                                    <th scope="col">Completed Time</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -74,14 +74,14 @@
                                         $getTotalOrder = $connect->prepare("SELECT tblorderdetails.order_number,tblorderdetails.required_date,
                                         tblcustomerorder.customer_name,tblorderdetails.product_name,tblorderdetails.product_variation,
                                         tblorderdetails.quantity,tblorderdetails.price,tblorderdetails.price * tblorderdetails.quantity as 'subtotal',
-                                        tblorderdetails.add_ons,tblorderdetails.order_type 
+                                        tblorderdetails.add_ons,tblorderdetails.order_type,tblorderdetails.completed_time
                                         FROM tblorderdetails LEFT JOIN tblcustomerorder ON tblorderdetails.order_number = tblcustomerorder.order_number
-                                        WHERE tblorderdetails.order_status IN (?,?) AND tblorderdetails.required_date BETWEEN (?) AND (?)
-                                        AND tblorderdetails.order_type=?");
+                                        WHERE tblorderdetails.order_status IN (?,?) AND tblorderdetails.order_type=?
+                                        AND tblorderdetails.completed_time BETWEEN (?) AND (?)");
                                         echo $connect->error;
-                                        $getTotalOrder->bind_param('sssss',$orderCompleted,$orderReceived,$startDate,$endDate,$orderType);
+                                        $getTotalOrder->bind_param('sssss',$orderCompleted,$orderReceived,$orderType,$startDate,$endDate);
                                         $getTotalOrder->execute();
-                                        $getTotalOrder->bind_result($orderNumber,$requiredDate,$customerName,$product,$variation,$quantity,$price,$subtotal,$addOns,$orderType);
+                                        $getTotalOrder->bind_result($orderNumber,$requiredDate,$customerName,$product,$variation,$quantity,$price,$subtotal,$addOns,$orderType,$completedTime);
                                         if($getTotalOrder){
                                             while($getTotalOrder->fetch()){
                                                 $totalAmount+=$subtotal;
@@ -95,7 +95,7 @@
                                                     <td><?= $quantity?></td>
                                                     <td><?= $price?></td>
                                                     <td><?= $subtotal?></td>
-                                                    <td><?= $orderType?></td>
+                                                    <td><?= $completedTime?></td>
                                                 </tr>
                                                 <?php
                                             }
@@ -112,12 +112,13 @@
                                         $getTotalOrder = $connect->prepare("SELECT tblorderdetails.order_number,tblorderdetails.required_date,
                                         tblcustomerorder.customer_name,tblorderdetails.product_name,tblorderdetails.product_variation,
                                         tblorderdetails.quantity,tblorderdetails.price,tblorderdetails.price * tblorderdetails.quantity as 'subtotal',
-                                        tblorderdetails.add_ons,tblorderdetails.order_type 
+                                        tblorderdetails.add_ons,tblorderdetails.order_type,tblorderdetails.completed_time
                                         FROM tblorderdetails LEFT JOIN tblcustomerorder ON tblorderdetails.order_number = tblcustomerorder.order_number
-                                        WHERE tblorderdetails.order_status IN (?,?) AND tblorderdetails.required_date=? AND tblorderdetails.order_type=?");
-                                        $getTotalOrder->bind_param('ssss',$orderCompleted,$orderReceived,$date,$orderType);
+                                        WHERE tblorderdetails.order_status IN (?,?) AND tblorderdetails.order_type=? 
+                                        AND STR_TO_DATE(tblorderdetails.completed_time,'%Y-%m-%d')=?");
+                                        $getTotalOrder->bind_param('ssss',$orderCompleted,$orderReceived,$orderType,$date);
                                         $getTotalOrder->execute();
-                                        $getTotalOrder->bind_result($orderNumber,$requiredDate,$customerName,$product,$variation,$quantity,$price,$subtotal,$addOns,$orderType);
+                                        $getTotalOrder->bind_result($orderNumber,$requiredDate,$customerName,$product,$variation,$quantity,$price,$subtotal,$addOns,$orderType,$completedTime);
                                         if($getTotalOrder){
                                             while($getTotalOrder->fetch()){
                                                 $totalAmount+=$subtotal;
@@ -131,7 +132,7 @@
                                                     <td><?= $quantity?></td>
                                                     <td><?= $price?></td>
                                                     <td><?= $subtotal?></td>
-                                                    <td><?= $orderType?></td>
+                                                    <td><?= $completedTime?></td>
                                                 </tr>
                                                 <?php
                                             }

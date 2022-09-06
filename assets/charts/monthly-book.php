@@ -2,9 +2,10 @@
     <?php
         require 'public/connection.php';
         error_reporting(0);
-        $getMonthlyBook = $connect->query("SELECT SUM(guests)as 'guests',YEAR(created_at) as 'year',
-        MONTHNAME(created_at) as 'month' FROM tblreservation WHERE status IN ('Reserved','Order Received') AND YEAR(created_at) = YEAR(curdate()) 
-        GROUP BY YEAR(created_at) = YEAR(curdate()), MONTH(created_at) ORDER BY YEAR(created_at),MONTH(created_at)");
+        $getMonthlyBook = $connect->query("SELECT SUM(guests)as 'guests',YEAR(scheduled_date) as 'year',
+        MONTHNAME(scheduled_date) as 'month' FROM tblreservation WHERE status IN ('Finished','Order Received')
+        AND YEAR(scheduled_date) = YEAR(curdate()) 
+        GROUP BY YEAR(scheduled_date) = YEAR(curdate()), MONTH(scheduled_date) ORDER BY YEAR(scheduled_date),MONTH(scheduled_date)");
         foreach ($getMonthlyBook as $displayMonthlyBook) {
         $monthsBook[] = $displayMonthlyBook['guests'];
         $monthlyBook[] = $displayMonthlyBook['month'];

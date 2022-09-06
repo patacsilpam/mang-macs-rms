@@ -2,11 +2,11 @@
     <?php
         require 'public/connection.php';
         error_reporting(0);
-        $getMonth = $connect->query("SELECT YEAR(required_date) as 'year',MONTHNAME(required_date) as 'month',
-        SUM(price*quantity) as 'totalSales' FROM tblorderdetails WHERE order_status IN ('Order Completed','Order Received') 
-        AND YEAR(required_date) = YEAR(curdate()) 
-        GROUP BY YEAR(required_date) = YEAR(curdate()),
-        MONTH(required_date) ORDER BY YEAR(required_date),MONTH(required_date)");
+        $getMonth = $connect->query("SELECT YEAR(completed_time) as 'year',MONTHNAME(completed_time) as 'month',
+        SUM(price*quantity) as 'totalSales' FROM tblorderdetails WHERE order_status IN ('Order Completed','Order Received','Finished') 
+        AND YEAR(completed_time) = YEAR(curdate()) 
+        GROUP BY YEAR(completed_time) = YEAR(curdate()),
+        MONTH(completed_time) ORDER BY YEAR(completed_time),MONTH(completed_time)");
         foreach ($getMonth as $displayMonth) {
         $months[] = $displayMonth['month'];
         $monthlySales[] = $displayMonth['totalSales'];

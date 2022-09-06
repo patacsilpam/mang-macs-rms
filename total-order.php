@@ -69,10 +69,11 @@
                                 <?php
                                     require 'public/connection.php';
                                     $totalAmount=0;
-                                    if(isset($_GET['startDate']) && isset($_GET['endDate'])){  
+                                    if(isset($_GET['startDate']) && isset($_GET['endDate'])){ 
+                                        date_default_timezone_set("Asia/Manila"); 
                                         $orderCompleted = "Order Completed";  
                                         $orderReceived = "Order Received";   
-                                        $reserved = "Reserved";    
+                                        $reserved = "Finished";    
                                         $startDate = $_GET['startDate'];
                                         $endDate = $_GET['endDate'];
                                         $getTotalOrder = $connect->prepare("SELECT DISTINCT(tblorderdetails.order_number),tblorderdetails.required_date,
@@ -81,7 +82,7 @@
                                         tblorderdetails.price * tblorderdetails.quantity as 'subtotal',tblorderdetails.order_type 
                                         FROM tblorderdetails LEFT JOIN tblcustomerorder ON tblorderdetails.order_number = tblcustomerorder.order_number
                                         LEFT JOIN tblreservation ON tblorderdetails.order_number = tblreservation.refNumber
-                                        WHERE tblorderdetails.order_status IN (?,?,?) AND tblorderdetails.required_date BETWEEN (?) AND (?)
+                                        WHERE tblorderdetails.order_status IN (?,?,?) AND tblorderdetails.completed_time BETWEEN (?) AND (?)
                                         ORDER BY tblorderdetails.required_date ASC");
                                         $getTotalOrder->bind_param('sssss',$orderCompleted,$orderReceived,$reserved,$startDate,$endDate);
                                         $getTotalOrder->execute();
@@ -111,7 +112,7 @@
                                             } else{
                                                 $orderCompleted = "Order Completed";
                                                 $orderReceived = "Order Received";
-                                                $reserved = "Reserved";
+                                                $reserved = "Finished";
                                                 $date = date('Y-m-d');
                                                 $getTotalOrder = $connect->prepare("SELECT DISTINCT(tblorderdetails.order_number),tblorderdetails.required_date,
                                                 tblcustomerorder.customer_name,tblreservation.fname,tblreservation.lname,tblorderdetails.product_name,tblorderdetails.product_variation,
@@ -119,7 +120,7 @@
                                                 tblorderdetails.order_type 
                                                 FROM tblorderdetails LEFT JOIN tblcustomerorder ON tblorderdetails.order_number = tblcustomerorder.order_number
                                                 LEFT JOIN tblreservation ON tblorderdetails.order_number = tblreservation.refNumber
-                                                WHERE tblorderdetails.order_status IN (?,?,?) AND tblorderdetails.required_date=?
+                                                WHERE tblorderdetails.order_status IN (?,?,?) AND STR_TO_DATE(tblorderdetails.completed_time,'%Y-%m-%d')=?
                                                 ORDER BY tblorderdetails.required_date ASC");
                                                 $getTotalOrder->bind_param('ssss',$orderCompleted,$orderReceived,$reserved,$date);
                                                 $getTotalOrder->execute();

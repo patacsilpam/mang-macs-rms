@@ -2,11 +2,11 @@
     <?php
     require 'public/connection.php';
     error_reporting(0);
-    $getdDailyBook = $connect->query("SELECT SUM(guests) as 'guests', YEAR(created_at) as 'year',DAY(created_at) as 'day'
-    FROM tblreservation WHERE status IN ('Reserved','Order Received') AND YEAR(created_at) = YEAR(curdate()) 
-    AND MONTH(created_at) = MONTH(curdate()) 
-    GROUP BY YEAR(created_at), DAY(created_at) 
-    ORDER BY YEAR(created_at),MONTH(created_at),DAY(created_at)");
+    $getdDailyBook = $connect->query("SELECT SUM(guests) as 'guests', YEAR(scheduled_date) as 'year',DAY(scheduled_date) as 'day'
+    FROM tblreservation WHERE status IN ('Finished','Order Received') AND YEAR(scheduled_date) = YEAR(curdate()) 
+    AND MONTH(scheduled_date) = MONTH(scheduled_date()) 
+    GROUP BY YEAR(scheduled_date), DAY(scheduled_date) 
+    ORDER BY YEAR(scheduled_date),MONTH(scheduled_date),DAY(scheduled_date)");
     foreach ($getdDailyBook as $displayDailyBook) {
        $daysBook[] = $displayDailyBook['guests'];
        $dailyBook[] = $displayDailyBook['day'];

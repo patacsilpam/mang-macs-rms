@@ -48,8 +48,8 @@ function countDeliveryOrders(){
     $orderReceived = "Order Received";
     $date = date('Y-m-d');
     $count = $connect->prepare("SELECT COUNT(*) as 'dailyDeliver', 
-    (SELECT COUNT(*) FROM tblorderdetails WHERE order_status IN (?,?) AND order_type=?) as 'totalDeliver' 
-    FROM tblorderdetails WHERE order_status IN (?,?) AND order_type=? AND required_date=?");
+    (SELECT COUNT(*) FROM tblorderdetails WHERE order_status IN (?,?) AND order_type=? AND completed_time !='0000-00-00 00:00:00') as 'totalDeliver' 
+    FROM tblorderdetails WHERE order_status IN (?,?) AND order_type=? AND STR_TO_DATE(completed_time,'%Y-%m-%d')=?");
     echo $connect->error;
     $count->bind_param('sssssss',$orderCompleted,$orderReceived,$orderType,$orderCompleted,$orderReceived,$orderType,$date);
     $count->execute();
@@ -64,10 +64,10 @@ function countPickUpOrders(){
     $orderType = "Pick Up";
     $orderCompleted = "Order Completed";
     $orderReceived = "Order Received";
-    $date = date('Y-m-d');
+    $date = date('Y-m-d')."%";
     $count = $connect->prepare("SELECT COUNT(*) as 'dailyPickUp', 
-    (SELECT COUNT(*) FROM tblorderdetails WHERE order_status IN (?,?) AND order_type=?) as 'totalPickUp' 
-    FROM tblorderdetails WHERE order_status IN (?,?) AND order_type=? AND required_date=?");
+    (SELECT COUNT(*) FROM tblorderdetails WHERE order_status IN (?,?) AND order_type=? AND completed_time !='0000-00-00 00:00:00') as 'totalPickUp' 
+    FROM tblorderdetails WHERE order_status IN (?,?) AND order_type=? AND  completed_time LIKE (?)");
     echo $connect->error;
     $count->bind_param('sssssss',$orderCompleted,$orderReceived,$orderType,$orderCompleted,$orderReceived,$orderType,$date);
     $count->execute();
@@ -134,11 +134,11 @@ function countTotalOrders(){
     require 'public/connection.php';
     $orderCompleted = "Order Completed";
     $orderReceived = "Order Received";
-    $reserved = "Reserved";
+    $reserved = "Finished";
     $date = date('Y-m-d');
     $count = $connect->prepare("SELECT COUNT(*) as 'dailyOrders',
-    (SELECT COUNT(*) FROM tblorderdetails WHERE order_status IN (?,?,?)) as 'totalOrders'
-    FROM tblorderdetails WHERE order_status IN (?,?,?) AND required_date=?");
+    (SELECT COUNT(*) FROM tblorderdetails WHERE order_status IN (?,?,?) AND completed_time !='0000-00-00 00:00:00') as 'totalOrders'
+    FROM tblorderdetails WHERE order_status IN (?,?,?) AND STR_TO_DATE(completed_time,'%Y-%m-%d')=?");
     $count->bind_param('sssssss',$orderCompleted,$orderReceived,$reserved,$orderCompleted,$orderReceived,$reserved,$date);
     $count->execute();
     $row = $count->get_result();
@@ -150,7 +150,7 @@ function countTotalOrders(){
 //count total table reservation 
 function countTotalBooking(){
     require 'public/connection.php';
-    $reserved = "Reserved";
+    $reserved = "Finished";
     $orderReceived = "Order Received";
     $date = date('Y-m-d');
     $count = $connect->prepare("SELECT COUNT(*) as 'dailyBooking',
