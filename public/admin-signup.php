@@ -33,7 +33,7 @@ function updateVerificationCode(){
                         $mail->Password = 'chaknqplsssfybtt'; //chak nqpl sssf ybtt
                         $mail->SMTPSecure = 'tls';
                         $mail->Port = 587;
-                        $mail->setFrom('', "Mang Mac's Marinero");
+                        $mail->setFrom('mangmacspizzahouse@gmail.com', "Mang Mac's Marinero");
                         $mail->addAddress($email);
                         $mail->isHTML(true);
                         $mail->Subject = "Your Mang Mac's reset password code";

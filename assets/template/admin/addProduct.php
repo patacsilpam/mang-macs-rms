@@ -94,11 +94,7 @@
               <label style="font-size: 1.1rem">Add Main Ingredients</label><br>
               <textarea name="mainIngredients" rows="0" cols="5" style="width:100%"></textarea>
             </div>
-            <div class="mt-3 add-ons-con">
-              <div class="add-ons-child">
-              </div>
-              <p id="add-ons">Create add-on choice </p>
-            </div>
+           
             <div style="font-size: 1.1rem" class="mt-2">
               <label for="prodImage">Choose Image</label>
               <input type="file" multiple accept="image/png, image/jpeg, image/jpg" name="imageProduct" required>

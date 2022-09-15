@@ -611,7 +611,38 @@ ul li a.focus {
     background: #63646d;
     width: 50%;
 }
-
+.add-ons-con>p{
+    color:#6bdb89;
+    cursor:pointer;
+    
+}
+.add-ons-child{
+    display:flex;
+    flex-direction:column;
+}
+.add-ons-div{
+    display:flex;
+    flex-direction:row;
+}
+.add-ons-div label{
+   width:100%;
+   margin:.5rem;
+}
+.add-ons-input{
+    border radius:3px;
+    margin:.5rem;
+    padding:2px;
+}
+.remove-btn,.remove-btn-db{
+    text-size:1.3rem;
+    font-weight:600;
+    color:#7a7c82;
+    border:transparent;
+    background-color:transparent;
+}
+.remove-btn:hover{
+    color:#303136;
+}
 @media (max-width: 1024px) {
     .burger {
         display: flex;

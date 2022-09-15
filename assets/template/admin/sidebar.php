@@ -22,6 +22,7 @@
             <div class="collapse" id="collapseProducts">
                 <div class="card card-body" style="background:#040720; padding:0;">
                     <a class="text-white" href="products.php">Products</a>
+                    <a class="text-white" href="create-add-on.php">Create Add-on</a>
                     <a class="text-white" href="available-menu.php">Available Menu</a>
                 </div>
             </div>

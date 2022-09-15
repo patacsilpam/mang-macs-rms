@@ -24,6 +24,7 @@ function insertProducts(){
             $created_at = date('Y-m-d h:i:s');
             $imageFolderPath = "assets/img-products/".$productImage;
             move_uploaded_file($imageTemp,$imageFolderPath);
+            $code="";
             //check if product name already exist
             $check_product_name = $connect->prepare("SELECT * FROM tblproducts WHERE productName LIKE (?) AND productCategory=?");
             $check_product_name ->bind_param('ss', $likeProduct,$productCategory);
@@ -40,7 +41,7 @@ function insertProducts(){
                     $code = bin2hex(random_bytes(20));
                     $newPizzaSize = $value;
                     $newPizzaPrice = $pizzaPrice[$key];
-                    $insertProduct = $connect->prepare("INSERT tblproducts(id,code,productName,productCategory,productVariation,stocks,price,preparationTime,mainIngredients,productImage,created_at)
+                    $insertProduct = $connect->prepare("INSERT INTO tblproducts(id,code,productName,productCategory,productVariation,stocks,price,preparationTime,mainIngredients,productImage,created_at)
                     VALUES(?,?,?,?,?,?,?,?,?,?,?)");
                     $insertProduct->bind_param('issssiiisss', $newId,$code, $productName, $productCategory, $newPizzaSize,$stocks,$newPizzaPrice, $preparationTime,$mainIngredients,$imageServerUrl, $created_at);
                     $insertProduct->execute();
@@ -58,7 +59,7 @@ function insertProducts(){
                     $code = bin2hex(random_bytes(20));
                     $newBilaoSize = $value;
                     $newBilaoPrice = $bilaoPrice[$key];
-                    $insertProduct = $connect->prepare("INSERT tblproducts(id,code,productName,productCategory,productVariation,stocks,price,preparationTime,mainIngredients,productImage,created_at)
+                    $insertProduct = $connect->prepare("INSERT INTO tblproducts(id,code,productName,productCategory,productVariation,stocks,price,preparationTime,mainIngredients,productImage,created_at)
                     VALUES(?,?,?,?,?,?,?,?,?,?,?)");
                     $insertProduct->bind_param('issssiiisss', $newId,$code, $productName, $productCategory, $newBilaoSize,$stocks,$newBilaoPrice, $preparationTime,$mainIngredients,$imageServerUrl, $created_at);
                     $insertProduct->execute();
@@ -74,15 +75,15 @@ function insertProducts(){
                 $ids = "";
                 $noCategorySize = '';
                 $code = bin2hex(random_bytes(20));
-                $insertProduct = $connect->prepare("INSERT tblproducts(id,code,productName,productCategory,productVariation,stocks,price,preparationTime,mainIngredients,productImage,created_at)
+                $insertProduct = $connect->prepare("INSERT INTO tblproducts(id,code,productName,productCategory,productVariation,stocks,price,preparationTime,mainIngredients,productImage,created_at)
                 VALUES(?,?,?,?,?,?,?,?,?,?,?)");
                 $insertProduct->bind_param('issssiiisss', $ids,$code, $productName, $productCategory, $noCategorySize,$stocks,$noCategoryPrice, $preparationTime,$mainIngredients,$imageServerUrl, $created_at);
-                $insertProduct->execute();
-                if ($insertProduct) {
+                if ($insertProduct->execute()) {
                     header('Location:products.php?inserted');
+                   
                 } else{
                     header('Location:products.php?error');
-                }
+                }  
             }
         }
     }
@@ -175,10 +176,87 @@ function updateProductStocks(){
         }
     }
 }
+//create or insert add-on data
+function createAddOns(){
+    require 'public/connection.php';
+    if(isset($_SERVER["REQUEST_METHOD"]) == "POST"){
+        if(isset($_POST['btn-save-choices'])){
+            $id = null;
+            $code = bin2hex(random_bytes(20));
+            $addOnsName = $_POST['add-ons-name'];
+            $addOnsPrice = $_POST['add-ons-price'];
+            $productName =  mysqli_real_escape_string($connect,$_POST['choiceGroup']);
+            foreach($addOnsName as $addOnsIndex => $addOnsValue){
+                $newAddOns = $addOnsValue;
+                $newAddOnsPrice = $addOnsPrice[$addOnsIndex];
+                $insertAddOns = $connect->prepare("INSERT INTO tbladdons(id,add_ons_code,add_ons,add_ons_price,add_ons_category) VALUES(?,?,?,?,?)");
+                $insertAddOns->bind_param('issis',$id,$code,$newAddOns,$newAddOnsPrice,$productName);
+                if($insertAddOns->execute()){
+                    header('Location:create-add-on.php');
+                }
+            }
+        }
+    }
 
+}
+//update each add-on name and price
+function editChoiceGroup(){
+    require 'public/connection.php';
+    if(isset($_SERVER["REQUEST_METHOD"]) == "POST"){
+        if(isset($_POST['btn-edit-choices'])){
+            $ids = $_POST['ids'];
+            $addOnsName = $_POST['addOns'];
+            $addOnsPrice = $_POST['addOnsPrice'];
+            foreach($ids as $idsIndex => $idsVal) {
+                $newId = $idsVal;
+                $newAddOnsName = $addOnsName[$idsIndex];
+                $newAddOnsPrice = $addOnsPrice[$idsIndex];
+
+                $editChoices = $connect->prepare("UPDATE tbladdons SET add_ons=?,add_ons_price=? WHERE id=?");
+                $editChoices->bind_param('ssi',$newAddOnsName,$newAddOnsPrice,$newId);
+                if($editChoices->execute()){
+                    header('Location:create-add-on.php');
+                }
+            }
+        }
+    }
+}
+//remove specific add-on of menu category
+function removeAddOn(){
+    require 'public/connection.php';
+    if(isset($_SERVER["REQUEST_METHOD"]) == "POST"){
+        if(isset($_POST['btn-remove-addOns'])){
+            $id = mysqli_real_escape_string($connect,$_POST['id']);
+
+            $removeChoices = $connect->prepare("DELETE FROM tbladdons WHERE id=?");
+            $removeChoices->bind_param('i',$id);
+            if($removeChoices->execute()){
+                header('Location:create-add-on.php?deleted');
+            }
+        }
+    }
+}
+//remove group of add-on in specific menu category
+function removeChoiceGroup(){
+    require 'public/connection.php';
+    if(isset($_SERVER["REQUEST_METHOD"]) == "POST"){
+        if(isset($_POST['btn-delete-choiceGroup'])){
+            $code = mysqli_real_escape_string($connect,$_POST['code']);
+
+            $removeGroup = $connect->prepare("DELETE FROM tbladdons WHERE add_ons_code=?");
+            $removeGroup->bind_param('s',$code);
+            if($removeGroup->execute()){
+                header('Location:create-add-on.php?deleted');
+            }
+        }
+    }
+}
 insertProducts();
 updateProducts();
 deleteProducts();
 updateProductStocks();
-
+createAddOns();
+editChoiceGroup();
+removeAddOn();
+removeChoiceGroup();
 ?>

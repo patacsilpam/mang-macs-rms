@@ -72,16 +72,17 @@
                                     <td>₱ <?= $fetch['price'] ?></td>
                                     <td><?= $fetch['preparationTime']?>mins</td>
                                     <td style="display: flex;"> 
-                                        <button title="View" type="button" class="btn btn-primary" data-toggle="modal"
-                                            data-target="#viewProduct<?= $fetch['id']; ?>"><i
-                                                class="fas fa-eye"></i></button>&emsp;
+                                        <button title="View" type="button" class="btn btn-primary" data-toggle="modal" data-target="#viewProduct<?= $fetch['id']; ?>">
+                                            <i class="fas fa-eye"></i>
+                                        </button>&emsp;
                                         <button value="<?= $fetch['productCategory']; ?>" title="Edit" type="button" class="btn btn-success" data-toggle="modal"
-                                            data-target="#editProducts<?= $fetch['id']; ?>"  onclick="clickCategory(this)"><i
-                                                class="fas fa-edit"></i></button>    
-                                       <?php include 'assets/template/admin/addProduct.php'?>&emsp;            
-                                        <button title="Delete" type="button" class="btn btn-danger" data-toggle="modal"
-                                            data-target="#deleteProduct<?= $fetch['id']; ?>"><i
-                                                class="fas fa-trash"></i></button>
+                                            data-target="#editProducts<?= $fetch['id']; ?>"  onclick="clickCategory(this)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>    
+                                        <?php include 'assets/template/admin/addProduct.php'?>&emsp;            
+                                        <button title="Delete" type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteProduct<?= $fetch['id']; ?>">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
                                            
                                     </td>
                                 </tr>
