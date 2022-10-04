@@ -3,7 +3,7 @@
         require 'public/connection.php';
         error_reporting(0);
         $getMonth = $connect->query("SELECT YEAR(completed_time) as 'year',MONTHNAME(completed_time) as 'month',
-        SUM(price*quantity) as 'totalSales' FROM tblorderdetails WHERE order_status IN ('Order Completed','Order Received','Finished') 
+        SUM((price * quantity) + (add_ons_fee * quantity)) as 'totalSales' FROM tblorderdetails WHERE order_status IN ('Order Completed','Order Received','Finished') 
         AND YEAR(completed_time) = YEAR(curdate()) 
         GROUP BY YEAR(completed_time) = YEAR(curdate()),
         MONTH(completed_time) ORDER BY YEAR(completed_time),MONTH(completed_time)");

@@ -4,7 +4,7 @@
         error_reporting(0);
         $firstDayOfWeek = date('F d',strtotime("sunday last week"));
         $getWeek = $connect->query("SELECT DAYNAME(completed_time) as 'weeks',WEEK(completed_time) as 'numWeeks',
-        SUM(price * quantity) as 'totalSales' FROM tblorderdetails 
+        SUM((price * quantity) + (add_ons_fee * quantity)) as 'totalSales' FROM tblorderdetails 
         WHERE order_status IN ('Order Completed','Order Received','Finished')  AND week(completed_time)=week(curdate()) AND YEAR(completed_time)=YEAR(curdate())
         GROUP BY day(completed_time)  ORDER BY completed_time ASC");
         foreach ($getWeek as $displayWeek) {

@@ -2,7 +2,7 @@
 <li class="dropdown">
     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
         aria-expanded="false">
-        <i class="fas fa-bell text-primary"><sup><?= $fetchNotif[0] ?></sup></i>
+        <i class="fas fa-bell text-primary bell-icon"><sup id="countNotif"><?= $fetchNotif[0] ?></sup></i>
     </a>
     <div class="dropdown-menu dropdown-bell-icon" aria-labelledby="dropdownMenuLink">
         <a class="dropdown-item" href="inventory.php">
@@ -54,3 +54,4 @@
     border: none;
 }
 </style>
+<script src="assets/js/notif-bell.js"></script>

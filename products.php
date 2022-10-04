@@ -8,7 +8,7 @@
     <meta name="Products" content="Mang Macs-Products">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/4adbff979d.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
@@ -60,9 +60,10 @@
                                 $selectProduct = "SELECT * FROM tblproducts";
                                 $displayProduct = $connect->query($selectProduct);
                                 while ($fetch = $displayProduct->fetch_assoc()) {
+                                    $newPrepTime = $fetch['preparationTime'];
+                                    $convertMinHr = $newPrepTime/60;
                                 ?>
                                 <tr>
-                                    
                                     <th scope="row"><?= $fetch['id'] ?></th>
                                     <td><?= $fetch['created_at'] ?></td>
                                     <td><img src="<?= $fetch['productImage']?>" alt="image" width="50" class="img-products"></td>
@@ -70,7 +71,7 @@
                                     <td><?= $fetch['productCategory'] ?></td>
                                     <td><?= $fetch['productVariation'] ?></td>
                                     <td>₱ <?= $fetch['price'] ?></td>
-                                    <td><?= $fetch['preparationTime']?>mins</td>
+                                    <td><?php echo $prepTime = ($newPrepTime < 60) ? "$newPrepTime mins" : "$convertMinHr hr";?></td>
                                     <td style="display: flex;"> 
                                         <button title="View" type="button" class="btn btn-primary" data-toggle="modal" data-target="#viewProduct<?= $fetch['id']; ?>">
                                             <i class="fas fa-eye"></i>

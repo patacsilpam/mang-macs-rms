@@ -8,7 +8,7 @@
     <meta name="Products" content="Mang Macs-Products">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/4adbff979d.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
@@ -51,12 +51,11 @@
                             </thead>
                             <tbody>
                                 <?php
-                                    $getProductCategory = $connect->prepare("SELECT id,add_ons_code,GROUP_CONCAT(add_ons SEPARATOR ','),
-                                    GROUP_CONCAT(add_ons_price SEPARATOR ','),add_ons_category FROM tbladdons 
-                                    GROUP BY add_ons_category");
+                                    $getProductCategory = $connect->prepare("SELECT id,GROUP_CONCAT(add_ons SEPARATOR ','),
+                                    GROUP_CONCAT(add_ons_price SEPARATOR ','),add_ons_category FROM tbladdons GROUP BY add_ons_category");
                                     $getProductCategory->execute();
                                     $getProductCategory->store_result();
-                                    $getProductCategory->bind_result($id,$addOnsCode,$addOnsName,$addOnsPrice,$addOnsCategory);
+                                    $getProductCategory->bind_result($id,$addOnsName,$addOnsPrice,$addOnsCategory);
                                     while($getProductCategory->fetch()){
                                         ?>
                                         <tr>
@@ -67,13 +66,13 @@
                                                 <button title="View" type="button" class="btn btn-primary" data-toggle="modal" data-target="#viewAddOns<?= $id; ?>">
                                                     <i class="fas fa-eye"></i>
                                                 </button>&nbsp;
-                                            <button value="<?php if(empty($productVariation)) {echo "null";} else{ echo $productVariation;} ?>" title="Edit" type="button" class="btn btn-success" data-toggle="modal"
-                                                data-target="#editAddons<?=$id;?>" onclick="clickStocks(this)">
-                                                <i class="fas fa-edit"></i>
-                                            </button><?php include 'assets/template/admin/addOns.php'; ?> &nbsp;
-                                            <button title="Delete" type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteChoiceGroup<?=$addOnsCode?>">
-                                                <i class="fas fa-trash"></i>
-                                            </button> 
+                                                <button title="Edit" type="button" class="btn btn-success" data-toggle="modal"
+                                                    data-target="#editAddons<?=$id;?>">
+                                                    <i class="fas fa-edit"></i>
+                                                </button><?php include 'assets/template/admin/addOns.php'; ?> &nbsp;
+                                                <button title="Delete" type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteChoiceGroup<?=$id?>">
+                                                    <i class="fas fa-trash"></i>
+                                                </button> 
                                             </td>
                                         </tr>
                                         <?php

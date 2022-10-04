@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/4adbff979d.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
@@ -57,6 +57,8 @@
                                     <th scope="col">Variation</th>
                                     <th scope="col">Quantity</th>
                                     <th scope="col">Price</th>
+                                    <th scope="col">Add Ons</th>
+                                    <th scope="col">Add Ons Price</th>
                                     <th scope="col">Subtotal</th>
                                     <th scope="col">Completed Time</th>
                                 </tr>
@@ -65,6 +67,7 @@
                                 <?php
                                     require 'public/connection.php';
                                     $totalAmount=0;
+                                    $totalAddOnsFee=0;
                                     if(isset($_GET['startDate']) && isset($_GET['endDate'])){  
                                         $orderCompleted = "Order Completed";
                                         $orderReceived = "Order Received";           
@@ -74,17 +77,19 @@
                                         $getTotalOrder = $connect->prepare("SELECT tblorderdetails.order_number,tblorderdetails.required_date,
                                         tblcustomerorder.customer_name,tblorderdetails.product_name,tblorderdetails.product_variation,
                                         tblorderdetails.quantity,tblorderdetails.price,tblorderdetails.price * tblorderdetails.quantity as 'subtotal',
-                                        tblorderdetails.add_ons,tblorderdetails.order_type,tblorderdetails.completed_time
+                                        tblorderdetails.add_ons,tblorderdetails.add_ons_fee * tblorderdetails.quantity as 'add_ons_fee',
+                                        tblorderdetails.order_type,tblorderdetails.completed_time
                                         FROM tblorderdetails LEFT JOIN tblcustomerorder ON tblorderdetails.order_number = tblcustomerorder.order_number
                                         WHERE tblorderdetails.order_status IN (?,?) AND tblorderdetails.order_type=?
                                         AND tblorderdetails.completed_time BETWEEN (?) AND (?)");
                                         echo $connect->error;
                                         $getTotalOrder->bind_param('sssss',$orderCompleted,$orderReceived,$orderType,$startDate,$endDate);
                                         $getTotalOrder->execute();
-                                        $getTotalOrder->bind_result($orderNumber,$requiredDate,$customerName,$product,$variation,$quantity,$price,$subtotal,$addOns,$orderType,$completedTime);
+                                        $getTotalOrder->bind_result($orderNumber,$requiredDate,$customerName,$product,$variation,$quantity,$price,$subtotal,$addOns,$addOnsFee,$orderType,$completedTime);
                                         if($getTotalOrder){
                                             while($getTotalOrder->fetch()){
                                                 $totalAmount+=$subtotal;
+                                                $totalAddOnsFee+=$addOnsFee;
                                                 ?>
                                                 <tr>
                                                     <td><?= $orderNumber?></td>
@@ -94,7 +99,9 @@
                                                     <td><?= $variation?></td>
                                                     <td><?= $quantity?></td>
                                                     <td><?= $price?></td>
-                                                    <td><?= $subtotal?></td>
+                                                    <td><?= $addOns?></td>
+                                                    <td><?= $addOnsFee?></td>
+                                                    <td><?= $subtotal + $addOnsFee?></td>
                                                     <td><?= $completedTime?></td>
                                                 </tr>
                                                 <?php
@@ -112,16 +119,18 @@
                                         $getTotalOrder = $connect->prepare("SELECT tblorderdetails.order_number,tblorderdetails.required_date,
                                         tblcustomerorder.customer_name,tblorderdetails.product_name,tblorderdetails.product_variation,
                                         tblorderdetails.quantity,tblorderdetails.price,tblorderdetails.price * tblorderdetails.quantity as 'subtotal',
-                                        tblorderdetails.add_ons,tblorderdetails.order_type,tblorderdetails.completed_time
+                                        tblorderdetails.add_ons,tblorderdetails.add_ons_fee * tblorderdetails.quantity as 'add_ons_fee',
+                                        tblorderdetails.order_type,tblorderdetails.completed_time
                                         FROM tblorderdetails LEFT JOIN tblcustomerorder ON tblorderdetails.order_number = tblcustomerorder.order_number
                                         WHERE tblorderdetails.order_status IN (?,?) AND tblorderdetails.order_type=? 
                                         AND STR_TO_DATE(tblorderdetails.completed_time,'%Y-%m-%d')=?");
                                         $getTotalOrder->bind_param('ssss',$orderCompleted,$orderReceived,$orderType,$date);
                                         $getTotalOrder->execute();
-                                        $getTotalOrder->bind_result($orderNumber,$requiredDate,$customerName,$product,$variation,$quantity,$price,$subtotal,$addOns,$orderType,$completedTime);
+                                        $getTotalOrder->bind_result($orderNumber,$requiredDate,$customerName,$product,$variation,$quantity,$price,$subtotal,$addOns,$addOnsFee,$orderType,$completedTime);
                                         if($getTotalOrder){
                                             while($getTotalOrder->fetch()){
                                                 $totalAmount+=$subtotal;
+                                                $totalAddOnsFee+=$addOnsFee;
                                                 ?>
                                                 <tr>
                                                     <td><?= $orderNumber?></td>
@@ -130,8 +139,10 @@
                                                     <td><?= $product?></td>
                                                     <td><?= $variation?></td>
                                                     <td><?= $quantity?></td>
-                                                    <td><?= $price?></td>
-                                                    <td><?= $subtotal?></td>
+                                                    <td><?= $price?>.00</td>
+                                                    <td><?= $addOns?></td>
+                                                    <td><?= $addOnsFee?>.00</td>
+                                                    <td><?= $subtotal + $addOnsFee?>.00</td>
                                                     <td><?= $completedTime?></td>
                                                 </tr>
                                                 <?php
@@ -146,9 +157,9 @@
 
                           <tfoot>
                               <tr>
-                                <td colspan="6"></td>
+                                <td colspan="8"></td>
                                 <td><b>Total Sales:  </b></td>
-                                <td><b>₱<?= $totalAmount?>.00</b> </td>
+                                <td><b>₱<?= $totalAmount + $totalAddOnsFee?>.00</b> </td>
                                 <td></td>
                               </tr>
                           </tfoot>

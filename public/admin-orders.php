@@ -314,10 +314,10 @@ function updateOrderStatus(){
                     $sales = $_POST['sales'];
                     $userType = "Admin";
                     $reportDate = date('Y-m-d h:i:s');
+                    $eSignature = $_SESSION['mySignature'] ?? 'no signature';
                     //insert report sale
-                    $insertSale = $connect->prepare("INSERT INTO tblreport(id,fullname,sales,user_type,report_date) VALUES(?,?,?,?,?)");
-                    echo $connect->error;
-                    $insertSale->bind_param('isiss',$id,$fullname,$sales,$userType,$reportDate);
+                    $insertSale = $connect->prepare("INSERT INTO tblreport(id,fullname,sales,user_type,report_date,e_signature) VALUES(?,?,?,?,?,?)");
+                    $insertSale->bind_param('isisss',$id,$fullname,$sales,$userType,$reportDate,$eSignature);
                     $insertSale->execute();
                     $OrderStatus = $connect->prepare("UPDATE tblorderdetails SET order_status=?,completed_time=?,notif_date=? WHERE order_number=?");
                     $OrderStatus->bind_param('ssss',$changeOrderStatus,$completedTime,$notifDate,$orderNumber);
@@ -697,10 +697,11 @@ function updateOrderStatus(){
                             $sales = $_POST['sales'];
                             $userType = "Admin";
                             $reportDate = date('Y-m-d h:i:s');
+                            $eSignature = $_SESSION['mySignature'];
                             //insert report sale
-                            $insertSale = $connect->prepare("INSERT INTO tblreport(id,fullname,sales,user_type,report_date) VALUES(?,?,?,?,?)");
+                            $insertSale = $connect->prepare("INSERT INTO tblreport(id,fullname,sales,user_type,report_date,e_signature) VALUES(?,?,?,?,?,?)");
                             echo $connect->error;
-                            $insertSale->bind_param('isiss',$id,$fullname,$sales,$userType,$reportDate);
+                            $insertSale->bind_param('isisss',$id,$fullname,$sales,$userType,$reportDate,$eSignature);
                             $insertSale->execute();
                             //update order status
                             $OrderStatus = $connect->prepare("UPDATE tblorderdetails SET order_status=?,completed_time=?,notif_date=? WHERE order_number=?");

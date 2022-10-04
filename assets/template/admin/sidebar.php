@@ -6,7 +6,7 @@
     <img class="img-logo" src="assets/images/logo.png" alt="mang macs logo">
     <ul class="sidebar-links">
         <li title="Dashboard" class="lists">
-            <a href="dashboard.php"  class="link"><i class="fas fa-tachometer-alt icons"></i><span class="span">Dashboard</span></a>
+            <a href="dashboard.php"  class="link"><i class="fa-solid fa-gauge icons"></i><span class="span">Dashboard</span></a>
         </li>
         <li title="Orders">
             <a href="orders.php"><i class="fas fa-shopping-cart icons"></i><span class="span">Orders</span></a>

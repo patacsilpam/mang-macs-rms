@@ -21,6 +21,7 @@ function login(){
                     $_SESSION['lname'] = $fetch['lname'];
                     $_SESSION['uname'] = $fetch['uname'];
                     $_SESSION['email'] = $fetch['email'];
+                    $_SESSION['mySignature'] = $fetch['e_signature'];
                     $_SESSION['loggedIn'] = true;
                     header('Location:dashboard.php');
                 } else {

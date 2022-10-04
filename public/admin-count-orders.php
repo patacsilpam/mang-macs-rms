@@ -7,7 +7,7 @@ function countActiveOrders(){
     $orderCancelled = "Cancelled";
     $orderType = "Dine In";
     $count = $connect->prepare("SELECT SUM(COUNT(DISTINCT order_number)) OVER() as 'active_orders' 
-    FROM tblorderdetails WHERE order_status != ? AND order_status!=? AND order_status!=? AND order_type != ?
+    FROM tblorderdetails WHERE order_status NOT IN (?,?,?) AND order_type != ?
     GROUP BY order_number");
     $count->bind_param('ssss',$orderCompleted,$orderReceived,$orderCancelled,$orderType);
     $count->execute();
@@ -27,7 +27,7 @@ function countActiveBooking(){
     $bookPending = "Pending";
     $bookReserved = "Reserved";
     $count = $connect->prepare("SELECT COUNT(*) as 'active_booking' FROM tblreservation 
-    WHERE  status=? AND status=? AND
+    WHERE status IN (?,?) AND
     STR_TO_DATE(CONCAT(scheduled_date,' ', scheduled_time),'%Y-%m-%d %h:%i %p') >= DATE_SUB(CURDATE(), INTERVAL 30 MINUTE)");
     $count->bind_param('ss',$bookPending,$bookReserved);
     $count->execute();

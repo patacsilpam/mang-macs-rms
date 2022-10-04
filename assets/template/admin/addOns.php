@@ -123,26 +123,26 @@
                 <label>Add-On</label>
                 <label>Price</label>
               </div>
-              <?php 
-                  $getAddOnns = $connect->prepare("SELECT id,add_ons,add_ons_price FROM tbladdons");
-                  $getAddOnns->execute();
-                  $getAddOnns->store_result();
-                  $getAddOnns->bind_result($id,$addOns,$addOnsAmount);
-                  while($getAddOnns->fetch()){
-                      ?>
-                      <div class="add-ons-child">
-                        <div class="add-ons-div">
-                          <input type="hidden" name="id" value="<?=$id?>" >
-                          <input type="hidden" name="ids[]" value="<?=$id?>" >
-                          <input type="text" class="add-ons-input form-control form-control-sm" name="addOns[]" placeholder="Add-on" value="<?=$addOns?>" required>
-                          <input type="number" class="add-ons-input form-control form-control-sm" name="addOnsPrice[]" placeholder="0" value="<?=$addOnsAmount?>" required>
-                          <button type="submit" class="remove-btn-db" name="btn-remove-addOns">x</button>
-                        </div>
+                <?php
+                  $fetchAddOns = $connect->prepare("SELECT id,add_ons,add_ons_price,add_ons_category FROM tbladdons WHERE add_ons_category=?");
+                  $fetchAddOns->bind_param('s',$addOnsCategory);
+                  $fetchAddOns->execute();
+                  $fetchAddOns->store_result();
+                  $fetchAddOns->bind_result($id,$addOns,$addOnsFee,$addOnsGroup);
+                  while($fetchAddOns->fetch()){
+                    ?>
+                  <div class="add-ons-child">
+                      <div class="add-ons-div">
+                        <input type="hidden" name="ids[]" value="<?=$id?>">
+                        <input type="text" class="add-ons-input form-control form-control-sm" name="addOns[]" value="<?=$addOns?>" required>
+                        <input type="number" class="add-ons-input form-control form-control-sm" name="addOnsPrice[]" value="<?=$addOnsFee?>" required>
+                        <button type="submit" class="remove-btn" name="btn-remove-addOns" value="<?=$id?>">x</button>
                       </div>
-                      <?php                
-                  }
-                ?>
-              <hr>
+                  </div>    
+                  <?php
+                }
+              ?>
+            <hr>
             </div>
         </div>
       </div>
@@ -156,7 +156,7 @@
 </div>
 <!--Remove All Add Ons of each menu category--->
 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST">
-  <div class="modal fade" id="deleteChoiceGroup<?=$addOnsCode?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="deleteChoiceGroup<?=$id?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -166,7 +166,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <input type="hidden" name="code" value="<?=$addOnsCode?>">
+          <input type="hidden" name="add-ons-category" value="<?=$addOnsCategory?>">
           <p>Delete Choice Group</p>
           <div class="modal-body-container">
             <i class="fas fa-exclamation-circle fa-3x icon-warning"></i><br>

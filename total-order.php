@@ -60,6 +60,8 @@
                                     <th scope="col">Variation</th>
                                     <th scope="col">Quantity</th>
                                     <th scope="col">Price</th>
+                                    <th scope="col">Add Ons</th>
+                                    <th scope="col">Add Ons Price</th>
                                     <th scope="col">Subtotal</th>
                                     <th scope="col">Order Type</th>
                                    
@@ -69,6 +71,7 @@
                                 <?php
                                     require 'public/connection.php';
                                     $totalAmount=0;
+                                    $totalAddOnsFee=0;
                                     if(isset($_GET['startDate']) && isset($_GET['endDate'])){ 
                                         date_default_timezone_set("Asia/Manila"); 
                                         $orderCompleted = "Order Completed";  
@@ -79,17 +82,19 @@
                                         $getTotalOrder = $connect->prepare("SELECT DISTINCT(tblorderdetails.order_number),tblorderdetails.required_date,
                                         tblcustomerorder.customer_name,tblreservation.fname,tblreservation.lname,tblorderdetails.product_name,
                                         tblorderdetails.product_variation,tblorderdetails.quantity,tblorderdetails.price,
-                                        tblorderdetails.price * tblorderdetails.quantity as 'subtotal',tblorderdetails.order_type 
+                                        tblorderdetails.price * tblorderdetails.quantity as 'subtotal',tblorderdetails.add_ons,
+                                        tblorderdetails.add_ons_fee * tblorderdetails.quantity as 'add_ons_fee',tblorderdetails.order_type
                                         FROM tblorderdetails LEFT JOIN tblcustomerorder ON tblorderdetails.order_number = tblcustomerorder.order_number
                                         LEFT JOIN tblreservation ON tblorderdetails.order_number = tblreservation.refNumber
                                         WHERE tblorderdetails.order_status IN (?,?,?) AND tblorderdetails.completed_time BETWEEN (?) AND (?)
                                         ORDER BY tblorderdetails.required_date ASC");
                                         $getTotalOrder->bind_param('sssss',$orderCompleted,$orderReceived,$reserved,$startDate,$endDate);
                                         $getTotalOrder->execute();
-                                        $getTotalOrder->bind_result($orderNumber,$requiredDate,$customerName,$fname,$lname,$product,$variation,$quantity,$price,$subtotal,$orderType);
+                                        $getTotalOrder->bind_result($orderNumber,$requiredDate,$customerName,$fname,$lname,$product,$variation,$quantity,$price,$subtotal,$addOns,$addOnsFee,$orderType);
                                         if($getTotalOrder){
                                             while($getTotalOrder->fetch()){
                                                 $totalAmount += $subtotal;
+                                                $totalAddOnsFee+=$addOnsFee;
                                                 ?>
                                                     <tr>
                                                         <td><?= $orderNumber?></td>
@@ -98,8 +103,10 @@
                                                         <td><?= $product?></td>
                                                         <td><?= $variation?></td>
                                                         <td><?= $quantity?></td>
-                                                        <td><?= $price?></td>
-                                                        <td><?= $subtotal?></td>
+                                                        <td><?= $price?>.00</td>
+                                                        <td><?= $addOns?></td>
+                                                        <td><?= $addOnsFee?>.00</td>
+                                                        <td><?= $subtotal + $addOnsFee?>.00</td>
                                                         <td><?= $orderType?></td>
                                                     </tr>
                                             <?php
@@ -117,17 +124,18 @@
                                                 $getTotalOrder = $connect->prepare("SELECT DISTINCT(tblorderdetails.order_number),tblorderdetails.required_date,
                                                 tblcustomerorder.customer_name,tblreservation.fname,tblreservation.lname,tblorderdetails.product_name,tblorderdetails.product_variation,
                                                 tblorderdetails.quantity,tblorderdetails.price,tblorderdetails.price * tblorderdetails.quantity as 'subtotal',
-                                                tblorderdetails.order_type 
+                                                tblorderdetails.add_ons,tblorderdetails.add_ons_fee * tblorderdetails.quantity as 'add_ons_fee',tblorderdetails.order_type 
                                                 FROM tblorderdetails LEFT JOIN tblcustomerorder ON tblorderdetails.order_number = tblcustomerorder.order_number
                                                 LEFT JOIN tblreservation ON tblorderdetails.order_number = tblreservation.refNumber
                                                 WHERE tblorderdetails.order_status IN (?,?,?) AND STR_TO_DATE(tblorderdetails.completed_time,'%Y-%m-%d')=?
                                                 ORDER BY tblorderdetails.required_date ASC");
                                                 $getTotalOrder->bind_param('ssss',$orderCompleted,$orderReceived,$reserved,$date);
                                                 $getTotalOrder->execute();
-                                                $getTotalOrder->bind_result($orderNumber,$requiredDate,$customerName,$fname,$lname,$product,$variation,$quantity,$price,$subtotal,$orderType);
+                                                $getTotalOrder->bind_result($orderNumber,$requiredDate,$customerName,$fname,$lname,$product,$variation,$quantity,$price,$subtotal,$addOns,$addOnsFee,$orderType);
                                                 if($getTotalOrder){
                                                     while($getTotalOrder->fetch()){
                                                         $totalAmount += $subtotal;
+                                                        $totalAddOnsFee+=$addOnsFee;
                                                         ?>
                                             <tr>
                                                 <td><?= $orderNumber?></td>
@@ -136,8 +144,10 @@
                                                 <td><?= $product?></td>
                                                 <td><?= $variation?></td>
                                                 <td><?= $quantity?></td>
-                                                <td><?= $price?></td>
-                                                <td><?= $subtotal?></td>
+                                                <td><?= $price?>.00</td>
+                                                <td><?= $addOns?></td>
+                                                <td><?= $addOnsFee?></td>
+                                                <td><?= $subtotal + $addOnsFee?>.00</td>
                                                 <td><?= $orderType?></td>
                                             </tr>
                                             <?php
@@ -151,9 +161,9 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="6"></td>
+                                    <td colspan="8"></td>
                                     <td><b>Total Sales:  </b></td>
-                                    <td><b>₱ <?= $totalAmount?>.00</b> </td>
+                                    <td><b>₱ <?= $totalAmount + $totalAddOnsFee?>.00</b> </td>
                                     <td></td>
                                 </tr>
                             </tfoot>

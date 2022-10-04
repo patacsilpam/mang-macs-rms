@@ -20,6 +20,14 @@ function insertUsers(){
             $position = mysqli_real_escape_string($connect, $_POST['position']);
             $created_at = date('y-m-d h:i:s');
             $verification_code = 0;
+            $folderPath = "assets/signature-uploads/";
+            $splitImgStr = explode(";base64,", $_POST['signed']);//split the image in to two (image type,image string)
+            $imgTypeAux = explode("image/", $splitImgStr[0]);//split data:image/png    
+            $imgType = $imgTypeAux [1]; //get the array index 1 -- png  
+            $imgDecodeBase64 = base64_decode($splitImgStr[1]); //decode the lengthy image string 
+            $file = $folderPath . uniqid() . '.'.$imgType; //set the format of the image (assets/uploads/uniqueId.png)
+            file_put_contents($file, $imgDecodeBase64);//set a unique id and upload to specified folder path (see 56 line of code)
+            $imgSigServerUrl = "http://192.168.1.70/mang-macs-admin-web/".$file;
             //check username and email
             $check_uname_email = $connect->prepare("SELECT * FROM tblusers WHERE uname=? OR email=?");
             $check_uname_email->bind_param('ss', $uname, $email);
@@ -37,9 +45,9 @@ function insertUsers(){
             }
             //if validation is correct insert data values to database
             else {
-                $insertUser = $connect->prepare("INSERT INTO tblusers(id,fname,lname,uname,email,user_password,profile,position,created_at,verification_code)
-                VALUES(?,?,?,?,?,?,?,?,?,?)");
-                $insertUser->bind_param('issssssssi', $id, $fname, $lname, $uname, $email, $passwordHash, $profile, $position, $created_at, $verification_code);
+                $insertUser = $connect->prepare("INSERT INTO tblusers(id,fname,lname,uname,email,user_password,profile,position,created_at,verification_code,e_signature)
+                VALUES(?,?,?,?,?,?,?,?,?,?,?)");
+                $insertUser->bind_param('issssssssis', $id, $fname, $lname, $uname, $email, $passwordHash, $profile, $position, $created_at, $verification_code,$imgSigServerUrl);
                 $insertUser->execute();
                 if ($insertUser) {
                     header('Location:users.php?inserted');

@@ -10,7 +10,7 @@ require 'public/admin-orders.php'
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="Orders" content="Mang Macs-Orders">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/4adbff979d.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
@@ -56,7 +56,7 @@ require 'public/admin-orders.php'
                                     tblcustomerorder.token,tblorderdetails.created_at,
                                     tblcustomerorder.customer_name,tblorderdetails.order_status,
                                     tblorderdetails.order_type,tblcustomerorder.total_amount,tblorderdetails.required_date,
-                                    tblorderdetails.required_time,tblcustomerorder.email
+                                    tblorderdetails.required_time,tblcustomerorder.email,tblcustomerorder.delivery_fee
                                     FROM tblcustomerorder LEFT JOIN tblorderdetails 
                                     ON tblorderdetails.order_number = tblcustomerorder.order_number
                                     WHERE tblorderdetails.order_status!='Order Completed' AND tblorderdetails.order_status!='Order Received' 
@@ -70,7 +70,7 @@ require 'public/admin-orders.php'
                                     <td><?=$fetch['created_at']?></td>
                                     <td><?=$fetch['customer_name']?></td>
                                     <td><?=$fetch['order_type']?></td>
-                                    <td><?=$fetch['total_amount']?></td>
+                                    <td>₱ <?=$fetch['total_amount'] + $fetch['delivery_fee']?>.00</td>
                                     <td><?=$fetch['required_date']?><br><?=$fetch['required_time']?></td>
                                     <td width="150">
                                        <span>

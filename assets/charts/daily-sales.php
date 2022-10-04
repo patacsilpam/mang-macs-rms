@@ -3,7 +3,7 @@
     require 'public/connection.php';
     error_reporting(0);
     $getDays = $connect->query("SELECT COUNT(product_name), YEAR(completed_time) as 'year',DAY(completed_time) as 'day',
-    SUM(price*quantity) as 'totalSales' FROM tblorderdetails
+    SUM((price * quantity) + (add_ons_fee * quantity)) as 'totalSales' FROM tblorderdetails
     WHERE order_status IN ('Order Completed','Order Received','Finished') AND YEAR(completed_time) = YEAR(curdate()) 
     AND MONTH(completed_time) = MONTH(curdate()) GROUP BY YEAR(completed_time),DAY(completed_time) 
     ORDER BY YEAR(completed_time),MONTH(completed_time),DAY(completed_time)");

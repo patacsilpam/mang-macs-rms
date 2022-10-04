@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/4adbff979d.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
@@ -73,7 +73,7 @@
                                         $userType = $_GET['userType'];        
                                         $startDate = $_GET['startDate'];
                                         $endDate = $_GET['endDate'];
-                                        $getTotalOrder = $connect->prepare("SELECT * FROM tblreport WHERE STR_TO_DATE(report_date,'%Y-%m-%d') BETWEEN (?) AND (?)");
+                                        $getTotalOrder = $connect->prepare("SELECT id,fullname,sales,user_type,report_date FROM tblreport WHERE STR_TO_DATE(report_date,'%Y-%m-%d') BETWEEN (?) AND (?)");
                                         $getTotalOrder->bind_param('ss',$startDate,$endDate);
                                         $getTotalOrder->execute();
                                         $getTotalOrder->bind_result($id,$fullname,$sales,$userType,$reportDate);
@@ -102,7 +102,7 @@
                                             $userType = $_GET['userType'];       
                                             $startDate = $_GET['startDate'];
                                             $endDate = $_GET['endDate'];
-                                            $getTotalOrder = $connect->prepare("SELECT * FROM tblreport WHERE STR_TO_DATE(report_date,'%Y-%m-%d') BETWEEN (?) AND (?) AND user_type=?");
+                                            $getTotalOrder = $connect->prepare("SELECT id,fullname,sales,user_type,report_date FROM tblreport WHERE STR_TO_DATE(report_date,'%Y-%m-%d') BETWEEN (?) AND (?) AND user_type=?");
                                             $getTotalOrder->bind_param('sss',$startDate,$endDate,$userType);
                                             $getTotalOrder->execute();
                                             $getTotalOrder->bind_result($id,$fullname,$sales,$userType,$reportDate);
@@ -128,8 +128,8 @@
                                                 }
                                         }
                                          else{
-                                            $date = date('Y-m-d')."%";
-                                            $getTotalOrder = $connect->prepare("SELECT * FROM tblreport WHERE report_date LIKE (?)");
+                                            $date = date('Y-m-d');
+                                            $getTotalOrder = $connect->prepare("SELECT id,fullname,sales,user_type,report_date FROM tblreport WHERE STR_TO_DATE(report_date,'%Y-%m-%d') = ?");
                                             $getTotalOrder->bind_param('s',$date);
                                             $getTotalOrder->execute();
                                             $getTotalOrder->bind_result($id,$fullname,$sales,$userType,$reportDate);

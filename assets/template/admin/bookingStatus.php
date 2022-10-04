@@ -19,7 +19,7 @@
                     <input type="hidden" value="<?=$fetch['scheduled_time']?>"  name="schedTime">
                     <input type="hidden" value="<?= $fetch['email']?>" name="email">
                     <input type="hidden" value="<?= $fetch['guests']?>" name="guests">
-                    <input type="text" value="<?= $fetch['order_number']?>" name="refNumber">
+                    <input type="hidden" value="<?= $fetch['order_number']?>" name="refNumber">
                     <input type="hidden" value="<?=$fetch['token']?>" name="token">
                     <div class="form-check">
                         <div>

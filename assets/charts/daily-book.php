@@ -4,7 +4,7 @@
     error_reporting(0);
     $getdDailyBook = $connect->query("SELECT SUM(guests) as 'guests', YEAR(scheduled_date) as 'year',DAY(scheduled_date) as 'day'
     FROM tblreservation WHERE status IN ('Finished','Order Received') AND YEAR(scheduled_date) = YEAR(curdate()) 
-    AND MONTH(scheduled_date) = MONTH(scheduled_date()) 
+    AND MONTH(scheduled_date) = MONTH(scheduled_date) 
     GROUP BY YEAR(scheduled_date), DAY(scheduled_date) 
     ORDER BY YEAR(scheduled_date),MONTH(scheduled_date),DAY(scheduled_date)");
     foreach ($getdDailyBook as $displayDailyBook) {

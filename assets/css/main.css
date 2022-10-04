@@ -390,7 +390,8 @@ sup {
     align-items: center;
 }
 
-.admin-container>.profile-information-container {
+.admin-container>.profile-information-container,
+.profile-information-container {
     display: flex;
     flex-direction: column;
     background: white;
@@ -629,7 +630,7 @@ ul li a.focus {
    margin:.5rem;
 }
 .add-ons-input{
-    border radius:3px;
+    border-radius:3px;
     margin:.5rem;
     padding:2px;
 }
@@ -643,6 +644,23 @@ ul li a.focus {
 .remove-btn:hover{
     color:#303136;
 }
+
+.kbw-signature {
+    width: 470px;
+    height: 100px;
+}
+#signature-con canvas{
+    width: 100% !important;
+    height: auto;
+}
+/*btn clear signature*/
+#clear{
+    border:1px solid #b6b7ba;
+    border-radius: 2px;
+    padding: 3px;
+    font-size: 1rem;
+}
+
 @media (max-width: 1024px) {
     .burger {
         display: flex;

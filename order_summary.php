@@ -12,13 +12,12 @@ require 'public/admin-courier.php';
     <meta name="Orders" content="Mang Macs-Orders">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/4adbff979d.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
     <script src="assets/js/setCourier.js" defer></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
     <link rel="icon" type="image/jpeg" href="assets/images/mang-macs-logo.jpg" sizes="70x70">
@@ -88,7 +87,7 @@ require 'public/admin-courier.php';
                         <p><strong>Order Status:</strong> <?=$orderStatus?></p>
                         <p><strong>Email:</strong> <?=$email?></p>
                         <p><strong>Phone Number:</strong> <?=$phoneNumber?></p>
-                        <p><strong>Total Amount:</strong> <?=$totalAmount + $deliveryFee?></p>
+                        <p><strong>Total Amount: </strong>₱ <?=$totalAmount + $deliveryFee?>.00</p>
                         <p><strong><a href="view-payment.php?order_number=<?= $getOrderNumber?>">View Payment</a></strong></p>
                         <?php } ?>
                     </article>
@@ -116,10 +115,11 @@ require 'public/admin-courier.php';
                                     <tr>
                                         <th scope="col">Order Number</th>
                                         <th scope="col">Product</th>
+                                        <th scope="col">Variation</th>
                                         <th scope="col">Quantity</th>
                                         <th scope="col">Unit Price</th>
-                                        <th scope="col">Category</th>
                                         <th scope="col">Add Ons</th>
+                                        <th scope="col">Add Ons Price</th>
                                         <th scope="col">Subtotal</th>
                                     </tr>
                                 </thead>
@@ -128,22 +128,23 @@ require 'public/admin-courier.php';
                                     require 'public/connection.php';
                                     $recipientName="";
                                     $orderNumber = $_GET['order_number'];
-                                    $getOrderSummary = $connect->prepare("SELECT order_number,product_name,quantity,price,product_variation,add_ons,recipient_name FROM tblorderdetails WHERE order_number=?");
+                                    $getOrderSummary = $connect->prepare("SELECT order_number,product_name,product_variation,quantity,price,add_ons,add_ons_fee,recipient_name FROM tblorderdetails WHERE order_number=?");
                                     echo $connect->error;
                                     $getOrderSummary->bind_param('s',$orderNumber);
                                     $getOrderSummary->execute();
-                                    $getOrderSummary->bind_result($orderId,$productName,$quantity,$price,$variation,$addOns,$recipientName);
+                                    $getOrderSummary->bind_result($orderId,$productName,$variation,$quantity,$price,$addOns,$addOnsFee,$recipientName);
                                     while($getOrderSummary->fetch()){
                                    
                                         ?>
                                     <tr>
                                         <td><?=$orderId?></td>
                                         <td><?=$productName?></td>
-                                        <td><?=$quantity?></td>
-                                        <td><?=$price?></td>
                                         <td><?=$variation?></td>
+                                        <td><?=$quantity?></td>
+                                        <td><?=$price?>.00</td>
                                         <td><?=$addOns?></td>
-                                        <td><?=$subTotal = $price * $quantity;?>.00</td>
+                                        <td><?=$addOnsFee?>.00</td>
+                                        <td><?=($price * $quantity) + ($addOnsFee * $quantity);?>.00</td>
                                     </tr>
                                     <?php
                                     }
@@ -152,14 +153,14 @@ require 'public/admin-courier.php';
                                 </tbody>
                                <tfoot>
                                     <tr>
-                                        <td colspan="5"></td>
+                                        <td colspan="6"></td>
                                         <td><b>Delivery Fee</b>: </td>
                                         <td><?= $deliveryFee?>.00</td>
                                     </tr>
                                     <tr>
-                                        <td colspan="5"></td>
+                                        <td colspan="6"></td>
                                         <td><b>Grand Total</b>: </td>
-                                        <td>₱ <?= $totalAmount?>.00</td>
+                                        <td>₱ <?= $totalAmount + $deliveryFee?>.00</td>
                                     </tr>
                                </tfoot>
                             </table>

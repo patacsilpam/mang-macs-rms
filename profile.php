@@ -11,12 +11,17 @@ require 'public/password-update.php';
     <meta name="Profile" content="Mang Macs-Profile">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/4adbff979d.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
     <link rel="icon" type="image/jpeg" href="assets/images/mang-macs-logo.jpg" sizes="70x70">
     <link rel="stylesheet" href="assets/css/main.css" type="text/css">
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> 
+    <link type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/south-street/jquery-ui.css" rel="stylesheet"> 
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="jquery.signature/js/jquery.signature.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="jquery.signature/css/jquery.signature.css">
     <title>Profile</title>
 </head>
 
@@ -36,17 +41,19 @@ require 'public/password-update.php';
                     <div class="admin-container">
                         <div class="profile-information-container">
                             <h1>Account Information</h1>
-
+                           
                             <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST"
                                 class="profile-information-container" enctype="multipart/form-data">
                                 <?php
                                 $email = $_SESSION['email'];
                                 $id = $_SESSION['id'];
+                                $GLOBALS['eSignature']="";
                                 $check_admin_profile = $connect->prepare("SELECT * FROM tblusers WHERE id=?");
                                 $check_admin_profile->bind_param('i', $id);
                                 $check_admin_profile->execute();
                                 $rows = $check_admin_profile->get_result();
                                 while ($fetch = $rows->fetch_assoc()) {
+                                $eSignature = $fetch['e_signature'];
                                 ?>
                                 <input type="hidden" name="number" value="<?= $fetch['id'] ?>">
                                 <label>First Name</label>
@@ -70,8 +77,15 @@ require 'public/password-update.php';
                                     value="<?= $fetch['uname'] ?>" required>
                                 <label>Email</label>
                                 <input type="email" class="form-control" name="email" placeholder="Email Address"
-                                    value="<?= $fetch['email'] ?>" required>
+                                    value="<?= $fetch['email'] ?>" required> 
+                                <label for="">
+                                    <label>Signature</label><br>
+                                    <div id="signature-con" style="width:360px"></div><br>
+                                    <button id="clear">Clear Signature</button>
+                                    <textarea id="signature-base64" name="e-signed" style="display:none;"></textarea>
+                                </label>  
                                 <label>
+                                    <label>Upload Image</label><br>
                                     <input type="file" name="adminImage" multiple
                                         accept="image/png, image/jpeg, image/jpg" size="60">
                                 </label>
@@ -83,7 +97,12 @@ require 'public/password-update.php';
                                 ?>
                             </form>
                         </div>
-                        <div class="profile-information-container">
+                        <div style="display:grid; gap:50px">
+                            <div class="profile-information-container border">
+                                <h1>Your e-Signature</h1><hr>
+                                <img src="<?=$eSignature?>" class="border border-secondary" alt="e-signature">
+                            </div>
+                            <div class="profile-information-container">
                             <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST"
                                 class="profile-information-container">
                                 <h1>Change Password</h1>
@@ -100,11 +119,14 @@ require 'public/password-update.php';
                                     placeholder="Confirm Password" minlength="8" required>
                                 <?php if ($confirmPwordError) echo "<strong class='msg-Error text-danger fa fa-times'> $confirmPwordError</strong>" ?></strong>
                                 <?php if ($pwordNotMatch) echo "<strong class='msg-Error text-danger fa fa-times'>$pwordNotMatch</strong>" ?></strong>
-                                <input type="checkbox" class="checkbox" onclick="toggle(this)">Show password
+                                <input type="checkbox" class="checkbox" onclick="toggle(this)">Show password 
                                 <button type="Submit" class="btn btn-success" name="btn-change-password">Change
                                     Password</button>
                             </form>
                         </div>
+                        </div>
+                        
+                       
                     </div>
                 </article>
             </section>
@@ -140,6 +162,14 @@ require 'public/password-update.php';
     <script src="assets/js/sidebar-menu.js"></script>
     <script src="assets/js/sidebar-menu-active.js"></script>
     <script src="assets/js/multi-password-visibility.js"></script>
+    <script type="text/javascript">
+    var sig = $('#signature-con').signature({syncField: '#signature-base64', syncFormat: 'PNG'});
+    $('#clear').click(function(e) {
+        e.preventDefault();
+        sig.signature('clear');
+        $("#signature-base64").val('');
+    });
+</script>
 </body>
 
 </html>

@@ -20,7 +20,7 @@ function insertProducts(){
             $preparationTime = $_POST['preparedTime'];
             $productImage = basename($_FILES['imageProduct']['name'] ?? '');
             $imageTemp = $_FILES['imageProduct']['tmp_name'] ?? '';
-            $imageServerUrl = "http://10.68.253.181/mang-macs-admin-web/assets/img-products/".$productImage;
+            $imageServerUrl = "http://192.168.1.70/mang-macs-admin-web/assets/img-products/".$productImage;
             $created_at = date('Y-m-d h:i:s');
             $imageFolderPath = "assets/img-products/".$productImage;
             move_uploaded_file($imageTemp,$imageFolderPath);
@@ -61,6 +61,7 @@ function insertProducts(){
                     $newBilaoPrice = $bilaoPrice[$key];
                     $insertProduct = $connect->prepare("INSERT INTO tblproducts(id,code,productName,productCategory,productVariation,stocks,price,preparationTime,mainIngredients,productImage,created_at)
                     VALUES(?,?,?,?,?,?,?,?,?,?,?)");
+                    echo $connect->error;
                     $insertProduct->bind_param('issssiiisss', $newId,$code, $productName, $productCategory, $newBilaoSize,$stocks,$newBilaoPrice, $preparationTime,$mainIngredients,$imageServerUrl, $created_at);
                     $insertProduct->execute();
                     if ($insertProduct) {
@@ -102,7 +103,7 @@ function updateProducts(){
             $editImageProduct = basename($_FILES['editImageProduct']['name'] ?? '');
             $editImageProductTemp = $_FILES["editImageProduct"]["tmp_name"] ?? '';
             $imageFolderPath = "assets/img-products/".$editImageProduct;
-            $imageServerUrl = "http://10.68.253.181/mang-macs-admin-web/assets/img-products/".$editImageProduct;
+            $imageServerUrl = "http://192.168.1.70/mang-macs-admin-web/assets/img-products/".$editImageProduct;
             $edited_at = date('Y-m-d h:i:s');
             //update product
             if  ($editImageProduct  != '') {
@@ -181,16 +182,18 @@ function createAddOns(){
     require 'public/connection.php';
     if(isset($_SERVER["REQUEST_METHOD"]) == "POST"){
         if(isset($_POST['btn-save-choices'])){
-            $id = null;
+            echo $connect->error;
             $code = bin2hex(random_bytes(20));
-            $addOnsName = $_POST['add-ons-name'];
+            $addOns = $_POST['add-ons-name'];
             $addOnsPrice = $_POST['add-ons-price'];
-            $productName =  mysqli_real_escape_string($connect,$_POST['choiceGroup']);
-            foreach($addOnsName as $addOnsIndex => $addOnsValue){
-                $newAddOns = $addOnsValue;
+            $choiceGroup = $_POST['choiceGroup'];
+           
+            foreach($addOns as $addOnsIndex => $addOnsVal){
+                $id = null;
+                $newAddOns = $addOnsVal;
                 $newAddOnsPrice = $addOnsPrice[$addOnsIndex];
-                $insertAddOns = $connect->prepare("INSERT INTO tbladdons(id,add_ons_code,add_ons,add_ons_price,add_ons_category) VALUES(?,?,?,?,?)");
-                $insertAddOns->bind_param('issis',$id,$code,$newAddOns,$newAddOnsPrice,$productName);
+                $insertAddOns = $connect->prepare("INSERT INTO tbladdons(id,add_ons_code,add_ons,add_ons_price,add_ons_category) VALUES (?,?,?,?,?)");
+                $insertAddOns->bind_param('issis',$id,$code,$newAddOns,$newAddOnsPrice,$choiceGroup);
                 if($insertAddOns->execute()){
                     header('Location:create-add-on.php');
                 }
@@ -207,15 +210,14 @@ function editChoiceGroup(){
             $ids = $_POST['ids'];
             $addOnsName = $_POST['addOns'];
             $addOnsPrice = $_POST['addOnsPrice'];
-            foreach($ids as $idsIndex => $idsVal) {
+            foreach($ids as $idsIndex => $idsVal){
                 $newId = $idsVal;
-                $newAddOnsName = $addOnsName[$idsIndex];
+                $newAddOns = $addOnsName[$idsIndex];
                 $newAddOnsPrice = $addOnsPrice[$idsIndex];
-
                 $editChoices = $connect->prepare("UPDATE tbladdons SET add_ons=?,add_ons_price=? WHERE id=?");
-                $editChoices->bind_param('ssi',$newAddOnsName,$newAddOnsPrice,$newId);
+                $editChoices->bind_param('ssi',$newAddOns,$newAddOnsPrice,$newId);
                 if($editChoices->execute()){
-                    header('Location:create-add-on.php');
+                    header('Location:create-add-on.php?updated');
                 }
             }
         }
@@ -226,11 +228,10 @@ function removeAddOn(){
     require 'public/connection.php';
     if(isset($_SERVER["REQUEST_METHOD"]) == "POST"){
         if(isset($_POST['btn-remove-addOns'])){
-            $id = mysqli_real_escape_string($connect,$_POST['id']);
-
-            $removeChoices = $connect->prepare("DELETE FROM tbladdons WHERE id=?");
-            $removeChoices->bind_param('i',$id);
-            if($removeChoices->execute()){
+            $ids = $_POST['btn-remove-addOns'];
+            $removeChoice = $connect->prepare("DELETE FROM tbladdons WHERE id=?");
+            $removeChoice->bind_param('i',$ids);
+            if($removeChoice->execute()){
                 header('Location:create-add-on.php?deleted');
             }
         }
@@ -241,11 +242,10 @@ function removeChoiceGroup(){
     require 'public/connection.php';
     if(isset($_SERVER["REQUEST_METHOD"]) == "POST"){
         if(isset($_POST['btn-delete-choiceGroup'])){
-            $code = mysqli_real_escape_string($connect,$_POST['code']);
-
-            $removeGroup = $connect->prepare("DELETE FROM tbladdons WHERE add_ons_code=?");
-            $removeGroup->bind_param('s',$code);
-            if($removeGroup->execute()){
+            $addOnsCategory = $_POST['add-ons-category'];
+            $removeChoice = $connect->prepare("DELETE FROM tbladdons WHERE add_ons_category=?");
+            $removeChoice->bind_param('s',$addOnsCategory);
+            if($removeChoice->execute()){
                 header('Location:create-add-on.php?deleted');
             }
         }

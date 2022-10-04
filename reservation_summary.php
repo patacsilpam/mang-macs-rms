@@ -50,14 +50,14 @@
                         $getOrderSummary = $connect->prepare("SELECT tblreservation.refNumber,tblreservation.fname,
                             tblreservation.lname,tblorderdetails.required_date,tblorderdetails.required_time,
                             tblreservation.totalAmount, tblorderdetails.order_type,tblorderdetails.created_at,
-                            tblorderdetails.order_status,tblorderdetails.email
+                            tblorderdetails.order_status,tblorderdetails.email,tblreservation.dining_area
                             FROM tblreservation LEFT JOIN tblorderdetails
                             ON tblreservation.refNumber = tblorderdetails.order_number
                             WHERE tblorderdetails.order_number=? LIMIT 1");
                         echo $connect->error;
                         $getOrderSummary->bind_param('s',$getOrderNumber);
                         $getOrderSummary->execute();
-                        $getOrderSummary->bind_result($orderNumber,$fname,$lname,$requiredDate,$requiredTime,$totalAmount,$orderType,$createdAt,$orderStatus,$email);
+                        $getOrderSummary->bind_result($orderNumber,$fname,$lname,$requiredDate,$requiredTime,$totalAmount,$orderType,$createdAt,$orderStatus,$email,$diningArea);
                         while($getOrderSummary->fetch()){
                         $GLOBALS['totalAmount'] = $totalAmount;
                    ?>
@@ -70,7 +70,8 @@
                     <article>
                         <p><strong>Order Status:</strong> <?=$orderStatus?></p>
                         <p><strong>Email:</strong> <?=$email?></p>
-                        <p><strong>Total Amount:</strong> <?=$totalAmount?></p>
+                        <p><strong>Total Amount:</strong>₱ <?=$totalAmount?>.00</p>
+                        <p><strong>Dining Area:</strong> <?=$diningArea?></p>
                         <p><strong><a href="view-payment-1.php?order_number=<?= $getOrderNumber?>">View Payment</a></strong></p>
                         <?php } ?>
                     </article>
@@ -85,7 +86,7 @@
                         </li>
                         <li class="nav-item  w-50">
                             <a class="nav-link m-1  bg-dark text-white" data-toggle="tab"
-                                href="#shippingAddress">Shipping Address</a>
+                                href="#shippingAddress">Comments/Suggestion</a>
                         </li>
                     </ul>
                     <article class="tab-pane active" id="orderProduct">
@@ -144,18 +145,16 @@
 
                     </article>
                     <article class="tab-pane fade" id="shippingAddress">
-                        <?php
-                            $orderNumber = $_GET['order_number'];
+                        <?php 
                             require 'public/connection.php';
-                            $getOrder = $connect->prepare("SELECT customer_address,label_address FROM tblcustomerorder WHERE order_number=? LIMIT 1");
-                            $getOrder->bind_param('s',$orderNumber);
-                            $getOrder->execute();
-                            $getOrder->bind_result($customerAddress,$labelAddress);
-                            $getOrder->fetch();
+                            $orderNumber = $_GET['order_number'];
+                            $fetchComments = $connect->prepare("SELECT comments FROM tblreservation WHERE refNumber=?");
+                            $fetchComments->bind_param('s',$orderNumber);
+                            $fetchComments->execute();
+                            $fetchComments->bind_result($commentsSuggestion);
+                            $fetchComments->fetch();
                         ?>
-                          <p><strong>Recipient Name: </strong><?=$recipientName?></p>
-                        <p><strong>Address: </strong><?=$customerAddress?></p>
-                        <p><strong>Label Address: </strong><?=$labelAddress?></p>
+                         <p><strong>Comments/Suggestion:</strong><?=$commentsSuggestion;?></p>
                     </article>
                 </article>
 
