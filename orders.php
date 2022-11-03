@@ -19,14 +19,14 @@ require 'public/admin-orders.php'
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
     <link rel="icon" type="image/jpeg" href="assets/images/mang-macs-logo.jpg" sizes="70x70">
     <link rel="stylesheet" href="assets/css/main.css">
-    <title>Orders</title>
+    <title>Order</title>
 </head>
 
 <body>
     <div class="grid-container">
         <!--Navigation-->
         <header class="nav-container">
-            <h3>Orders</h3>
+            <h3 class="mx-2 font-weight-normal">Order</h3>
             <ul class="nav-list">
                 <?php include 'assets/template/admin/navbar.php'?>
             </ul>
@@ -52,6 +52,7 @@ require 'public/admin-orders.php'
                             <tbody id="trans_separate">
                                 <?php
                                     require 'public/connection.php';
+                                    //fetch new orders from table `tblorderdetails` with join table `tblcustomerorder`
                                     $getOrders = "SELECT DISTINCT(tblcustomerorder.order_number),tblcustomerorder.id,
                                     tblcustomerorder.token,tblorderdetails.created_at,
                                     tblcustomerorder.customer_name,tblorderdetails.order_status,
@@ -72,21 +73,8 @@ require 'public/admin-orders.php'
                                     <td><?=$fetch['order_type']?></td>
                                     <td>₱ <?=$fetch['total_amount'] + $fetch['delivery_fee']?>.00</td>
                                     <td><?=$fetch['required_date']?><br><?=$fetch['required_time']?></td>
-                                    <td width="150">
-                                       <span>
-                                            <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'])?>" method="POST">
-                                                <input type="hidden" value="<?= $fetch['order_type']?>" name="orderType">
-                                                <input type="hidden" value="<?= $fetch['customer_name']?>" name="customerName">
-                                                <input type="hidden" value="<?= $fetch['order_number'] ?>" name="orderNumber">
-                                                <input type="hidden" value="<?=$fetch['created_at']?>" name="orderDate">
-                                                <input type="hidden" value="<?= $fetch['email']?>" name="email">
-                                                <input type="hidden" value="<?=$fetch['token']?>" name="token">
-                                                <input type="hidden"  name="id">
-                                                <input type="hidden" value="<?=$fetch['total_amount']?>" name="sales">
-                                                <input type="text" value="<?=$fetch['order_status']?>" class="order-status"  name="orderStatus"/>
-                                                <button type="submit"  name="btn-update" class="order-button" title="Click for next step">Next Step <i class="far fa-arrow-alt-circle-right icon-forward"></i></button>
-                                            </form>
-                                       </span>
+                                    <td>
+                                        <input type="text" value="<?=$fetch['order_status']?>" class="order-status"  name="orderStatus"/>
                                     </td>
                                     <td>
                                         <a href='order_summary.php?order_number=<?= $fetch['order_number'];?>' title="View Order Details">

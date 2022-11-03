@@ -1,6 +1,7 @@
 <?php 
 require 'public/admin-inventory.php';
 require 'public/admin-courier.php';
+require 'public/admin-orders-orders.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -39,7 +40,7 @@ require 'public/admin-courier.php';
             <section class="order-summary-1">
                 <article class="order-summary-number">
                     <h3>
-                        <a href="orders.php" title="Back"><i class="fa fa-arrow-circle-left"></i></a>
+                        <a href="#"  onclick="history.back()" title="Back"><i class="fa fa-arrow-circle-left"></i></a>
                         Order # : <?=$_GET['order_number']?>
                     </h3>
                     <i>Orders / Order # : <?=$_GET['order_number']?></i>
@@ -53,13 +54,13 @@ require 'public/admin-courier.php';
                         $getOrderSummary = $connect->prepare("SELECT tblcustomerorder.order_number,tblcustomerorder.courier,tblcustomerorder.customer_name,
                             tblorderdetails.created_at,tblorderdetails.required_date,tblorderdetails.required_time,
                             tblorderdetails.order_type,tblorderdetails.order_status,tblcustomerorder.email,
-                            tblcustomerorder.phone_number,tblcustomerorder.total_amount,tblcustomerorder.delivery_fee
+                            tblcustomerorder.phone_number,tblcustomerorder.total_amount,tblcustomerorder.delivery_fee,tblcustomerorder.token
                             FROM tblcustomerorder LEFT JOIN tblorderdetails
                             ON tblcustomerorder.order_number = tblorderdetails.order_number
                             WHERE tblorderdetails.order_number=? LIMIT 1");
                         $getOrderSummary->bind_param('s',$getOrderNumber);
                         $getOrderSummary->execute();
-                        $getOrderSummary->bind_result($orderNumber,$courierName,$customerName,$placedOn,$requiredDate,$requiredTime,$orderType,$orderStatus,$email,$phoneNumber,$totalAmount,$deliveryFee);
+                        $getOrderSummary->bind_result($orderNumber,$courierName,$customerName,$placedOn,$requiredDate,$requiredTime,$orderType,$orderStatus,$email,$phoneNumber,$totalAmount,$deliveryFee,$token);
                         while($getOrderSummary->fetch()){
                         $GLOBALS['totalAmount'] = $totalAmount;
                    ?>
@@ -162,7 +163,34 @@ require 'public/admin-courier.php';
                                         <td><b>Grand Total</b>: </td>
                                         <td>₱ <?= $totalAmount + $deliveryFee?>.00</td>
                                     </tr>
+                                    <tr>
+                                        <td colspan="4"></td>
+                                        <td><b>Order Status</b><span class="mx-3 text-danger" style="font-size:1.5rem">*</span></td>
+                                        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST">
+                                            <td>
+                                                <select name="orderStatus" class="form-control" style="font-size:1.3rem" id="order-status">
+                                                    <option value="Pending" <?php if($orderStatus == "Pending") { echo 'selected ? "selected"';}?>>Pending</option>
+                                                    <option value="Order Processing" <?php if($orderStatus == "Order Processing") { echo 'selected ? "selected"';}?>>Processing (Confirm Order)</option>
+                                                    <option id="out-delivery" value="Out for Delivery" <?php if($orderStatus == "Out for Delivery") { echo 'selected ? "selected"';}?>>Out for Delivery</option>
+                                                    <option id="ready-pickup" value="Ready for Pick Up" <?php if($orderStatus == "Ready for Pick Up") { echo 'selected ? "selected"';}?>>Ready for Pick Up</option>
+                                                    <option value="Order Completed" <?php if($orderStatus == "Order Completed") { echo 'selected ? "selected"';}?>>Complete</option>
+                                                    <option value="Cancelled" <?php if($orderStatus == "Cancelled") { echo 'selected ? "selected"';}?>>Cancel</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="hidden" name="email" value="<?=$email?>">
+                                                <input type="hidden" name="customerName" value="<?=$customerName?>">
+                                                <input type="hidden" name="orderNumber" value="<?=$orderNumber?>">
+                                                <input type="hidden" name="sales" value="<?=$totalAmount?>">
+                                                <input type="hidden" name="orderType" value="<?=$orderType?>">
+                                                <input type="hidden" name="token" value="<?=$token?>">
+                                                <input type="hidden" name="orderDate" value="<?=$placedOn?>">
+                                                <button type="submit" name="btn-update" class="btn btn-primary">Update Status</button>
+                                            </td>
+                                        </form>
+                                    </tr>
                                </tfoot>
+                               
                             </table>
                         </div>
 
@@ -188,9 +216,10 @@ require 'public/admin-courier.php';
         <!--Sidebar-->
         <?php include 'assets/template/admin/sidebar.php'?>
     </div>
-    <script src="assets/sidebar-menu.js"></script>
-    <script src="assets/sidebar-menu-active.js"></script>
-    <script src="assets/table.js"></script>
+    <script src="assets/js/sidebar-menu.js"></script>
+    <script src="assets/js/sidebar-menu-active.js"></script>
+    <script src="assets/js/table.js"></script>
+    <script src="assets/js/highlight-order-status.js"></script>
 </body>
 
 </html>

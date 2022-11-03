@@ -16,14 +16,15 @@ function login(){
             $fetch = $row_uname_email->fetch_assoc();
             if ($row_uname_email->num_rows == 1) {
                 if ($pword == $fetch['user_password'] ||  password_verify($pword, $fetch['user_password'])) {
-                    $_SESSION['id'] = $fetch['id'];
-                    $_SESSION['fname'] = $fetch['fname'];
-                    $_SESSION['lname'] = $fetch['lname'];
-                    $_SESSION['uname'] = $fetch['uname'];
-                    $_SESSION['email'] = $fetch['email'];
-                    $_SESSION['mySignature'] = $fetch['e_signature'];
-                    $_SESSION['loggedIn'] = true;
-                    header('Location:dashboard.php');
+                    if($position == $fetch['position']){
+                        $_SESSION['id'] = $fetch['id'];
+                        $_SESSION['fname'] = $fetch['fname'];
+                        $_SESSION['lname'] = $fetch['lname'];
+                        $_SESSION['uname'] = $fetch['uname'];
+                        $_SESSION['email'] = $fetch['email'];
+                        $_SESSION['loggedIn'] = true;
+                        header('Location:dashboard.php');
+                    }
                 } else {
                     $GLOBALS['pwordError'] = "Incorrect Password.";
                 }

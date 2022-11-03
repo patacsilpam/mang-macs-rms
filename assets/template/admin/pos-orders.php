@@ -17,7 +17,7 @@
                         <option value="Processing" <?php if($statuss == "Processing") echo 'selected ? "selected"';?>>Processing</option>
                         <option value="Completed" <?php if($statuss == "Completed") echo 'selected ? "selected"';?>>Completed</option>
                     </select>
-                    <input type="text" name="sales" value="<?php if($discountedPrice == 0){ echo $total;} else{echo $discountedPrice;}?>">
+                    <input type="hidden" name="sales" value="<?php if($discountedPrice == 0){ echo $total;} else{echo $discountedPrice;}?>">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

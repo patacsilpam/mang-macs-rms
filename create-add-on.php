@@ -46,22 +46,25 @@
                                     <th scope="col">Choice Group</th>
                                     <th scope="col">Add Ons</th>
                                     <th scope="col">Price</th>
+                                    <th scope="col">Quantity</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
                                     $getProductCategory = $connect->prepare("SELECT id,GROUP_CONCAT(add_ons SEPARATOR ','),
-                                    GROUP_CONCAT(add_ons_price SEPARATOR ','),add_ons_category FROM tbladdons GROUP BY add_ons_category");
+                                    GROUP_CONCAT(add_ons_price SEPARATOR ','),add_ons_category,GROUP_CONCAT(add_ons_quantity SEPARATOR ',') 
+                                    FROM tbladdons GROUP BY add_ons_category");
                                     $getProductCategory->execute();
                                     $getProductCategory->store_result();
-                                    $getProductCategory->bind_result($id,$addOnsName,$addOnsPrice,$addOnsCategory);
+                                    $getProductCategory->bind_result($id,$addOnsName,$addOnsPrice,$addOnsCategory,$addOnsQty);
                                     while($getProductCategory->fetch()){
                                         ?>
                                         <tr>
                                             <td>Add ons of <?=$addOnsCategory?></td>
                                             <td><?=$addOnsName?></td>
                                             <td><?=$addOnsPrice?></td>
+                                            <td><?=$addOnsQty?></td>
                                             <td style="display:flex;">
                                                 <button title="View" type="button" class="btn btn-primary" data-toggle="modal" data-target="#viewAddOns<?= $id; ?>">
                                                     <i class="fas fa-eye"></i>

@@ -37,7 +37,7 @@
     <main>
         <article>
             <section>
-                <a href="order_summary.php?order_number=<?php echo $_GET['order_number']?> " title="Back" class="text-white">
+                <a href="#?order_number=<?php echo $_GET['order_number']?>"  onclick="history.back()" title="Back" class="text-white">
                     <i class="fa fa-arrow-circle-left" style="font-size:2.3rem"></i>
                 </a>
             </section>

@@ -3,7 +3,7 @@
 require 'public/connection.php';
 include 'fpdf/fpdf.php';
 date_default_timezone_set('Asia/Manila');
-$id=$fullname=$userType=$reportDate=$sales=$eSignature="";
+$id=$fullname=$userType=$reportDate=$sales="";
 
 class PDF extends FPDF
 {
@@ -32,7 +32,6 @@ class PDF extends FPDF
         $this->Cell(50, 10, 'User Type', 1, 0, 'C');
         $this->Cell(40, 10, 'Date', 1, 0, 'C');
         $this->Cell(40, 10, 'Sales', 1, 0, 'C');
-        $this->Cell(40, 10, 'Signature', 1, 0, 'C');
         $this->Ln();
     }
     function viewTable($connect,$id,$fullname,$userType,$reportDate,$sales) {
@@ -44,7 +43,7 @@ class PDF extends FPDF
             $getTotalOrder = $connect->prepare("SELECT * FROM tblreport WHERE report_date BETWEEN (?) AND (?) HAVING user_type=?");
             $getTotalOrder->bind_param('sss',$startDate,$endDate,$userType);
             $getTotalOrder->execute();
-            $getTotalOrder->bind_result($id,$fullname,$sales,$reportDate,$userType,$eSignature);
+            $getTotalOrder->bind_result($id,$fullname,$sales,$reportDate,$userType);
             if($getTotalOrder){
                 while($getTotalOrder->fetch()){
                     $totalAmount+=$sales;
@@ -53,16 +52,13 @@ class PDF extends FPDF
                     $this->Cell(30, 10, $fullname, 1, 0, 'C');
                     $this->Cell(50, 10, $userType, 1, 0, 'C');
                     $this->Cell(40, 10, $reportDate, 1, 0, 'C');
-                    $this->Cell(40, 10, $sales, 1, 0, 'C');
-                    //$this->Cell(40, 10, $eSignature, 1, 0, 'C');
-                    
-                    $this->Cell(40,40,$this->Image($eSignature,$this->GetX(),$this->GetY(),33.78),0,0,'L',false);
+                    $this->Cell(40, 10, $sales.".00", 1, 0, 'C');
                     $this->Ln();
+                    //$this->Cell(40, 10, $eSignature, 1, 0, 'C');
+                   // $this->Cell(40,40,$this->Image($eSignature,$this->GetX(),$this->GetY(),33.78),0,0,'L',false);
+                  
                 }
             }
-            $this->Cell(130, 10, "", 0, 0, 'C');
-            $this->Cell(40, 10, "Total Sales: PHP $totalAmount.00", 1, 0, 'C');
-        
         }
         else{
             $totalAmount=0;
@@ -71,7 +67,7 @@ class PDF extends FPDF
             $getTotalOrder = $connect->prepare("SELECT * FROM tblreport WHERE report_date BETWEEN (?) AND (?)");
             $getTotalOrder->bind_param('ss',$startDate,$endDate);
             $getTotalOrder->execute();
-            $getTotalOrder->bind_result($id,$fullname,$sales,$reportDate,$userType,$eSignature);
+            $getTotalOrder->bind_result($id,$fullname,$sales,$reportDate,$userType);
             $sig = "";
             if($getTotalOrder){
                 while($getTotalOrder->fetch()){
@@ -81,17 +77,18 @@ class PDF extends FPDF
                     $this->Cell(30, 10, $fullname, 1, 0, 'C');
                     $this->Cell(50, 10, $userType, 1, 0, 'C');
                     $this->Cell(40, 10, $reportDate, 1, 0, 'C');
-                    $this->Cell(40, 10, $sales, 1, 0, 'C');
-                    $this->Cell(40, 10, (empty($eSignature) || $eSignature == 'no signature') ? '' : $this->Image(''.$eSignature,$this->GetX(),$this->GetY(),0,10),1,0,'L',false); //show signature if it is not empty
+                    $this->Cell(40, 10, $sales.".00", 1, 0, 'C');
+                    
                     $this->Ln();
-                  
+                    //$this->Cell(40, 10, (empty($eSignature) || $eSignature == 'no signature') ? '' : $this->Image(''.$eSignature,$this->GetX(),$this->GetY(),0,10),1,0,'L',false); //show signature if it is not empty
                 }
             }
-            $this->Cell(130, 10, "", 0, 0, 'C');
-            $this->Cell(40, 10, "Total Sales: PHP $totalAmount.00", 1, 0, 'C');
-           
         }
-       
+        $this->Cell(130, 10, "", 0, 0, 'C');
+        $this->Cell(40, 10, "Total Sales: PHP $totalAmount.00", 1, 0, 'C');
+        $this->Ln();
+        $this->SetFont('Arial', '', 12);
+        $this->Cell(0,10,"Prepared by:",0,0,'L');
     }
     function Footer()
     {
@@ -108,7 +105,7 @@ $pdf = new PDF('L');
 $pdf->AliasNbPages();
 $pdf->AddPage();
 $pdf->SetFont('Times', '', 8);
-$pdf->setLeftMargin('50');
+$pdf->setLeftMargin('60');
 $pdf->headerTable();
-$pdf->viewTable($connect,$id,$fullname,$userType,$reportDate,$sales,$eSignature);
+$pdf->viewTable($connect,$id,$fullname,$userType,$reportDate,$sales);
 $pdf->Output();

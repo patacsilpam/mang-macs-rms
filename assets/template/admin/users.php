@@ -15,11 +15,9 @@
                     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST">
                         <input type="hidden" name="id">
                         <label for="fname">First Name</label>
-                        <input type="text" class="form-control" name="fname" id="fname" placeholder="First Name"
-                            required>
+                        <input type="text" class="form-control" name="fname" id="fname" placeholder="First Name" required>
                         <label for="lname">Last Name</label>
-                        <input type="text" class="form-control" name="lname" id="lname" placeholder="Last Name"
-                            required>
+                        <input type="text" class="form-control" name="lname" id="lname" placeholder="Last Name" required>
                         <label for="uname">Username</label>
                         <input type="text" class="form-control" name="uname" id="uname" placeholder="Username" required>
                         <label for="email">Email</label>
@@ -33,11 +31,6 @@
                         <label for="password">Password</label>
                         <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
                         <i class="fa fa-eye text-muted icon-eye" id="togglePassword"></i>
-                        <div>
-                            <div id="signature-con"></div>
-                            <button id="clear">Clear Signature</button>
-                            <textarea id="signature-base64" name="signed" style="display:none;"></textarea>
-                        </div>  
                 </div>
             </div>
             <div class="modal-footer">
@@ -68,8 +61,6 @@
                 <p>Email: <?=$fetch['email']?></p>
                 <p>Account Type: <?=$fetch['position']?></p>
                 <p>Created At: <?=date('F d, Y h:i:s',strtotime($fetch['created_at']));?></p>
-                <p>Signature</p>
-                <img src="<?=$fetch['e_signature']?>" alt="" width="250">
             </div>  
         </div>
       </div>

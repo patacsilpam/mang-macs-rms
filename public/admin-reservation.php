@@ -23,7 +23,7 @@ function updateBookStatus(){
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
             $mail->Username = 'mangmacspizzahouse@gmail.com';
-            $mail->Password = 'chaknqplsssfybtt'; //chak nqpl sssf ybtt
+            $mail->Password = ''; 
             $mail->SMTPSecure = 'tls';
             $mail->Port = 587;
             $mail->setFrom('mangmacspizzahouse@gmail.com', "Mang Mac's Marinero");
@@ -204,12 +204,26 @@ function updateBookStatus(){
             }
             else{
                 $completedTime = date('Y-m-d h:i:s');
+                $reportId = null;
+                $fullname = $_SESSION['fname']." ".$_SESSION['lname']; // $_SESSION['fname']." ".$_SESSION['lname']
+                $sales = $_POST['sales'];
+                $userType = "Admin";
+                $reportDate = $completedTime;
+                $eSignature = $_SESSION['mySignature'] ?? 'no signature'; //$_SESSION['mySignature'] ?? 'no signature'
+                //insert report sale in table `tblreport`
+                $insertSale = $connect->prepare("INSERT INTO tblreport(id,fullname,sales,user_type,report_date,e_signature) VALUES(?,?,?,?,?,?)");
+                $insertSale->bind_param('isisss',$reportId,$fullname,$sales,$userType,$reportDate,$eSignature);
+                $insertSale->execute();
+                //update order status to order completed in table `tblorderdetails`
                 $updateOrderStatus = $connect->prepare("UPDATE tblorderdetails SET order_status=?,completed_time=? WHERE order_number=?");
                 $updateOrderStatus->bind_param('sss',$bookStatus,$completedTime,$refNumber);
                 $updateOrderStatus->execute();
+                //update booking status to finished in table `tblreservation`
                 $updateBookStatus = $connect->prepare("UPDATE tblreservation SET status=? WHERE id=?");
                 $updateBookStatus->bind_param('si',$bookStatus,$id);
                 $updateBookStatus->execute();
+                header('Location:reservation.php');
+               
             }
         }
     }
@@ -224,7 +238,9 @@ function noShowsReservation(){
     $customerName = array();
     $guests = array();
     $scheduledDate = array();
-    $getId = $connect->query("SELECT * FROM tblreservation WHERE STR_TO_DATE(CONCAT(scheduled_date,' ',scheduled_time), '%Y-%m-%d %h:%i %p') <= DATE_SUB(NOW(),INTERVAL 30 MINUTE) AND status='Reserved'");
+    $getId = $connect->query("SELECT * FROM tblreservation WHERE 
+    STR_TO_DATE(CONCAT(scheduled_date,' ',scheduled_time), '%Y-%m-%d %h:%i %p') <= 
+    DATE_SUB(NOW(),INTERVAL 1 HOUR) AND status='Reserved'");
     while($fetch = $getId->fetch_assoc()){
         $bookingNumber[] =  $fetch['refNumber'];
         $email[] = $fetch['email'];
@@ -248,7 +264,7 @@ function noShowsReservation(){
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
         $mail->Username = 'mangmacspizzahouse@gmail.com';
-        $mail->Password = 'chaknqplsssfybtt'; //chak nqpl sssf ybtt
+        $mail->Password = ''; 
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
         $mail->setFrom('mangmacspizzahouse@gmail.com', "Mang Mac's Marinero");
@@ -306,4 +322,5 @@ function noShowsReservation(){
 
 updateBookStatus();
 noShowsReservation();
+
 ?>

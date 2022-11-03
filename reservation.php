@@ -51,21 +51,13 @@
                                 <?php
                                     require 'public/connection.php';
                                     date_default_timezone_set("Asia/Manila");
-                                    $queryReservation = $connect->query("SELECT DISTINCT(tblorderdetails.order_number),tblreservation.id, 
-                                    tblreservation.token,tblorderdetails.created_at, tblreservation.fname,tblreservation.lname,
-                                    tblreservation.guests,tblreservation.status,
-                                    tblreservation.scheduled_date, tblreservation.scheduled_time, tblreservation.email,
-                                    tblorderdetails.order_status, tblorderdetails.order_type
-                                    FROM tblreservation LEFT JOIN tblorderdetails ON 
-                                    tblreservation.refNumber = tblorderdetails.order_number 
-                                    WHERE tblreservation.status IN ('Pending','Reserved') AND tblorderdetails.order_type = 'Dine In' 
-                                    AND STR_TO_DATE(CONCAT(tblreservation.scheduled_date,' ', tblreservation.scheduled_time),'%Y-%m-%d %h:%i %p') >= DATE_SUB(CURDATE(), INTERVAL 30 MINUTE)
-                                    GROUP BY tblorderdetails.order_number
-                                    ORDER BY STR_TO_DATE(CONCAT(.tblreservation.scheduled_date,' ',tblreservation.scheduled_time),'%Y-%m-%d %h:%i %p') ASC");
+                                    $queryReservation = $connect->query("SELECT * FROM tblreservation
+                                    WHERE STR_TO_DATE(CONCAT(scheduled_date,' ', scheduled_time),'%Y-%m-%d %h:%i %p') >= DATE_SUB(CURDATE(), INTERVAL 60 MINUTE)
+                                    ORDER BY STR_TO_DATE(CONCAT(scheduled_date,' ',scheduled_time),'%Y-%m-%d %h:%i %p') ASC");
                                     while($fetch = $queryReservation->fetch_assoc()){
                                    ?>
                                 <tr>
-                                    <td><?= $fetch['order_number']?></td>
+                                    <td><?= $fetch['refNumber']?></td>
                                     <td><?= $fetch['scheduled_date']?> <br> <?=$fetch['scheduled_time']?></td>
                                     <td><?= $fetch['fname'] ?> <?=$fetch['lname']?></td>
                                     <td><?= $fetch['email']?></td>
@@ -98,6 +90,11 @@
     <script src="assets/js/activePage.js"></script>
     <script src="assets/js/table.js"></script>
     <script src="assets/js/highlight-order-status.js"></script>
+    <script>
+        setTimeout(() => {
+        document.location.reload();
+    },60000)
+    </script>
 </body>
 
 </html>

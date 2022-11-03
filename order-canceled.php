@@ -19,7 +19,7 @@ require 'public/admin-orders.php'
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
     <link rel="icon" type="image/jpeg" href="assets/images/mang-macs-logo.jpg" sizes="70x70">
     <link rel="stylesheet" href="assets/css/main.css">
-    <title>Order(Canceled)</title>
+    <title>Order (Canceled)</title>
 </head>
 
 <body>

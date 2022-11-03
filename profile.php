@@ -17,11 +17,6 @@ require 'public/password-update.php';
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
     <link rel="icon" type="image/jpeg" href="assets/images/mang-macs-logo.jpg" sizes="70x70">
     <link rel="stylesheet" href="assets/css/main.css" type="text/css">
-    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> 
-    <link type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/south-street/jquery-ui.css" rel="stylesheet"> 
-    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="jquery.signature/js/jquery.signature.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="jquery.signature/css/jquery.signature.css">
     <title>Profile</title>
 </head>
 
@@ -53,7 +48,6 @@ require 'public/password-update.php';
                                 $check_admin_profile->execute();
                                 $rows = $check_admin_profile->get_result();
                                 while ($fetch = $rows->fetch_assoc()) {
-                                $eSignature = $fetch['e_signature'];
                                 ?>
                                 <input type="hidden" name="number" value="<?= $fetch['id'] ?>">
                                 <label>First Name</label>
@@ -77,13 +71,7 @@ require 'public/password-update.php';
                                     value="<?= $fetch['uname'] ?>" required>
                                 <label>Email</label>
                                 <input type="email" class="form-control" name="email" placeholder="Email Address"
-                                    value="<?= $fetch['email'] ?>" required> 
-                                <label for="">
-                                    <label>Signature</label><br>
-                                    <div id="signature-con" style="width:360px"></div><br>
-                                    <button id="clear">Clear Signature</button>
-                                    <textarea id="signature-base64" name="e-signed" style="display:none;"></textarea>
-                                </label>  
+                                    value="<?= $fetch['email'] ?>" required>  
                                 <label>
                                     <label>Upload Image</label><br>
                                     <input type="file" name="adminImage" multiple
@@ -98,10 +86,6 @@ require 'public/password-update.php';
                             </form>
                         </div>
                         <div style="display:grid; gap:50px">
-                            <div class="profile-information-container border">
-                                <h1>Your e-Signature</h1><hr>
-                                <img src="<?=$eSignature?>" class="border border-secondary" alt="e-signature">
-                            </div>
                             <div class="profile-information-container">
                             <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST"
                                 class="profile-information-container">
@@ -119,7 +103,7 @@ require 'public/password-update.php';
                                     placeholder="Confirm Password" minlength="8" required>
                                 <?php if ($confirmPwordError) echo "<strong class='msg-Error text-danger fa fa-times'> $confirmPwordError</strong>" ?></strong>
                                 <?php if ($pwordNotMatch) echo "<strong class='msg-Error text-danger fa fa-times'>$pwordNotMatch</strong>" ?></strong>
-                                <input type="checkbox" class="checkbox" onclick="toggle(this)">Show password 
+                                <span><input type="checkbox" class="checkbox" onclick="toggle(this)">Show password </span>
                                 <button type="Submit" class="btn btn-success" name="btn-change-password">Change
                                     Password</button>
                             </form>

@@ -84,9 +84,9 @@ function countCancelledOrders(){
     $cancelled = "Cancelled";
     $date = date('Y-m-d');
     $count = $connect->prepare("SELECT COUNT(*) as 'dailyCancelled', 
-    (SELECT COUNT(*) FROM tblorderdetails WHERE order_type IN (?,?) AND order_status=?) as 'totalCancelled' 
-    FROM tblorderdetails WHERE order_type IN (?,?) AND order_status=? AND required_date=?");
-    $count->bind_param('sssssss',$orderDeliver,$orderPickUp,$cancelled,$orderDeliver,$orderPickUp,$cancelled,$date);
+    (SELECT COUNT(*) FROM tblorderdetails WHERE order_status=?) as 'totalCancelled' 
+    FROM tblorderdetails WHERE order_status=? AND required_date=?");
+    $count->bind_param('sss',$cancelled,$cancelled,$date);
     $count->execute();
     $row = $count->get_result();
     if($fetch = $row->fetch_assoc()){

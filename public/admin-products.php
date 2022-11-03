@@ -187,13 +187,14 @@ function createAddOns(){
             $addOns = $_POST['add-ons-name'];
             $addOnsPrice = $_POST['add-ons-price'];
             $choiceGroup = $_POST['choiceGroup'];
-           
+            $addOnsQty = $_POST['add-ons-quantity'];
             foreach($addOns as $addOnsIndex => $addOnsVal){
                 $id = null;
                 $newAddOns = $addOnsVal;
                 $newAddOnsPrice = $addOnsPrice[$addOnsIndex];
-                $insertAddOns = $connect->prepare("INSERT INTO tbladdons(id,add_ons_code,add_ons,add_ons_price,add_ons_category) VALUES (?,?,?,?,?)");
-                $insertAddOns->bind_param('issis',$id,$code,$newAddOns,$newAddOnsPrice,$choiceGroup);
+                $newAddOnsQty = $addOnsQty[$addOnsIndex];
+                $insertAddOns = $connect->prepare("INSERT INTO tbladdons(id,add_ons_code,add_ons,add_ons_price,add_ons_category,add_ons_quantity,add_ons_available_qty) VALUES (?,?,?,?,?,?,?)");
+                $insertAddOns->bind_param('issisii',$id,$code,$newAddOns,$newAddOnsPrice,$choiceGroup,$newAddOnsQty,$newAddOnsQty);
                 if($insertAddOns->execute()){
                     header('Location:create-add-on.php');
                 }
@@ -210,12 +211,18 @@ function editChoiceGroup(){
             $ids = $_POST['ids'];
             $addOnsName = $_POST['addOns'];
             $addOnsPrice = $_POST['addOnsPrice'];
+            $addOnsQty = $_POST['addOnsQuantity'];
+            $adjustQty = $_POST['adjustQty'];
+            $availStockQty = $_POST['availStockQty'];
             foreach($ids as $idsIndex => $idsVal){
                 $newId = $idsVal;
+                $newAdjustQty = $adjustQty[$idsIndex];
                 $newAddOns = $addOnsName[$idsIndex];
                 $newAddOnsPrice = $addOnsPrice[$idsIndex];
-                $editChoices = $connect->prepare("UPDATE tbladdons SET add_ons=?,add_ons_price=? WHERE id=?");
-                $editChoices->bind_param('ssi',$newAddOns,$newAddOnsPrice,$newId);
+                $newAddOnsQty = $addOnsQty[$idsIndex] + $newAdjustQty;
+                $newAvailStockQty = $availStockQty[$idsIndex] + $newAdjustQty;
+                $editChoices = $connect->prepare("UPDATE tbladdons SET add_ons=?,add_ons_price=?,add_ons_quantity=?,add_ons_available_qty=? WHERE id=?");
+                $editChoices->bind_param('siiii',$newAddOns,$newAddOnsPrice,$newAddOnsQty,$newAvailStockQty,$newId);
                 if($editChoices->execute()){
                     header('Location:create-add-on.php?updated');
                 }
@@ -223,7 +230,7 @@ function editChoiceGroup(){
         }
     }
 }
-//remove specific add-on of menu category
+//remove specific add-on of food category
 function removeAddOn(){
     require 'public/connection.php';
     if(isset($_SERVER["REQUEST_METHOD"]) == "POST"){
@@ -237,7 +244,7 @@ function removeAddOn(){
         }
     }
 }
-//remove group of add-on in specific menu category
+//remove group of add-on in specific food category
 function removeChoiceGroup(){
     require 'public/connection.php';
     if(isset($_SERVER["REQUEST_METHOD"]) == "POST"){

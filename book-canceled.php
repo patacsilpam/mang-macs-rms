@@ -75,7 +75,7 @@
                                     
                                     <td><small><?=$fetch['comments']?></small></td>
                                     <td>
-                                        <a href='view-payment-1.php?order_number=<?= $fetch['refNumber'];?>' title="View Payment">
+                                        <a href='view-payment.php?order_number=<?= $fetch['refNumber'];?>' title="View Payment">
                                             <button class="btn btn-primary"><i class="fas fa-eye"></i></button>
                                         </a>
                                     </td>
