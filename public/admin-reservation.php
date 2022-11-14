@@ -23,7 +23,7 @@ function updateBookStatus(){
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
             $mail->Username = 'mangmacspizzahouse@gmail.com';
-            $mail->Password = ''; 
+            $mail->Password = 'ylzikpnelhxltves'; 
             $mail->SMTPSecure = 'tls';
             $mail->Port = 587;
             $mail->setFrom('mangmacspizzahouse@gmail.com', "Mang Mac's Marinero");
@@ -204,16 +204,6 @@ function updateBookStatus(){
             }
             else{
                 $completedTime = date('Y-m-d h:i:s');
-                $reportId = null;
-                $fullname = $_SESSION['fname']." ".$_SESSION['lname']; // $_SESSION['fname']." ".$_SESSION['lname']
-                $sales = $_POST['sales'];
-                $userType = "Admin";
-                $reportDate = $completedTime;
-                $eSignature = $_SESSION['mySignature'] ?? 'no signature'; //$_SESSION['mySignature'] ?? 'no signature'
-                //insert report sale in table `tblreport`
-                $insertSale = $connect->prepare("INSERT INTO tblreport(id,fullname,sales,user_type,report_date,e_signature) VALUES(?,?,?,?,?,?)");
-                $insertSale->bind_param('isisss',$reportId,$fullname,$sales,$userType,$reportDate,$eSignature);
-                $insertSale->execute();
                 //update order status to order completed in table `tblorderdetails`
                 $updateOrderStatus = $connect->prepare("UPDATE tblorderdetails SET order_status=?,completed_time=? WHERE order_number=?");
                 $updateOrderStatus->bind_param('sss',$bookStatus,$completedTime,$refNumber);
@@ -264,7 +254,7 @@ function noShowsReservation(){
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
         $mail->Username = 'mangmacspizzahouse@gmail.com';
-        $mail->Password = ''; 
+        $mail->Password = 'ylzikpnelhxltves'; 
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
         $mail->setFrom('mangmacspizzahouse@gmail.com', "Mang Mac's Marinero");

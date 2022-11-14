@@ -1,4 +1,19 @@
 <?php
+function fetchOrderTimeType($orderNumber,$requiredTime,$prepTime){
+    require 'public/connection.php';
+    if($requiredTime == "-- --"){
+        date_default_timezone_set('Asia/Manila');
+        $time = ltrim(strtotime(date("h:i a")),"0");
+        $milTime =  date("H:i", strtotime("+$prepTime min",$time));
+        $estTime = ltrim(date("h:i a",strtotime($milTime)),"0");
+        echo $connect->error;
+        $updateEstTime = $connect->prepare("UPDATE tblorderdetails SET required_time=? WHERE order_number=?");
+        $updateEstTime->bind_param('ss',$estTime,$orderNumber);
+        $updateEstTime->execute();
+    }
+}
+
+
 function updateOrderStatus(){
     require 'public/connection.php';
     require 'php-mailer/vendor/autoload.php';
@@ -12,6 +27,8 @@ function updateOrderStatus(){
             $orderDate = $_POST['orderDate'];
             $email = $_POST['email'];
             $sendTo = $_POST['token'];
+            $requiredTime = $_POST['requiredTime'];
+            $prepTime = $_POST['preparedTime'];
             //$firstLetter = substr($customerName,0,1);
             $logo = "https://i.ibb.co/CMq6CXs/logo.png";
             $completedTime = date('Y-m-d h:i:s');
@@ -22,32 +39,33 @@ function updateOrderStatus(){
             if($editOrderStatus->execute()){
                 switch($orderStatus){
                     case "Order Processing":
-                        include 'email-notifications/mail-order-processing.php';
-                        include 'local-notification/firebase-notification.php';
+                        include 'public/email-notifications/mail-order-processing.php';
+                        include 'public/local-notification/firebase-notifcation.php';
                         $data = array('title'=>"$orderStatus",'body'=>"Hello $customerName,\nyour order #$orderNumber has been confirmed.");
                         pushNotifcation($sendTo,$data);
                         mailOrderProcessing($email,$orderNumber,$logo,$customerName,$orderDate,$orderType);
+                        fetchOrderTimeType($orderNumber,$requiredTime,$prepTime);
                         break;
 
                     case "Out for Delivery":
-                        include 'email-notifications/mail-out-for-delivery.php';
-                        include 'local-notification/firebase-notification.php';
+                        include 'public/email-notifications/mail-out-for-delivery.php';
+                        include 'public/local-notification/firebase-notifcation.php';
                         $data = array('title'=>"$orderStatus",'body'=>"Hello $customerName,\nyour order #$orderNumber is out for delivery.");
                         pushNotifcation($sendTo,$data);
                         mailOutForDelivery($email,$orderNumber,$logo,$customerName,$orderDate,$orderType);
                         break;
 
                     case "Ready for Pick Up":
-                        include 'email-notifications/mail-ready-for-pick-up.php';
-                        include 'local-notification/firebase-notification.php';
+                        include 'public/email-notifications/mail-ready-for-pick-up.php';
+                        include 'public/local-notification/firebase-notifcation.php';
                         $data = array('title'=>"$orderStatus",'body'=>"Hello $customerName,\nyour order #$orderNumber is out for delivery.");
                         pushNotifcation($sendTo,$data);
                         mailReadyForPickUp($email,$orderNumber,$logo,$customerName,$orderDate,$orderType);
                         break;
 
                     case "Order Completed":
-                        include 'email-notifications/mail-order-completed.php';
-                        include 'local-notification/firebase-notification.php';
+                        include 'public/email-notifications/mail-order-completed.php';
+                        include 'public/local-notification/firebase-notifcation.php';
                         $data = array('title'=>"$orderStatus",'body'=>"Hello $customerName,\nyour order #$orderNumber has been delivered.");
                         pushNotifcation($sendTo,$data);
                         mailOrderCompleted($email,$orderNumber,$logo,$customerName,$orderDate,$orderType);
@@ -64,8 +82,8 @@ function updateOrderStatus(){
                         break;
 
                     case "Cancelled":
-                        include 'email-notifications/mail-order-cancelled.php';
-                        include 'local-notification/firebase-notification.php';
+                        include 'public/email-notifications/mail-order-cancelled.php';
+                        include 'public/local-notification/firebase-notifcation.php';
                         $data = array('title'=>"$orderStatus",'body'=>"Hello $customerName,\nyour order #$orderNumber is canceled due to your invalid payment.");
                         pushNotifcation($sendTo,$data);
                         mailOrderCanceled($email,$orderNumber,$logo,$customerName,$orderDate,$orderType);

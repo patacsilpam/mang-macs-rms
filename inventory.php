@@ -45,11 +45,14 @@
                                 <thead class="thead-dark">
                                     <tr>
                                         <th scope="col">#</th>
+                                        <th scope="col">Code</th>
                                         <th scope="col">Purchased Date</th>
                                         <th scope="col">EXP Date</th>
-                                        <th scope="col">Item Name</th>
-                                        <th scope="col">Item Purchased</th>
-                                        <th scope="col">Item Stock</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Category</th>
+                                        <th scope="col">Variation</th>
+                                        <th scope="col">Purchased</th>
+                                        <th scope="col">Stock</th>
                                         <th scope="col">Action</th>
                                     </tr>
                                 </thead>
@@ -65,14 +68,18 @@
                                         $todayDate = new DateTime($today);
                                         $exp = new DateTime($endDate);
                                         if ($exp > $todayDate) {
-                                            $highligtRow = "#e6dccc";
+                                            $highligtRow = "#ffffff";
                                         }
                                     ?>
                                         <tr style="background: <?php echo $highligtRow; ?>;">
+                                        
                                             <th scope="row"><?= $fetch['id'] ?></th>
+                                            <td><?=$fetch['itemCode']?></td>
                                             <td><?= date('F d, Y',strtotime($fetch['created_at'])) ?></td>
                                             <td><?= date('F d, Y',strtotime($fetch['expiration_date'])) ?></td>
                                             <td><?= $fetch['product'] ?></td>
+                                            <td><?= $fetch['itemCategory'] ?></td>
+                                            <td><?= $fetch['itemVariation'] ?></td>
                                             <td><?= $fetch['quantityPurchased'] ?></td>
                                             <td><?= $fetch['quantityInStock'] ?></td>
                                             <td style="display: flex;">
@@ -101,6 +108,7 @@
     <script src="assets/js/sidebar-menu-active.js"></script>
     <script src="assets/js/activePage.js"></script>
     <script src="assets/js/table.js"></script>
+    
 </body>
 
 </html>

@@ -17,14 +17,14 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
     <link rel="icon" type="image/jpeg" href="assets/images/mang-macs-logo.jpg" sizes="70x70">
     <link rel="stylesheet" href="assets/css/main.css" type="text/css">
-    <title>Reservation (Completed)</title>
+    <title>Reservation (Finished)</title>
 </head>
 
 <body>
     <div class="grid-container">
         <!--header-->
         <header class="nav-container">
-            <h3 class="mx-2 font-weight-normal">Reservation <small>(Completed)</small></h3>
+            <h3 class="mx-2 font-weight-normal">Reservation <small>(Finished)</small></h3>
             <ul class="nav-list">
                 <?php include 'assets/template/admin/navbar.php'?>
             </ul>
@@ -41,7 +41,6 @@
                                     <th scope="col">Date Schedule</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Email</th>
-                                    <th scope="col">Dining Area</th>
                                     <th scope="col">No. of Guests</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Suggestions</th>
@@ -63,7 +62,6 @@
                                     <td><?= $fetch['scheduled_date']?> <br> <?=$fetch['scheduled_time']?></td>
                                     <td><?= $fetch['fname'] ?> <?=$fetch['lname']?></td>
                                     <td><?= $fetch['email']?></td>
-                                    <td><?= $fetch['dining_area']?></td>
                                     <td><?= $fetch['guests']?></td>
                                     <td>
                                         <input type="text"  class="order-status" value="<?=$fetch['status']?>">

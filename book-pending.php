@@ -41,7 +41,6 @@
                                     <th scope="col">Date Schedule</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Email</th>
-                                    <th scope="col">Dining Area</th>
                                     <th scope="col">No. of Guests</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Suggestions</th>
@@ -64,7 +63,6 @@
                                     <td><?= $fetch['scheduled_date']?> <br> <?=$fetch['scheduled_time']?></td>
                                     <td><?= $fetch['fname'] ?> <?=$fetch['lname']?></td>
                                     <td><?= $fetch['email']?></td>
-                                    <td><?= $fetch['dining_area']?></td>
                                     <td><?= $fetch['guests']?></td>
                                     <td>
                                         <input type="text"  class="order-status" value="<?=$fetch['status']?>">
@@ -95,5 +93,10 @@
     <script src="assets/js/activePage.js"></script>
     <script src="assets/js/table.js"></script>
     <script src="assets/js/highlight-order-status.js"></script>
+    <script>
+        setTimeout(() => {
+        document.location.reload();
+    },60000)
+    </script>
 </body>
 </html>

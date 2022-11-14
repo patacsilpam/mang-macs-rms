@@ -149,11 +149,14 @@
                         <input type="text" class="add-ons-input form-control form-control-sm" name="addOns[]" value="<?=$addOns?>" required style="width:150px">
                         <input type="number" class="add-ons-input form-control form-control-sm" name="addOnsPrice[]" value="<?=$addOnsFee?>" required style="width:50px;">
                         <input type="number" class="add-ons-input form-control form-control-sm" name="addOnsQuantity[]" value="<?=$addOnsQty?>" readonly style="width:70px;">      
-                        <div class="d-flex flex-row align-content-center justify-content-center my-2 mx-3">
-                          <button type="button" class="rounded-0 border border-secondary form-control form-control-sm" id="minus-btn" style="width:25px"><strong>-</strong></button>
-                          <input type="number" class="text-center rounded-0 add-ons-input border border-secondary form-control form-control-sm m-0" id="adjust-qty" style="width:45px;" name="adjustQty[]" placeholder="0">
-                          <button type="button" class="rounded-0 border border-secondary form-control form-control-sm" id="plus-btn" style="width:25px"><strong>+</strong></button>
-                        </div>
+                        
+                          <div class="d-flex flex-row align-content-center justify-content-center my-2 mx-3">
+                            <button type="button" class="rounded-0 border border-secondary form-control form-control-sm" id="minus-btn" style="width:25px"><strong>-</strong></button>
+                            <input type="number" class="text-center rounded-0 add-ons-input border border-secondary form-control form-control-sm m-0" id="adjust-qty" style="width:45px;" name="adjustQty[]" placeholder="0">
+                            <button type="button" class="rounded-0 border border-secondary form-control form-control-sm" id="plus-btn" style="width:25px"><strong>+</strong></button>
+                          </div>
+                        
+                        
                         <button type="submit" class="remove-btn" name="btn-remove-addOns" value="<?=$id?>">x</button><!--This button's functionality delete specific add ons--->
                       </div>
                   </div>    

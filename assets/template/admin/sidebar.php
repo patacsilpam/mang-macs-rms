@@ -40,7 +40,7 @@
                     <a class="text-white" href="reservation.php">All</a>
                     <a class="text-white" href="book-pending.php">Pending</a>
                     <a class="text-white" href="book-reserved.php">Reserved</a>
-                    <a class="text-white" href="book-completed.php">Completed</a>
+                    <a class="text-white" href="book-completed.php">Finished</a>
                     <a class="text-white" href="book-canceled.php">Canceled/No Shows</a>
                 </div>
             </div>
@@ -55,7 +55,7 @@
                 <div class="card card-body" style="background:#070b2e; padding:0; font-size:1rem;">
                     <a class="text-white" href="products.php">Products</a>
                     <a class="text-white" href="create-add-on.php">Create Add-on</a>
-                    <a class="text-white" href="available-menu.php">Available Menu</a>
+                    <!--<a class="text-white" href="available-menu.php">Available Menu</a>--->
                 </div>
             </div>
         </li>
@@ -74,7 +74,7 @@
         </li>
          <!--Inventory-->
         <li title="Inventory">
-            <a href="stocks.php"><i class="fas fa-boxes icons"></i><span class="span">Inventory</span></a>
+            <a href="inventory.php"><i class="fas fa-boxes icons"></i><span class="span">Inventory</span></a>
         </li>
          <!--Users-->
         <li title="Users">

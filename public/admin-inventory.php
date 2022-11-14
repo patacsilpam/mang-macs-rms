@@ -15,21 +15,24 @@ function insertStocks(){
     require 'public/connection.php';
     if (isset($_SERVER["REQUEST_METHOD"]) == "POST"){
         if (isset($_POST["btn-save-inventory"])) {
+            $itemCode = bin2hex(random_bytes(5));
             $id = mysqli_real_escape_string($connect, $_POST['id']);
             $created_at = mysqli_real_escape_string($connect,$_POST['purchasedDate']);
             $expirationDate = mysqli_real_escape_string($connect, $_POST['expirationDate']);
             $product = mysqli_real_escape_string($connect, $_POST['product']);
             $getCode = mysqli_real_escape_string($connect, $_POST['product']);
             $quantityPurchased= mysqli_real_escape_string($connect, $_POST['quantityPurchased']);
+            $itemCategory = mysqli_real_escape_string($connect,$_POST['itemCategory']);
+            $itemVariation = mysqli_real_escape_string($connect,$_POST['itemVariation']);
             $quantityInStock = $quantityPurchased;
             $quantitySold = 0;
             $status ='';
             $inCharge = '';
-            $lastPiece = explode("=",$product);//split product code and product name
-            $strProduct = array_pop($lastPiece);//remove last word and store it in a variable
-            $code = strtok($getCode,"=");//get product code
+            $lastPiece = explode("=",$product);//split product code and product name (this is for insert name of the product)
+            $strProduct = array_pop($lastPiece);//remove last word and store it in a variable (this is for insert name of the product)
+            $code = strtok($getCode,"=")."-".$itemVariation;//bin2hex(random_bytes(5));//strtok($getCode,"=");//get product code
             //check product if already exists and update quantity stock
-            $getStock = $connect->prepare("SELECT code,quantityInStock FROM tblinventory WHERE code=?");
+            $getStock = $connect->prepare("SELECT itemCode,code,quantityInStock FROM tblinventory WHERE code=?");
             $getStock->bind_param('s',$code);
             $getStock->execute();
             $row = $getStock->get_result();
@@ -41,9 +44,9 @@ function insertStocks(){
                 $updateStock->execute();
                 if ($updateStock) {
                     //if stock already updated insert in table inventory
-                    $insertInventory = $connect->prepare("INSERT tblinventory(id,code,expiration_date,created_at,product,quantityPurchased,quantityInStock,quantitySold,status)
-                    VALUES (?,?,?,?,?,?,?,?,?)");
-                    $insertInventory->bind_param('issssiiis', $id,$code,$expirationDate, $created_at, $strProduct,$quantityPurchased,$totalStock,$quantitySold, $status);
+                    $insertInventory = $connect->prepare("INSERT tblinventory(id,itemCode,code,expiration_date,created_at,product,quantityPurchased,quantityInStock,quantitySold,status,itemCategory,itemVariation)
+                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
+                    $insertInventory->bind_param('isssssiiisss', $id,$itemCode,$code,$expirationDate, $created_at, $strProduct,$quantityPurchased,$totalStock,$quantitySold, $status,$itemCategory,$itemVariation);
                     $insertInventory->execute();
                     if ($insertInventory) {
                         header('Location:inventory.php?inserted');
@@ -56,9 +59,9 @@ function insertStocks(){
             }
              //insert non existent product in table inventory
             else{
-            $insertInventory = $connect->prepare("INSERT tblinventory(id,code,expiration_date,created_at,product,quantityPurchased,quantityInStock,quantitySold,status)
-            VALUES (?,?,?,?,?,?,?,?,?)");
-            $insertInventory->bind_param('issssiiis', $id,$code,$expirationDate, $created_at, $strProduct,$quantityPurchased,$quantityInStock,$quantitySold, $status);
+            $insertInventory = $connect->prepare("INSERT tblinventory(id,itemCode,code,expiration_date,created_at,product,quantityPurchased,quantityInStock,quantitySold,status,itemCategory,itemVariation)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
+            $insertInventory->bind_param('isssssiiisss', $id,$itemCode,$code,$expirationDate, $created_at, $strProduct,$quantityPurchased,$quantityInStock,$quantitySold, $status,$itemCategory,$itemVariation);
             $insertInventory->execute();
             if ($insertInventory) {
                 header('Location:inventory.php?inserted');
@@ -78,6 +81,8 @@ function updateStocks(){
             $purchasedDate =  mysqli_real_escape_string($connect, $_POST['purchasedDate']);
             $expirationDate = mysqli_real_escape_string($connect, $_POST['expirationDate']);
             $product = mysqli_real_escape_string($connect, $_POST['product']);
+            $itemCategory = mysqli_real_escape_string($connect,$_POST['itemCategory']);
+            $itemVariation = mysqli_real_escape_string($connect,$_POST['itemVariation']);
             $quantityPurchased = mysqli_real_escape_string($connect, $_POST['quantityPurchased']);
             $status = '';
             //check product code
@@ -95,8 +100,8 @@ function updateStocks(){
                $updateStocks = $connect->prepare("UPDATE tblinventory SET quantityInStock=? WHERE code=?");
                $updateStocks->bind_param('is',  $totalStocks,$code);
                $updateStocks->execute();
-                $updateInventory = $connect->prepare("UPDATE tblinventory SET created_at=?,expiration_date=?,product=?,quantityPurchased=?,quantitySold=?,status=? WHERE id=?");
-                $updateInventory->bind_param('sssiisi', $purchasedDate,$expirationDate, $product, $purchased,$quantitySold, $status, $id);
+                $updateInventory = $connect->prepare("UPDATE tblinventory SET created_at=?,expiration_date=?,product=?,quantityPurchased=?,quantitySold=?,status=?,itemCategory=?,itemVariation=? WHERE id=?");
+                $updateInventory->bind_param('sssiisssi', $purchasedDate,$expirationDate, $product, $purchased,$quantitySold, $status,$itemCategory,$itemVariation, $id,);
                 $updateInventory->execute();
               
                 if ($updateInventory) {

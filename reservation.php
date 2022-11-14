@@ -17,14 +17,14 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
     <link rel="icon" type="image/jpeg" href="assets/images/mang-macs-logo.jpg" sizes="70x70">
     <link rel="stylesheet" href="assets/css/main.css" type="text/css">
-    <title>Reservation</title>
+    <title>Reservation (All)</title>
 </head>
 
 <body>
     <div class="grid-container">
         <!--header-->
         <header class="nav-container">
-            <h3>Reservation</h3>
+            <h3>Reservation <small>(Finished)</small></h3>
             <ul class="nav-list">
                 <?php include 'assets/template/admin/navbar.php'?>
             </ul>
@@ -43,7 +43,7 @@
                                     <th scope="col">Email</th>
                                     <th scope="col">No. of Guests</th>
                                     <th scope="col">Status</th>
-                                    <th scope="col">Action</th>
+                                    <th scope="col">View Payment</th>
                                 </tr>
                             </thead>
                             <!---->
@@ -70,7 +70,7 @@
                                         <?php include 'assets/template/admin/bookingStatus.php' ?>
                                     </td>
                                     <td>
-                                        <a href='reservation_summary.php?order_number=<?= $fetch['order_number'];?>' title="View Order Details">
+                                        <a href='view-payment-1.php?order_number=<?= $fetch['refNumber'];?>' title="View Payment">
                                             <button class="btn btn-primary"><i class="fas fa-eye"></i></button>
                                         </a>
                                     </td>

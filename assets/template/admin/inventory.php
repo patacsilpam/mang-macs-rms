@@ -15,21 +15,45 @@
                     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST">
                         <input type="hidden" name="id">
                         <div class="mt2">
-                            <label for="expirationDate">Purchased Date</label>
+                            <label>Purchased Date</label>
                             <input type="date" id="purchasedDate" name="purchasedDate" class="form-control" required>
                         </div>
                         <div class="mt2">
-                            <label for="expirationDate">Expiration Date</label>
+                            <label>Expiration Date</label>
                             <input type="date" id="expirationDate" name="expirationDate" class="form-control" required>
                         </div>
                         <div class="mt-2">
-                            <label for="product">Item Name</label>
+                            <label>Item Name</label>
                             <input type="text" class="form-control" name="product" placeholder="Enter item name" required>
                         </div>
                         <div class="mt-2">
-                            <label for="quantity">Item Purchase</label>
-                            <input type="number" class="form-control" name="quantityPurchased"
-                                placeholder="Enter Quantity Purchased" required>
+                            <label>Item Category</label>
+                            <input list="brow" class="form-control" name="itemCategory" placeholder="Enter Item Category">
+                            <div>
+                                <datalist id="brow">
+                                    <?php
+                                    require 'public/connection.php';
+                                        $fetchCategoryDb = $connect->prepare("SELECT productCategory FROM tblproducts GROUP BY productCategory");
+                                        $fetchCategoryDb->execute();
+                                        $fetchCategoryDb->store_result();
+                                        $fetchCategoryDb->bind_result($productCategory);
+                                        while($fetchCategoryDb->fetch()){
+                                            ?>
+                                                <option value="<?=$productCategory?>"><?=$productCategory?></option>
+                                            <?php
+                                        }
+                                        
+                                    ?>
+                                </datalist>
+                            </div>  
+                        </div>
+                        <div class="mt-2">
+                            <label>Item Variation</label>
+                            <input type="text" class="form-control" name="itemVariation" placeholder="Enter Item Variation" required>
+                        </div>
+                        <div class="mt-2">
+                            <label>Item Purchase</label>
+                            <input type="number" class="form-control" name="quantityPurchased" placeholder="Enter Quantity Purchased" required>
                         </div>
                 </div>
             </div>
@@ -74,11 +98,35 @@
                                 value="<?=$fetch['product']?>" required>
                         </div>
                         <div class="mt-2">
-                            <label for="quantity">Add/Remove Quantity Purchased</label>
-                            <input type="number" class="form-control" name="quantityPurchased"
-                                placeholder="Enter Quantity Purchased"
-                                required>
-                        </div>    
+                            <label>Item Category</label>
+                            <input type="text" list="category" class="form-control" name="itemCategory" placeholder="Enter Item Category" value="<?=$fetch['itemCategory']?>">
+                            <div>
+                                <datalist id="category">
+                                    <?php
+                                    require 'public/connection.php';
+                                        $fetchCategoryDb = $connect->prepare("SELECT productCategory FROM tblproducts GROUP BY productCategory");
+                                        $fetchCategoryDb->execute();
+                                        $fetchCategoryDb->store_result();
+                                        $fetchCategoryDb->bind_result($productCategory);
+                                        while($fetchCategoryDb->fetch()){
+                                            ?>
+                                                <option value="<?=$productCategory?>"><?=$productCategory?></option>
+                                            <?php
+                                        }
+                                        
+                                    ?>
+                                </datalist>
+                            </div>  
+                        </div>
+                        <div class="mt-2">
+                            <label for="product">Variation</label>
+                            <input type="text" class="form-control" name="itemVariation" placeholder="Enter Item Variation"
+                                value="<?=$fetch['itemVariation']?>" required>
+                        </div>
+                        <div  class="mt-2">
+                          <label for="quantity">Add/Remove Quantity Purchased</label>
+                          <input type="number" class="form-control" name="quantityPurchased" placeholder="0" value="0"/>
+                        </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -104,9 +152,11 @@
             <div class="d-flex justify-content-center">
             </div>
             <div>
-                <p>Purchased Date: <?=date('F d, Y h:i:s',strtotime($fetch['created_at']));?></p>
-                <p>Expiration Date: <?=date('F d, Y h:i:s',strtotime($fetch['expiration_date']))?></p>
-                <p>Item Name: <?=$fetch['product']?></p>
+                <p>Purchased Date: <?=date('F d, Y',strtotime($fetch['created_at']));?></p>
+                <p>Expiration Date: <?=date('F d, Y',strtotime($fetch['expiration_date']))?></p>
+                <p>Name: <?=$fetch['product']?></p>
+                <p>Category: <?=$fetch['itemCategory']?></p>
+                <p>Variation: <?=$fetch['itemVariation']?></p>
                 <p>Quantity Purchased: <?=$fetch['quantityPurchased']?></p>
                 <p>Quantity Stock: <?=$fetch['quantityInStock']?></p>
             </div>
@@ -148,3 +198,13 @@
         </div>
     </div>
 </form>
+
+<script type="text/javascript">
+    function incrementValue()
+    {
+        var value = parseInt(document.getElementById('number').value, 10);
+        value = isNaN(value) ? 0 : value;
+        value++;
+        document.getElementById('number').value = value;
+    }
+</script>

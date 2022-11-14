@@ -19,9 +19,8 @@
                     <input type="hidden" value="<?=$fetch['scheduled_time']?>"  name="schedTime">
                     <input type="hidden" value="<?= $fetch['email']?>" name="email">
                     <input type="hidden" value="<?= $fetch['guests']?>" name="guests">
-                    <input type="hidden" value="<?= $fetch['order_number']?>" name="refNumber">
+                    <input type="hidden" value="<?= $fetch['refNumber']?>" name="refNumber">
                     <input type="hidden" value="<?=$fetch['token']?>" name="token">
-                    <input type="text" value="<?=$fetch['totalAmount']?>" name="sales">
                     <div class="form-check">
                         <div>
                             <input class="form-check-input" type="radio" name="bookStatus" value="Reserved" <?php if($fetch['status'] == "Reserved"){ echo "checked=checked";} ?> style="height:15px; width:15px">

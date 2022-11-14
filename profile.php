@@ -91,21 +91,17 @@ require 'public/password-update.php';
                                 class="profile-information-container">
                                 <h1>Change Password</h1>
                                 <label for="currentPassword">Current Password</label>
-                                <input type="password" class="form-control togglePassword" name="currentPassword"
-                                    placeholder="Current Password" required>
-                                <strong><?php if ($pwordError) echo "<strong class='msg-Error text-danger fa fa-times'>$pwordError</strong>" ?></strong>
+                                <input type="hidden" name="email" value="<?=$email?>">
+                                <input type="password" class="form-control togglePassword" name="currentPassword" placeholder="Current Password" required>
+                                <span><?php if (isset($_GET['pwordError'])) echo "<span  class='msg-Error text-danger'><i class='fa fa-times'></i>Incorrect Password</span>" ?></span>
                                 <label for="password">New Password</label>
-                                <input type="password" class="form-control togglePassword" name="newPassword"
-                                    placeholder="New Password" minlength="8" required>
-                                <?php if ($newPwordError) echo "<strong class='msg-Error text-danger fa fa-times'>$newPwordError</strong>" ?></strong>
+                                <input type="password" class="form-control togglePassword" name="newPassword" placeholder="New Password" minlength="8" required>
+                                <span><?php if (isset($_GET['pwordNotMatch'])) echo "<span class='msg-Error text-danger'><i class='fa fa-times'></i>Password do not match</span>" ?></span>
                                 <label>Confirm Password</label>
-                                <input type="password" class="form-control togglePassword" name="confirmPassword"
-                                    placeholder="Confirm Password" minlength="8" required>
-                                <?php if ($confirmPwordError) echo "<strong class='msg-Error text-danger fa fa-times'> $confirmPwordError</strong>" ?></strong>
-                                <?php if ($pwordNotMatch) echo "<strong class='msg-Error text-danger fa fa-times'>$pwordNotMatch</strong>" ?></strong>
+                                <input type="password" class="form-control togglePassword" name="confirmPassword" placeholder="Confirm Password" minlength="8" required>
+                                <span><?php if (isset($_GET['pwordNotMatch'])) echo "<span class='msg-Error text-danger'><i class='fa fa-times'></i> Password do not match</span>" ?></span>
                                 <span><input type="checkbox" class="checkbox" onclick="toggle(this)">Show password </span>
-                                <button type="Submit" class="btn btn-success" name="btn-change-password">Change
-                                    Password</button>
+                                <button type="submit" class="btn btn-success" name="btn-change-password">Change Password</button>
                             </form>
                         </div>
                         </div>

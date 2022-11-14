@@ -21,7 +21,7 @@
             <div class="dropdown-notif">
                 <b>About to Expire</b>
                 <p class="text-dark">The item <i>( <?= $fetchItem['product'] ?> )</i> you purchased from <br> <?= $today ?>
-                    is about to expire on <br><?= $expDate ?>.</p>
+                    is about to expire on <br><?= $expDate ?> (#<?=$fetchItem['itemCode']?>).</p>
                 <?php if ($timeLapse > 0) {
                             echo $timeLapse . '<small> days to go</small>';
                         } else {

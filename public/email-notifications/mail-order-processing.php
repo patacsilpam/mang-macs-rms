@@ -10,7 +10,7 @@ function mailOrderProcessing($email,$orderNumber,$logo,$customerName,$orderDate,
     $mail->Host = 'smtp.gmail.com';
     $mail->SMTPAuth = true;
     $mail->Username = 'mangmacspizzahouse@gmail.com';
-    $mail->Password = '';
+    $mail->Password = 'ylzikpnelhxltves';
     $mail->SMTPSecure = 'tls';
     $mail->Port = 587;
     $mail->setFrom('mangmacspizzahouse@gmail.com', "Mang Mac's Marinero");
@@ -54,14 +54,14 @@ function mailOrderProcessing($email,$orderNumber,$logo,$customerName,$orderDate,
         $getOrders = $connect->prepare("SELECT tblcustomerorder.customer_name,tblcustomerorder.total_amount,
         tblcustomerorder.customer_address,tblcustomerorder.phone_number,
         tblorderdetails.product_name,tblorderdetails.product_variation,
-        tblorderdetails.quantity,tblorderdetails.price,tblorderdetails.add_ons,tblorderdetails.product_image
+        tblorderdetails.quantity,tblorderdetails.price,tblorderdetails.add_ons,tblorderdetails.product_image,tblcustomerorder.delivery_fee
         FROM tblcustomerorder LEFT JOIN tblorderdetails
         ON tblcustomerorder.order_number = tblorderdetails.order_number
         WHERE tblorderdetails.order_number=?");
         echo $connect->error;
         $getOrders->bind_param('s',$orderNumber);
         $getOrders->execute();
-        $getOrders->bind_result($customerName,$totalAmount,$customerAddress,$phoneNumber,$product,$variation,$quantity,$price,$addOns,$productImage);
+        $getOrders->bind_result($customerName,$totalAmount,$customerAddress,$phoneNumber,$product,$variation,$quantity,$price,$addOns,$productImage,$deliveryFee);
         $totalAmount="";
         while($getOrders->fetch()){
             $totalAmount += $deliveryFee;

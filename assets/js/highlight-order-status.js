@@ -25,17 +25,6 @@ const highlightOrderStatus = () =>{
   
 }
 
-const showOrderType = () =>{
-    const orderType = document.getElementById('order-type');
-    const outForDelivery = document.getElementById('out-delivery');
-    const readyForPickUp = document.getElementById('ready-pickup');
-    if(orderType.value === "Deliver"){
-        readyForPickUp.style.display = "none"
-    }
-    else{
-        outForDelivery.style.display = "none"
-    }
-}
 
 highlightOrderStatus();
-showOrderType();
+
