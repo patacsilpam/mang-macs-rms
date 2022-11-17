@@ -19,14 +19,14 @@ require 'public/admin-orders.php'
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
     <link rel="icon" type="image/jpeg" href="assets/images/mang-macs-logo.jpg" sizes="70x70">
     <link rel="stylesheet" href="assets/css/main.css">
-    <title>Order</title>
+    <title>Orders (All)</title>
 </head>
 
 <body>
     <div class="grid-container">
         <!--Navigation-->
         <header class="nav-container">
-            <h3 class="mx-2 font-weight-normal">Order</h3>
+            <h3 class="mx-2 font-weight-normal">Orders <small>(All)</small></h3>
             <ul class="nav-list">
                 <?php include 'assets/template/admin/navbar.php'?>
             </ul>
@@ -44,6 +44,7 @@ require 'public/admin-orders.php'
                                     <th scope="col">Customer Name</th>
                                     <th scope="col">Order Type</th>
                                     <th scope="col">Total Order Amount</th>
+                                    <th scope="col">Order Time</th>
                                     <th scope="col">Required Date</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Action</th>
@@ -72,6 +73,7 @@ require 'public/admin-orders.php'
                                     <td><?=$fetch['customer_name']?></td>
                                     <td><?=$fetch['order_type']?></td>
                                     <td>₱ <?=$fetch['total_amount'] + $fetch['delivery_fee']?>.00</td>
+                                    <td><?php if($fetch['required_time'] == '-- --') {echo 'Order Now';} else {echo 'Order Later';}  ?></td>
                                     <td><?=$fetch['required_date']?><br><?=$fetch['required_time']?></td>
                                     <td>
                                         <input type="text" value="<?=$fetch['order_status']?>" class="order-status"  name="orderStatus"/>

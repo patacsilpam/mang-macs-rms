@@ -74,7 +74,7 @@
                                         <tr style="background: <?php echo $highligtRow; ?>;">
                                         
                                             <th scope="row"><?= $fetch['id'] ?></th>
-                                            <td><?=$fetch['itemCode']?></td>
+                                            <td>#<?=$fetch['itemCode']?></td>
                                             <td><?= date('F d, Y',strtotime($fetch['created_at'])) ?></td>
                                             <td><?= date('F d, Y',strtotime($fetch['expiration_date'])) ?></td>
                                             <td><?= $fetch['product'] ?></td>

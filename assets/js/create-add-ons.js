@@ -24,12 +24,12 @@ function createAddOns(){
     addOnsPrice.placeholder = '0'
     parentDiv.append(addOnsPrice)
     //add ons quantity
-    let addOnsQuantity = document.createElement('input');
+    /*let addOnsQuantity = document.createElement('input');
     addOnsQuantity.setAttribute('type','number')
     addOnsQuantity.className = 'add-ons-input form-control form-control-sm'
     addOnsQuantity.name = 'add-ons-quantity[]'
     addOnsQuantity.placeholder = 0
-    parentDiv.append(addOnsQuantity)
+    parentDiv.append(addOnsQuantity)*/
 
     //create remove button for last child element
     let createBtn = document.createElement('button');

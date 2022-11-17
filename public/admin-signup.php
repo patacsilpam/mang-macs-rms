@@ -30,7 +30,7 @@ function updateVerificationCode(){
                         $mail->Host = 'smtp.gmail.com';
                         $mail->SMTPAuth = true;
                         $mail->Username = 'mangmacspizzahouse@gmail.com';
-                        $mail->Password = ''; 
+                        $mail->Password = 'ylzikpnelhxltves'; 
                         $mail->SMTPSecure = 'tls';
                         $mail->Port = 587;
                         $mail->setFrom('mangmacspizzahouse@gmail.com', "Mang Mac's Marinero");

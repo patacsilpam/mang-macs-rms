@@ -46,7 +46,6 @@
                                     <th scope="col">Choice Group</th>
                                     <th scope="col">Add Ons</th>
                                     <th scope="col">Price</th>
-                                    <th scope="col">Quantity</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
@@ -64,7 +63,6 @@
                                             <td>Add ons of <?=$addOnsCategory?></td>
                                             <td><?=$addOnsName?></td>
                                             <td><?=$addOnsPrice?></td>
-                                            <td><?=$addOnsQty?></td>
                                             <td style="display:flex;">
                                                 <button title="View" type="button" class="btn btn-primary" data-toggle="modal" data-target="#viewAddOns<?= $id; ?>">
                                                     <i class="fas fa-eye"></i>

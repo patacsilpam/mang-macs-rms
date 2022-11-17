@@ -35,13 +35,12 @@
               <div class="add-ons-div">
                 <label>Add-On</label>
                 <label>Price</label>
-                <label>Quantity</label>
               </div>
               <div class="add-ons-child">
                 <div class="add-ons-div">
                   <input type="text" class="add-ons-input form-control form-control-sm" name="add-ons-name[]" placeholder="Add-on" required>
                   <input type="number" class="add-ons-input form-control form-control-sm" name="add-ons-price[]" placeholder="0" required>
-                  <input type="number" class="add-ons-input form-control form-control-sm" name="add-ons-quantity[]" placeholder="0" required>
+                  <input type="hidden" class="add-ons-input form-control form-control-sm" name="add-ons-quantity[]" placeholder="0" required>
                 </div>
               </div>
               <hr>
@@ -76,7 +75,6 @@
               <div class="add-ons-div">
                 <label><strong>Choice Group: <?=$addOnsCategory?></strong></label>
                 <label>Price</label>
-                <label>Quantity</label>
               </div>
                
                 <?php
@@ -92,7 +90,7 @@
                         <div class="add-ons-div">
                           <input type="text" class="add-ons-input form-control form-control-sm" value="<?=$newAddOns?>" disabled>
                           <input type="number" class="add-ons-input form-control form-control-sm" value="<?=$newAddOnsPrice?>" disabled>
-                          <input type="number" class="add-ons-input form-control form-control-sm" value="<?=$newAddOnsQty?>" disabled>
+                          <input type="hidden" class="add-ons-input form-control form-control-sm" value="<?=$newAddOnsQty?>" disabled>
                         </div>
                       </div>                    
                     <?php
@@ -129,10 +127,12 @@
             </div>
             <div class="mt-3 add-ons-con">
               <div class="add-ons-div">
-                <label style="width:150px;" >Add-On</label>
-                <label style="width:50px;">Price</label>
-                <label style="width:80px;">Quantity</label>
-                <label style="width:90px;">Adjust Qty.</label>
+                <label>Add-On</label>
+                <label>Price</label>
+                <!--
+                  <label style="width:80px;">Quantity</label>
+                  <label style="width:90px;">Adjust Qty.</label>
+                -->
               </div>
                 <?php
                   $fetchAddOns = $connect->prepare("SELECT id,add_ons,add_ons_price,add_ons_category,add_ons_quantity,add_ons_available_qty FROM tbladdons WHERE add_ons_category=? ORDER BY id ASC");
@@ -146,17 +146,16 @@
                       <div class="add-ons-div">
                         <input type="hidden" name="ids[]" value="<?=$id?>">
                         <input type="hidden" name="availStockQty[]" value="<?=$availStockQty?>">
-                        <input type="text" class="add-ons-input form-control form-control-sm" name="addOns[]" value="<?=$addOns?>" required style="width:150px">
-                        <input type="number" class="add-ons-input form-control form-control-sm" name="addOnsPrice[]" value="<?=$addOnsFee?>" required style="width:50px;">
-                        <input type="number" class="add-ons-input form-control form-control-sm" name="addOnsQuantity[]" value="<?=$addOnsQty?>" readonly style="width:70px;">      
-                        
+                        <input type="text" class="add-ons-input form-control form-control-sm" name="addOns[]" value="<?=$addOns?>" required >
+                        <input type="number" class="add-ons-input form-control form-control-sm" name="addOnsPrice[]" value="<?=$addOnsFee?>" required >
+                        <input type="hidden" class="add-ons-input form-control form-control-sm" name="addOnsQuantity[]" value="<?=$addOnsQty?>" readonly style="width:70px;">      
+                        <!--
                           <div class="d-flex flex-row align-content-center justify-content-center my-2 mx-3">
                             <button type="button" class="rounded-0 border border-secondary form-control form-control-sm" id="minus-btn" style="width:25px"><strong>-</strong></button>
                             <input type="number" class="text-center rounded-0 add-ons-input border border-secondary form-control form-control-sm m-0" id="adjust-qty" style="width:45px;" name="adjustQty[]" placeholder="0">
                             <button type="button" class="rounded-0 border border-secondary form-control form-control-sm" id="plus-btn" style="width:25px"><strong>+</strong></button>
-                          </div>
-                        
-                        
+                          </div>  
+                        -->
                         <button type="submit" class="remove-btn" name="btn-remove-addOns" value="<?=$id?>">x</button><!--This button's functionality delete specific add ons--->
                       </div>
                   </div>    

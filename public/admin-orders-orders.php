@@ -13,6 +13,14 @@ function fetchOrderTimeType($orderNumber,$requiredTime,$prepTime){
     }
 }
 
+function updateStockQty($quantity,$itemCategory,$itemVariation){
+    require 'public/connection.php';
+    $variation = '%'.$itemVariation.'%';
+    //UPDATE tblinventory SET quantityInStock = quantityInStock + 5 WHERE itemCategory = 'Pizza' AND itemVariation LIKE '%Medium%'
+    $updateItemQty = $connect->prepare("UPDATE tblinventory SET quantityInStock = quantityInStock - (?) WHERE itemCategory=? AND itemVariation LIKE (?)");
+    $updateItemQty->bind_param('iss',$quantity,$itemCategory,$variation);
+    $updateItemQty->execute();
+}
 
 function updateOrderStatus(){
     require 'public/connection.php';
@@ -22,6 +30,9 @@ function updateOrderStatus(){
             date_default_timezone_set("Asia/Manila");
             $customerName = $_POST['customerName'];
             $orderStatus = $_POST['orderStatus'];
+            $quantity = $_POST['quantity'];
+            $category = $_POST['category'];
+            $variation = $_POST['variation'];
             $orderType = $_POST['orderType'];
             $orderNumber = $_POST['orderNumber'];
             $orderDate = $_POST['orderDate'];
@@ -45,6 +56,7 @@ function updateOrderStatus(){
                         pushNotifcation($sendTo,$data);
                         mailOrderProcessing($email,$orderNumber,$logo,$customerName,$orderDate,$orderType);
                         fetchOrderTimeType($orderNumber,$requiredTime,$prepTime);
+                        updateStockQty($quantity,$category,$variation);
                         break;
 
                     case "Out for Delivery":

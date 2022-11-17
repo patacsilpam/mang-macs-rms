@@ -87,8 +87,11 @@ class PDF extends FPDF
         $this->Cell(130, 10, "", 0, 0, 'C');
         $this->Cell(40, 10, "Total Sales: PHP $totalAmount.00", 1, 0, 'C');
         $this->Ln();
-        $this->SetFont('Arial', '', 12);
+        $this->SetFont('Arial', '', 10);
         $this->Cell(0,10,"Prepared by:",0,0,'L');
+        $this->Ln();
+        $this->SetFont('Arial', 'B', 12);
+        $this->Cell(0,10,$fullname,0,0,'L');
     }
     function Footer()
     {

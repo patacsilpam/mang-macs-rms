@@ -127,9 +127,9 @@
                                                 tblorderdetails.add_ons,tblorderdetails.add_ons_fee * tblorderdetails.quantity as 'add_ons_fee',tblorderdetails.order_type 
                                                 FROM tblorderdetails LEFT JOIN tblcustomerorder ON tblorderdetails.order_number = tblcustomerorder.order_number
                                                 LEFT JOIN tblreservation ON tblorderdetails.order_number = tblreservation.refNumber
-                                                WHERE tblorderdetails.order_status IN (?,?,?) AND STR_TO_DATE(tblorderdetails.completed_time,'%Y-%m-%d')=?
+                                                WHERE tblorderdetails.order_status IN (?,?,?) 
                                                 ORDER BY tblorderdetails.required_date ASC");
-                                                $getTotalOrder->bind_param('ssss',$orderCompleted,$orderReceived,$reserved,$date);
+                                                $getTotalOrder->bind_param('sss',$orderCompleted,$orderReceived,$reserved);
                                                 $getTotalOrder->execute();
                                                 $getTotalOrder->bind_result($orderNumber,$requiredDate,$customerName,$fname,$lname,$product,$variation,$quantity,$price,$subtotal,$addOns,$addOnsFee,$orderType);
                                                 if($getTotalOrder){

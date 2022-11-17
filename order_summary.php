@@ -54,7 +54,8 @@ require 'public/admin-orders-orders.php';
                         $getOrderSummary = $connect->prepare("SELECT tblcustomerorder.order_number,tblcustomerorder.courier,tblcustomerorder.customer_name,
                             tblorderdetails.created_at,tblorderdetails.required_date,tblorderdetails.required_time,
                             tblorderdetails.order_type,tblorderdetails.order_status,tblcustomerorder.email,
-                            tblcustomerorder.phone_number,tblcustomerorder.total_amount,tblcustomerorder.delivery_fee,tblcustomerorder.token,tblorderdetails.preparation_time
+                            tblcustomerorder.phone_number,tblcustomerorder.total_amount,tblcustomerorder.delivery_fee,
+                            tblcustomerorder.token,tblorderdetails.preparation_time
                             FROM tblcustomerorder LEFT JOIN tblorderdetails
                             ON tblcustomerorder.order_number = tblorderdetails.order_number
                             WHERE tblorderdetails.order_number=? LIMIT 1");
@@ -116,12 +117,14 @@ require 'public/admin-orders-orders.php';
                                     <tr>
                                         <th scope="col">Order Number</th>
                                         <th scope="col">Product</th>
+                                        <th scope="col">Category</th>
                                         <th scope="col">Variation</th>
                                         <th scope="col">Quantity</th>
                                         <th scope="col">Unit Price</th>
                                         <th scope="col">Add Ons</th>
                                         <th scope="col">Add Ons Price</th>
                                         <th scope="col">Subtotal</th>
+                                        <th scope="col">Order Type</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -129,23 +132,25 @@ require 'public/admin-orders-orders.php';
                                     require 'public/connection.php';
                                     $recipientName="";
                                     $orderNumber = $_GET['order_number'];
-                                    $getOrderSummary = $connect->prepare("SELECT order_number,product_name,product_variation,quantity,price,add_ons,add_ons_fee,recipient_name FROM tblorderdetails WHERE order_number=?");
+                                    $getOrderSummary = $connect->prepare("SELECT order_number,product_name,product_category,product_variation,quantity,price,add_ons,add_ons_fee,recipient_name,order_type FROM tblorderdetails WHERE order_number=?");
                                     echo $connect->error;
                                     $getOrderSummary->bind_param('s',$orderNumber);
                                     $getOrderSummary->execute();
-                                    $getOrderSummary->bind_result($orderId,$productName,$variation,$quantity,$price,$addOns,$addOnsFee,$recipientName);
+                                    $getOrderSummary->bind_result($orderId,$productName,$category,$variation,$quantity,$price,$addOns,$addOnsFee,$recipientName,$orderType);
                                     while($getOrderSummary->fetch()){
                                    
                                         ?>
                                     <tr>
                                         <td><?=$orderId?></td>
                                         <td><?=$productName?></td>
+                                        <td><?=$category?></td>
                                         <td><?=$variation?></td>
                                         <td><?=$quantity?></td>
                                         <td><?=$price?>.00</td>
                                         <td><?=$addOns?></td>
                                         <td><?=$addOnsFee?>.00</td>
                                         <td><?=($price * $quantity) + ($addOnsFee * $quantity);?>.00</td>
+                                        <td><?=$orderType?></td>
                                     </tr>
                                     <?php
                                     }
@@ -154,23 +159,26 @@ require 'public/admin-orders-orders.php';
                                 </tbody>
                                <tfoot>
                                     <tr>
-                                        <td colspan="6"></td>
+                                        <td colspan="8"></td>
                                         <td><b>Delivery Fee</b>: </td>
                                         <td><?= $deliveryFee?>.00</td>
                                     </tr>
                                     <tr>
-                                        <td colspan="6"></td>
+                                        <td colspan="8"></td>
                                         <td><b>Grand Total</b>: </td>
                                         <td>₱ <?= $totalAmount + $deliveryFee?>.00</td>
                                     </tr>
                                     <tr>
-                                        <td colspan="4"></td>
+                                        <td colspan="6"></td>
                                         <td><b>Order Status</b><span class="mx-3 text-danger" style="font-size:1.5rem">*</span></td>
                                         <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST">
                                             <td>
                                                 <input type="hidden" name="email" value="<?=$email?>">
                                                 <input type="hidden" name="customerName" value="<?=$customerName?>">
                                                 <input type="hidden" name="orderNumber" value="<?=$orderNumber?>">
+                                                <input type="hidden" name="quantity" value="<?=$quantity?>">
+                                                <input type="hidden" name="category" value="<?=$category?>">
+                                                <input type="hidden" name="variation" value="<?=$variation?>">
                                                 <input type="hidden" name="sales" value="<?=$totalAmount?>">
                                                 <input type="hidden" id="order-type" name="orderType" value="<?=$orderType?>">
                                                 <input type="hidden" name="token" value="<?=$token?>">
@@ -179,19 +187,10 @@ require 'public/admin-orders-orders.php';
                                                 <input type="hidden" name="preparedTime" value="<?=$preparedTime?>">
                                                     <div id="pickup-orders">
                                                         <select name="orderStatus" class="form-control" style="font-size:1.3rem" id="order-status">
-                                                           
                                                             <option value="Pending" <?php if($orderStatus == "Pending") { echo 'selected ? "selected"';}?>>Pending</option>
                                                             <option value="Order Processing" <?php if($orderStatus == "Order Processing") { echo 'selected ? "selected"';}?>>Processing (Confirm Order)</option>
-                                                            <option id="ready-pickup" value="Ready for Pick Up" <?php if($orderStatus == "Ready for Pick Up") { echo 'selected ? "selected"';}?>>Ready for Pick Up</option>
-                                                            <option value="Order Completed" <?php if($orderStatus == "Order Completed") { echo 'selected ? "selected"';}?>>Complete</option>
-                                                            <option value="Cancelled" <?php if($orderStatus == "Cancelled") { echo 'selected ? "selected"';}?>>Cancel</option>
-                                                        </select>
-                                                    </div>
-                                                    <div id="delivery-order">
-                                                        <select name="orderStatus" class="form-control" style="font-size:1.3rem" id="order-status">
-                                                            <option value="Pending" <?php if($orderStatus == "Pending") { echo 'selected ? "selected"';}?>>Pending</option>
-                                                            <option value="Order Processing" <?php if($orderStatus == "Order Processing") { echo 'selected ? "selected"';}?>>Processing (Confirm Order)</option>
-                                                            <option id="out-delivery" value="Out for Delivery" <?php if($orderStatus == "Out for Delivery") { echo 'selected ? "selected"';}?>>Out for Delivery</option>
+                                                            <option id="out-delivery" value="Out for Delivery" <?php if($orderStatus == "Out for Delivery") { echo 'selected ? "selected"';}?>>Out for Delivery (Deliver)</option>
+                                                            <option id="ready-pickup" value="Ready for Pick Up" <?php if($orderStatus == "Ready for Pick Up") { echo 'selected ? "selected"';}?>>Ready for Pick Up (Pick Up)</option>
                                                             <option value="Order Completed" <?php if($orderStatus == "Order Completed") { echo 'selected ? "selected"';}?>>Complete</option>
                                                             <option value="Cancelled" <?php if($orderStatus == "Cancelled") { echo 'selected ? "selected"';}?>>Cancel</option>
                                                         </select>

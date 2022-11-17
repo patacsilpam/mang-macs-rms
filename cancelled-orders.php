@@ -115,7 +115,6 @@
                                         tblorderdetails.quantity,tblorderdetails.price,tblorderdetails.price * tblorderdetails.quantity as 'subtotal',
                                         tblorderdetails.add_ons,tblorderdetails.order_type 
                                         FROM tblorderdetails LEFT JOIN tblcustomerorder ON tblorderdetails.order_number = tblcustomerorder.order_number
-                                        WHERE tblorderdetails.required_date=? and tblorderdetails.order_status=?
                                         ORDER BY STR_TO_DATE(CONCAT(required_date,' ',required_time),'%Y-%m-%d %h:%i %p') ASC");
                                         $getTotalOrder->bind_param('ss',$date,$orderStatus);
                                         $getTotalOrder->execute();

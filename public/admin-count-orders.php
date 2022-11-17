@@ -83,15 +83,17 @@ function countCancelledOrders(){
     $orderPickUp = "Pick Up";
     $cancelled = "Cancelled";
     $date = date('Y-m-d');
-    $count = $connect->prepare("SELECT COUNT(*) as 'dailyCancelled', 
-    (SELECT COUNT(*) FROM tblorderdetails WHERE order_status=?) as 'totalCancelled' 
-    FROM tblorderdetails WHERE order_status=? AND required_date=?");
-    $count->bind_param('sss',$cancelled,$cancelled,$date);
+    $count = $connect->prepare("SELECT COUNT(*) as 'totalCancelled' FROM tblorderdetails WHERE order_status=?");
+    $count->bind_param('s',$cancelled);
     $count->execute();
     $row = $count->get_result();
     if($fetch = $row->fetch_assoc()){
-        echo $countCancelled = $fetch['dailyCancelled']."/".$fetch['totalCancelled']; 
+        echo $countCancelled = $fetch['totalCancelled']; 
     }
+    /*$count = $connect->prepare("SELECT COUNT(*) as 'dailyCancelled', 
+    (SELECT COUNT(*) FROM tblorderdetails WHERE order_status=?) as 'totalCancelled' 
+    FROM tblorderdetails WHERE order_status=? AND required_date=?");*/
+    
 }
 //count cancelled table reservation
 function countCancelledBooking(){
@@ -99,15 +101,17 @@ function countCancelledBooking(){
     $cancelled = "Cancelled";
     $noShows = "No Shows";
     $date = date('Y-m-d');
-    $count = $connect->prepare("SELECT COUNT(*) as 'dailyCancelled',
-    (SELECT COUNT(*) FROM tblreservation WHERE status IN (?,?))  as 'totalCancelled' 
-    FROM tblreservation WHERE status IN (?,?) AND scheduled_date=?");
-    $count->bind_param('sssss',$cancelled,$noShows,$cancelled,$noShows,$date);
+    $count = $connect->prepare("SELECT COUNT(*) as 'totalCancelled' FROM tblreservation WHERE status=?");
+    $count->bind_param('s',$cancelled);
     $count->execute();
     $row = $count->get_result();
     if( $fetch = $row->fetch_assoc()){
-        echo $countCancelledBooking = $fetch['dailyCancelled']."/".$fetch['totalCancelled']; 
+        echo $fetch['totalCancelled']; 
     }
+    /*$count = $connect->prepare("SELECT COUNT(*) as 'dailyCancelled',
+    (SELECT COUNT(*) FROM tblreservation WHERE status IN (?,?))  as 'totalCancelled' 
+    FROM tblreservation WHERE status IN (?,?) AND scheduled_date=?");*/
+    
 }
 
     
@@ -143,7 +147,7 @@ function countTotalOrders(){
     $count->execute();
     $row = $count->get_result();
     if($fetch = $row->fetch_assoc()){
-        echo $countTotalOrder = $fetch['dailyOrders']."/".$fetch['totalOrders']; 
+        echo $countTotalOrder = $fetch['totalOrders']; 
     }
 }
 
@@ -160,7 +164,7 @@ function countTotalBooking(){
     $count->execute();
     $row = $count->get_result();
     if($fetch = $row->fetch_assoc()){
-        echo $countActiveBooking = $fetch['dailyBooking']."/".$fetch['totalBooking'];  
+        echo $countActiveBooking = $fetch['totalBooking'];  
     }
 }
 
