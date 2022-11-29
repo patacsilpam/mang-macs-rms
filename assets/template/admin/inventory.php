@@ -24,16 +24,36 @@
                         </div>
                         <div class="mt-2">
                             <label>Item Name</label>
-                            <input type="text" class="form-control" name="product" placeholder="Enter item name" required>
+                            <div>
+                                <select id="name" class="form-control" name="product" required>
+                                    <option disabled selected>Please Choose...</option>
+                                    <option value="Pizza Bread">Pizza Bread</option>
+                                    <?php
+                                    require 'public/connection.php';
+                                        $fetchCategoryDb = $connect->prepare("SELECT productName,stockCode FROM tblproducts 
+                                        WHERE productCategory IN ('Beverages and Liqours','Wine','Drinks')");
+                                        $fetchCategoryDb->execute();
+                                        $fetchCategoryDb->store_result();
+                                        $fetchCategoryDb->bind_result($productName,$stockCode);
+                                        while($fetchCategoryDb->fetch()){
+                                            ?>
+                                                <option value="<?=$productName?>"><?=$productName?></option>
+                                            <?php
+                                        }
+                                        
+                                    ?>
+                                </select>
+                            </div>  
                         </div>
                         <div class="mt-2">
                             <label>Item Category</label>
-                            <input list="brow" class="form-control" name="itemCategory" placeholder="Enter Item Category">
                             <div>
-                                <datalist id="brow">
+                                <select id="category" class="form-control" name="itemCategory" required>
+                                    <option disabled selected>Please Choose...</option>
                                     <?php
                                     require 'public/connection.php';
-                                        $fetchCategoryDb = $connect->prepare("SELECT productCategory FROM tblproducts GROUP BY productCategory");
+                                        $fetchCategoryDb = $connect->prepare("SELECT productCategory FROM tblproducts
+                                        WHERE productCategory IN ('Beverages & Liqours','Drinks','Pizza','Wine') GROUP BY productCategory");
                                         $fetchCategoryDb->execute();
                                         $fetchCategoryDb->store_result();
                                         $fetchCategoryDb->bind_result($productCategory);
@@ -44,7 +64,7 @@
                                         }
                                         
                                     ?>
-                                </datalist>
+                                </select>
                             </div>  
                         </div>
                         <div class="mt-2">
@@ -184,6 +204,9 @@
                     <input type="hidden" name="id" value="<?= $fetch['id']; ?>">
                     <input type="hidden" name="code" value="<?= $fetch['code']; ?>">
                     <input type="hidden" name="purchased" value="<?= $fetch['quantityPurchased']; ?>">
+                    <input type="hidden" name="product" value="<?= $fetch['product']; ?>">
+                    <input type="hidden" name="itemCategory" value="<?= $fetch['itemCategory']; ?>">
+                    <input type="hidden" name="itemVariation" value="<?= $fetch['itemVariation']; ?>">
                     <h4>Delete</h4>
                     <div class="modal-body-container">
                         <i class="fas fa-exclamation-circle fa-3x icon-warning"></i><br>

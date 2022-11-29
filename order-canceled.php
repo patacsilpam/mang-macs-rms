@@ -26,7 +26,7 @@ require 'public/admin-orders.php'
     <div class="grid-container">
         <!--Navigation-->
         <header class="nav-container">
-            <h3 class="mx-2 font-weight-normal">Order <small>(Canceled)</small></h3>
+            <h3 class="mx-2 font-weight-normal">Orders <small>(Canceled)</small></h3>
             <ul class="nav-list">
                 <?php include 'assets/template/admin/navbar.php'?>
             </ul>
@@ -36,7 +36,7 @@ require 'public/admin-orders.php'
             <section>
                 <article>
                     <div class="table-responsive table-container">
-                        <table id="example" class="table table-hover">
+                        <table id="example" class="table table-hover" data-toggle="table" data-sort-name="date" data-sort-order="asc">
                             <thead class="thead-dark">
                                 <tr>
                                     <th scope="col">#</th>
@@ -45,7 +45,7 @@ require 'public/admin-orders.php'
                                     <th scope="col">Order Type</th>
                                     <th scope="col">Total Order Amount</th>
                                     <th scope="col">Order Time</th>
-                                    <th scope="col">Required Date</th>
+                                    <th scope="col" data-field="date">Required Date</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Action</th>
                                 </tr>
@@ -61,7 +61,7 @@ require 'public/admin-orders.php'
                                     tblorderdetails.required_time,tblcustomerorder.email,tblcustomerorder.delivery_fee
                                     FROM tblcustomerorder LEFT JOIN tblorderdetails 
                                     ON tblorderdetails.order_number = tblcustomerorder.order_number
-                                    WHERE tblorderdetails.order_status ='Cancelled'  GROUP BY tblorderdetails.order_number 
+                                    WHERE tblorderdetails.order_status IN ('Invalid Payment','Out of Stock')  GROUP BY tblorderdetails.order_number 
                                     ORDER BY STR_TO_DATE(CONCAT(tblorderdetails.required_date,' ',tblorderdetails.required_time),'%Y-%m-%d %h:%i %p') ASC";
                                     $displayOrders = $connect->query($getOrders);
                                     while($fetch = $displayOrders->fetch_assoc()){

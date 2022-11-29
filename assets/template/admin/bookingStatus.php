@@ -22,18 +22,12 @@
                     <input type="hidden" value="<?= $fetch['refNumber']?>" name="refNumber">
                     <input type="hidden" value="<?=$fetch['token']?>" name="token">
                     <div class="form-check">
-                        <div>
-                            <input class="form-check-input" type="radio" name="bookStatus" value="Reserved" <?php if($fetch['status'] == "Reserved"){ echo "checked=checked";} ?> style="height:15px; width:15px">
-                            <label class="form-check-label">Reserved</label>
-                        </div>
-                        <div>
-                            <input class="form-check-input" type="radio" name="bookStatus" value="Cancelled" <?php if($fetch['status'] == "Cancelled"){ echo "checked=checked";} ?> style="height:15px; width:15px">
-                            <label class="form-check-label">Not Available</label>
-                        </div>
-                        <div>
-                            <input class="form-check-input" type="radio" name="bookStatus" value="Finished" <?php if($fetch['status'] == "Completed"){ echo "checked=checked";} ?> style="height:15px; width:15px">
-                            <label class="form-check-label">Finished</label>
-                        </div>
+                       <select class="form-control"  name="bookStatus">
+                            <option value="Reserved" <?php if($fetch['status'] == "Reserved"){ echo 'selected ? "selected"';} ?>>Reserved</option>
+                            <option value="Finished"  <?php if($fetch['status'] == "Finished"){ echo 'selected ? "selected"';} ?>>Finished</option>
+                            <option value="Not Available"  <?php if($fetch['status'] == "Not Available"){  echo 'selected ? "selected"';} ?>>Not Available</option>
+                            <option value="No Shows"  <?php if($fetch['status'] == "Not Available"){  echo 'selected ? "selected"';} ?>>No Shows</option>
+                       </select>
                     </div>
                 </div>
                 <div class="modal-footer">

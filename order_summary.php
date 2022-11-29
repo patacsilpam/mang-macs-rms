@@ -55,13 +55,13 @@ require 'public/admin-orders-orders.php';
                             tblorderdetails.created_at,tblorderdetails.required_date,tblorderdetails.required_time,
                             tblorderdetails.order_type,tblorderdetails.order_status,tblcustomerorder.email,
                             tblcustomerorder.phone_number,tblcustomerorder.total_amount,tblcustomerorder.delivery_fee,
-                            tblcustomerorder.token,tblorderdetails.preparation_time
+                            tblcustomerorder.token,tblorderdetails.preparation_time,tblcustomerorder.payment_number
                             FROM tblcustomerorder LEFT JOIN tblorderdetails
                             ON tblcustomerorder.order_number = tblorderdetails.order_number
                             WHERE tblorderdetails.order_number=? LIMIT 1");
                         $getOrderSummary->bind_param('s',$getOrderNumber);
                         $getOrderSummary->execute();
-                        $getOrderSummary->bind_result($orderNumber,$courierName,$customerName,$placedOn,$requiredDate,$requiredTime,$orderType,$orderStatus,$email,$phoneNumber,$totalAmount,$deliveryFee,$token,$preparedTime);
+                        $getOrderSummary->bind_result($orderNumber,$courierName,$customerName,$placedOn,$requiredDate,$requiredTime,$orderType,$orderStatus,$email,$phoneNumber,$totalAmount,$deliveryFee,$token,$preparedTime,$paymentNumber);
                         while($getOrderSummary->fetch()){
                         $GLOBALS['totalAmount'] = $totalAmount;
                    ?>
@@ -117,14 +117,15 @@ require 'public/admin-orders-orders.php';
                                     <tr>
                                         <th scope="col">Order Number</th>
                                         <th scope="col">Product</th>
-                                        <th scope="col">Category</th>
                                         <th scope="col">Variation</th>
+                                        <th scope="col">Category</th>
                                         <th scope="col">Quantity</th>
                                         <th scope="col">Unit Price</th>
                                         <th scope="col">Add Ons</th>
                                         <th scope="col">Add Ons Price</th>
                                         <th scope="col">Subtotal</th>
                                         <th scope="col">Order Type</th>
+                                        <th scope="col">Gcash Ref. Number</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -143,14 +144,15 @@ require 'public/admin-orders-orders.php';
                                     <tr>
                                         <td><?=$orderId?></td>
                                         <td><?=$productName?></td>
-                                        <td><?=$category?></td>
                                         <td><?=$variation?></td>
+                                        <td><?=$category?></td>
                                         <td><?=$quantity?></td>
                                         <td><?=$price?>.00</td>
                                         <td><?=$addOns?></td>
                                         <td><?=$addOnsFee?>.00</td>
                                         <td><?=($price * $quantity) + ($addOnsFee * $quantity);?>.00</td>
                                         <td><?=$orderType?></td>
+                                        <td><?=$paymentNumber?></td>
                                     </tr>
                                     <?php
                                     }
@@ -159,17 +161,17 @@ require 'public/admin-orders-orders.php';
                                 </tbody>
                                <tfoot>
                                     <tr>
-                                        <td colspan="8"></td>
+                                        <td colspan="9"></td>
                                         <td><b>Delivery Fee</b>: </td>
                                         <td><?= $deliveryFee?>.00</td>
                                     </tr>
                                     <tr>
-                                        <td colspan="8"></td>
+                                        <td colspan="9"></td>
                                         <td><b>Grand Total</b>: </td>
                                         <td>₱ <?= $totalAmount + $deliveryFee?>.00</td>
                                     </tr>
                                     <tr>
-                                        <td colspan="6"></td>
+                                        <td colspan="7"></td>
                                         <td><b>Order Status</b><span class="mx-3 text-danger" style="font-size:1.5rem">*</span></td>
                                         <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST">
                                             <td>
@@ -185,16 +187,17 @@ require 'public/admin-orders-orders.php';
                                                 <input type="hidden" name="orderDate" value="<?=$placedOn?>">
                                                 <input type="hidden" name="requiredTime" value="<?=$requiredTime?>">
                                                 <input type="hidden" name="preparedTime" value="<?=$preparedTime?>">
-                                                    <div id="pickup-orders">
-                                                        <select name="orderStatus" class="form-control" style="font-size:1.3rem" id="order-status">
-                                                            <option value="Pending" <?php if($orderStatus == "Pending") { echo 'selected ? "selected"';}?>>Pending</option>
-                                                            <option value="Order Processing" <?php if($orderStatus == "Order Processing") { echo 'selected ? "selected"';}?>>Processing (Confirm Order)</option>
-                                                            <option id="out-delivery" value="Out for Delivery" <?php if($orderStatus == "Out for Delivery") { echo 'selected ? "selected"';}?>>Out for Delivery (Deliver)</option>
-                                                            <option id="ready-pickup" value="Ready for Pick Up" <?php if($orderStatus == "Ready for Pick Up") { echo 'selected ? "selected"';}?>>Ready for Pick Up (Pick Up)</option>
-                                                            <option value="Order Completed" <?php if($orderStatus == "Order Completed") { echo 'selected ? "selected"';}?>>Complete</option>
-                                                            <option value="Cancelled" <?php if($orderStatus == "Cancelled") { echo 'selected ? "selected"';}?>>Cancel</option>
-                                                        </select>
-                                                    </div>
+                                                <select name="orderStatus" class="form-control" style="font-size:1.3rem" id="order-status">
+                                                    <option value="Pending" <?php if($orderStatus == "Pending") { echo 'selected ? "selected"';}?>>Pending</option>
+                                                    <option value="Order Processing" <?php if($orderStatus == "Order Processing") { echo 'selected ? "selected"';}?>>Processing (Confirm Order)</option>
+                                                    <option id="out-delivery" value="Out for Delivery" <?php if($orderStatus == "Out for Delivery") { echo 'selected ? "selected"';}?>>Out for Delivery (Deliver)</option>
+                                                    <option id="ready-pickup" value="Ready for Pick Up" <?php if($orderStatus == "Ready for Pick Up") { echo 'selected ? "selected"';}?>>Ready for Pick Up (Pick Up)</option>
+                                                    <option value="Order Completed" <?php if($orderStatus == "Order Completed") { echo 'selected ? "selected"';}?>>Complete</option><br>
+                                                    <optgroup label="Cancel" style="color:#676767">
+                                                        <option value="Invalid Payment" <?php if($orderStatus == "Invalid Payment") { echo 'selected ? "selected"';}?>>Invalid Payment</option>
+                                                        <option value="Out of Stock" <?php if($orderStatus == "Out of Stock") { echo 'selected ? "selected"';}?>>Out of Stock</option>
+                                                    </optgroup>
+                                                </select>
                                             </td>
                                             <td>
                                                 <button type="submit" name="btn-update" class="btn btn-primary">Update Status</button>

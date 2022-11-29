@@ -3,6 +3,12 @@
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" id="myTab">
             <li class="nav-item">
+                <a class="nav-link m-1  bg-dark text-white" data-toggle="tab" href="#beerBucket">Beer Bucket w/ Pulutan</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link m-1  bg-dark text-white" data-toggle="tab" href="#beverages">Beverages & Liqours</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link m-1  bg-dark text-white" data-toggle="tab" href="#bilao">Bilao</a>
             </li>
             <li class="nav-item">
@@ -27,9 +33,6 @@
                 <a class="nav-link m-1  bg-dark text-white" data-toggle="tab" href="#pulutan">Mang Mac's Pulutan</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link m-1  bg-dark text-white" data-toggle="tab" href="#liqours">Mang Mac's Drinks</a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link m-1  bg-dark text-white" data-toggle="tab" href="#grilledMenu">Mang Mac's Grilled Menu</a>
             </li>
             <li class="nav-item">
@@ -45,7 +48,9 @@
             <li class="nav-item">
                 <a class="nav-link m-1  bg-dark text-white" data-toggle="tab" href="#pancitNoodles">Pancit & Noodles</a>
             </li>
-           
+            <li class="nav-item">
+                <a class="nav-link m-1  bg-dark text-white" data-toggle="tab" href="#wine">Wine</a>
+            </li>
         </ul>
         <!-- Tab panes -->
         <div class="tab-content">
@@ -64,7 +69,7 @@
                     <img src="<?=$fetch['productImage']?>" class="img-product">
                     <strong class="text-product-name"><?=$fetch['productName']?></strong>
                     <small class="text-dark"><?=$fetch['productVariation']?></small>
-                    <label class="text-danger">₱<?=$fetch['price']?>.00</label>
+                    <label class="text-success">₱<?=$fetch['price']?>.00</label>
                     <input type="number" class="form-control input-quantity" value="1" name="quantity">
                     <button type="submit" name="add-to-cart" class="btn btn-warning">Add</button>
                    
@@ -88,7 +93,7 @@
                     <img src="<?=$fetch['productImage']?>" class="img-product">
                     <strong class="text-product-name"><?=$fetch['productName']?></strong>
                     <small class="text-dark"><?=$fetch['productVariation']?></small>
-                    <label class="text-danger">₱<?=$fetch['price']?>.00</label>
+                    <label class="text-success">₱<?=$fetch['price']?>.00</label>
                     <input type="number" class="form-control input-quantity" value="1" name="quantity">
                     <button type="submit" name="add-to-cart" class="btn btn-warning">Add</button>
                     <!---Add Category and Product Code Here :)----!-->
@@ -112,7 +117,7 @@
                     <img src="<?=$fetch['productImage']?>" class="img-product">
                     <strong class="text-product-name"><?=$fetch['productName']?></strong>
                     <small class="text-dark"><?=$fetch['productVariation']?></small>
-                    <label class="text-danger">₱<?=$fetch['price']?>.00</label>
+                    <label class="text-success">₱<?=$fetch['price']?>.00</label>
                     <input type="number" class="form-control input-quantity" value="1" name="quantity">
                     <button type="submit" name="add-to-cart" class="btn btn-warning">Add</button>
                     <!---Add Category and Product Code Here :)----!-->
@@ -136,7 +141,7 @@
                     <img src="<?=$fetch['productImage']?>" class="img-product">
                     <strong class="text-product-name"><?=$fetch['productName']?></strong>
                     <small class="text-dark"><?=$fetch['productVariation']?></small>
-                    <label class="text-danger">₱<?=$fetch['price']?>.00</label>
+                    <label class="text-success">₱<?=$fetch['price']?>.00</label>
                     <input type="number" class="form-control input-quantity" value="1" name="quantity">
                     <button type="submit" name="add-to-cart" class="btn btn-warning">Add</button>
                     <!---Add Category and Product Code Here :)----!-->
@@ -160,7 +165,7 @@
                     <img src="<?=$fetch['productImage']?>" class="img-product">
                     <strong class="text-product-name"><?=$fetch['productName']?></strong>
                     <small class="text-dark"><?=$fetch['productVariation']?></small>
-                    <label class="text-danger">₱<?=$fetch['price']?>.00</label>
+                    <label class="text-success">₱<?=$fetch['price']?>.00</label>
                     <input type="number" class="form-control input-quantity" value="1" name="quantity">
                     <button type="submit" name="add-to-cart" class="btn btn-warning">Add</button>
                     <!---Add Category and Product Code Here :)----!-->
@@ -184,7 +189,7 @@
                     <img src="<?=$fetch['productImage']?>" class="img-product">
                     <strong class="text-product-name"><?=$fetch['productName']?></strong>
                     <small class="text-dark"><?=$fetch['productVariation']?></small>
-                    <label class="text-danger">₱<?=$fetch['price']?>.00</label>
+                    <label class="text-success">₱<?=$fetch['price']?>.00</label>
                     <input type="number" class="form-control input-quantity" value="1" name="quantity">
                     <button type="submit" name="add-to-cart" class="btn btn-warning">Add</button>
                     <!---Add Category and Product Code Here :)----!-->
@@ -199,7 +204,7 @@
                 <h5>Bilao</h5>
                 <div class="product-container">
                 <?php
-                    $getMenu = "SELECT * FROM tblproducts WHERE productCategory='Palabok Bilao' OR productCategory='Pancit Bilao(Bihon)' OR productCategory='Pancit Bilao(Canton)' OR productCategory='Spaghetti Bilao' ORDER BY productname ASC";
+                    $getMenu = "SELECT * FROM tblproducts WHERE productCategory='Palabok Bilao' OR productCategory='Pancit Bilao(Bihon Guisado)' OR productCategory='Pancit Bilao(Canton Bihon)' OR productCategory='Spaghetti Bilao' ORDER BY productname ASC";
                     $displayMenu = $connect->query($getMenu);
                     while($fetch = $displayMenu->fetch_assoc()){ 
                 ?>
@@ -208,7 +213,7 @@
                     <img src="<?=$fetch['productImage']?>" class="img-product">
                     <strong class="text-product-name"><?=$fetch['productName']?></strong>
                     <small class="text-dark"><?=$fetch['productVariation']?></small>
-                    <label class="text-danger">₱<?=$fetch['price']?>.00</label>
+                    <label class="text-success">₱<?=$fetch['price']?>.00</label>
                     <input type="number" class="form-control input-quantity" value="1" name="quantity">
                     <button type="submit" name="add-to-cart" class="btn btn-warning">Add</button>
                     <!---Add Category and Product Code Here :)----!-->
@@ -232,7 +237,7 @@
                     <img src="<?=$fetch['productImage']?>" class="img-product">
                     <strong class="text-product-name"><?=$fetch['productName']?></strong>
                     <small class="text-dark"><?=$fetch['productVariation']?></small>
-                    <label class="text-danger">₱<?=$fetch['price']?>.00</label>
+                    <label class="text-success">₱<?=$fetch['price']?>.00</label>
                     <input type="number" class="form-control input-quantity" value="1" name="quantity">
                     <button type="submit" name="add-to-cart" class="btn btn-warning">Add</button>
                     <!---Add Category and Product Code Here :)----!-->
@@ -256,7 +261,7 @@
                     <img src="<?=$fetch['productImage']?>" class="img-product">
                     <strong class="text-product-name"><?=$fetch['productName']?></strong>
                     <small class="text-dark"><?=$fetch['productVariation']?></small>
-                    <label class="text-danger">₱<?=$fetch['price']?>.00</label>
+                    <label class="text-success">₱<?=$fetch['price']?>.00</label>
                     <input type="number" class="form-control input-quantity" value="1" name="quantity">
                     <button type="submit" name="add-to-cart" class="btn btn-warning">Add</button>
                     <!---Add Category and Product Code Here :)----!-->
@@ -280,7 +285,7 @@
                     <img src="<?=$fetch['productImage']?>" class="img-product">
                     <strong class="text-product-name"><?=$fetch['productName']?></strong>
                     <small class="text-dark"><?=$fetch['productVariation']?></small>
-                    <label class="text-danger">₱<?=$fetch['price']?>.00</label>
+                    <label class="text-success">₱<?=$fetch['price']?>.00</label>
                     <input type="number" class="form-control input-quantity" value="1" name="quantity">
                     <button type="submit" name="add-to-cart" class="btn btn-warning">Add</button>
                     <!---Add Category and Product Code Here :)----!-->
@@ -304,9 +309,12 @@
                     <img src="<?=$fetch['productImage']?>" class="img-product">
                     <strong class="text-product-name"><?=$fetch['productName']?></strong>
                     <small class="text-dark"><?=$fetch['productVariation']?></small>
-                    <label class="text-danger">₱<?=$fetch['price']?>.00</label>
+                    <strong class="text-success">₱<?=$fetch['price']?>.00</strong>
                     <input type="number" class="form-control input-quantity" value="1" name="quantity">
-                    <button type="submit" name="add-to-cart" class="btn btn-warning">Add</button>
+                    <p class="text-danger"><?php if($fetch['stocks'] <= 10 && $fetch['stocks'] != 0){echo $fetch['stocks']." items left";} else{echo "";}?></p>
+                    <button type="submit" name="add-to-cart" class="btn btn-warning" <?php if($fetch['stocks']  <= 0){ echo "disabled";}?>> 
+                        <?php if($fetch['stocks'] <= 0){ echo "Not Available";} else{echo "Add";}?>
+                    </button>
                     <!---Add Category and Product Code Here :)----!-->
                 </form>
                 <?php
@@ -328,7 +336,7 @@
                     <img src="<?=$fetch['productImage']?>" class="img-product">
                     <strong class="text-product-name"><?=$fetch['productName']?></strong>
                     <small class="text-dark"><?=$fetch['productVariation']?></small>
-                    <label class="text-danger">₱<?=$fetch['price']?>.00</label>
+                    <label class="text-success">₱<?=$fetch['price']?>.00</label>
                     <input type="number" class="form-control input-quantity" value="1" name="quantity">
                     <button type="submit" name="add-to-cart" class="btn btn-warning">Add</button>
                     <!---Add Category and Product Code Here :)----!-->
@@ -352,7 +360,7 @@
                     <img src="<?=$fetch['productImage']?>" class="img-product">
                     <strong class="text-product-name"><?=$fetch['productName']?></strong>
                     <small class="text-dark"><?=$fetch['productVariation']?></small>
-                    <label class="text-danger">₱<?=$fetch['price']?>.00</label>
+                    <label class="text-success">₱<?=$fetch['price']?>.00</label>
                     <input type="number" class="form-control input-quantity" value="1" name="quantity">
                     <button type="submit" name="add-to-cart" class="btn btn-warning">Add</button>
                     <!---Add Category and Product Code Here :)----!-->
@@ -363,11 +371,11 @@
                 </div>
             </div>
             <!--Mang Macs Pulutan--!--->
-            <div id="liqours" class="container tab-pane fade"><br>
-                <h5>Mang Mac's Drinks</h5>
+            <div id="beerBucket" class="container tab-pane fade"><br>
+                <h5>Beer Bucket w/ Pulutan</h5>
                 <div class="product-container">
                 <?php
-                    $getMenu = "SELECT * FROM tblproducts WHERE productCategory='Beer Bucket' OR productCategory='Beverages and Liqours' OR productCategory='Wine' ORDER BY productname ASC";
+                    $getMenu = "SELECT * FROM tblproducts WHERE productCategory='Beer Bucket'  ORDER BY productname ASC";
                     $displayMenu = $connect->query($getMenu);
                     while($fetch = $displayMenu->fetch_assoc()){ 
                 ?>
@@ -376,9 +384,61 @@
                     <img src="<?=$fetch['productImage']?>" class="img-product">
                     <strong class="text-product-name"><?=$fetch['productName']?></strong>
                     <small class="text-dark"><?=$fetch['productVariation']?></small>
-                    <label class="text-danger">₱<?=$fetch['price']?>.00</label>
+                    <label class="text-success">₱<?=$fetch['price']?>.00</label>
                     <input type="number" class="form-control input-quantity" value="1" name="quantity">
                     <button type="submit" name="add-to-cart" class="btn btn-warning">Add</button>
+                    <!---Add Category and Product Code Here :)----!-->
+                </form>
+                <?php
+                    }
+                ?>
+                </div>
+            </div>
+            <div id="beverages" class="container tab-pane fade"><br>
+                <h5>Beverages & Liqours</h5>
+                <div class="product-container">
+                <?php
+                    $getMenu = "SELECT * FROM tblproducts WHERE  productCategory='Beverages and Liqours'  ORDER BY productname ASC";
+                    $displayMenu = $connect->query($getMenu);
+                    while($fetch = $displayMenu->fetch_assoc()){ 
+                ?>
+                <form method="POST" action="pos.php?action=add&code=<?=$fetch['code']?>" class="box-product">
+                    <input type="hidden" value="<?=$fetch['code']?>">
+                    <img src="<?=$fetch['productImage']?>" class="img-product">
+                    <strong class="text-product-name"><?=$fetch['productName']?></strong>
+                    <small class="text-dark"><?=$fetch['productVariation']?></small>
+                    <label class="text-success">₱<?=$fetch['price']?>.00</label>
+                    <input type="number" class="form-control input-quantity" value="1" name="quantity">
+                    <p class="text-danger"><?php if($fetch['stocks'] <= 10 && $fetch['stocks'] != 0){echo $fetch['stocks']." items left";} else{echo "";}?></p>
+                    <button type="submit" name="add-to-cart" class="btn btn-warning" <?php if($fetch['stocks']  <= 0){ echo "disabled";}?>> 
+                        <?php if($fetch['stocks'] <= 0){ echo "Not Available";} else{echo "Add";}?>
+                    </button>
+                    <!---Add Category and Product Code Here :)----!-->
+                </form>
+                <?php
+                    }
+                ?>
+                </div>
+            </div>
+            <div id="wine" class="container tab-pane fade"><br>
+                <h5>Wine</h5>
+                <div class="product-container">
+                <?php
+                    $getMenu = "SELECT * FROM tblproducts WHERE  productCategory='Wine'  ORDER BY productname ASC";
+                    $displayMenu = $connect->query($getMenu);
+                    while($fetch = $displayMenu->fetch_assoc()){ 
+                ?>
+                <form method="POST" action="pos.php?action=add&code=<?=$fetch['code']?>" class="box-product">
+                    <input type="hidden" value="<?=$fetch['code']?>">
+                    <img src="<?=$fetch['productImage']?>" class="img-product">
+                    <strong class="text-product-name"><?=$fetch['productName']?></strong>
+                    <small class="text-dark"><?=$fetch['productVariation']?></small>
+                    <label class="text-success">₱<?=$fetch['price']?>.00</label>
+                    <input type="number" class="form-control input-quantity" value="1" name="quantity">
+                    <p class="text-danger"><?php if($fetch['stocks'] <= 10 && $fetch['stocks'] != 0){echo $fetch['stocks']." items left";} else{echo "";}?></p>
+                    <button type="submit" name="add-to-cart" class="btn btn-warning" <?php if($fetch['stocks']  <= 0){ echo "disabled";}?>> 
+                        <?php if($fetch['stocks'] <= 0){ echo "Not Available";} else{echo "Add";}?>
+                    </button>
                     <!---Add Category and Product Code Here :)----!-->
                 </form>
                 <?php

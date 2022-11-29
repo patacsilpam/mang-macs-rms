@@ -44,7 +44,6 @@
                             <table id="example" class="table table-hover">
                                 <thead class="thead-dark">
                                     <tr>
-                                        <th scope="col">#</th>
                                         <th scope="col">Code</th>
                                         <th scope="col">Purchased Date</th>
                                         <th scope="col">EXP Date</th>
@@ -58,7 +57,7 @@
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $selectInventory = "SELECT * FROM tblinventory";
+                                    $selectInventory = "SELECT * FROM tblinventory WHERE status !='expired' ORDER BY expiration_date asc";
                                     $displayInventory = $connect->query($selectInventory);
                                     while ($fetch = $displayInventory->fetch_assoc()) {
                                         $today = date('y-m-d');
@@ -72,8 +71,6 @@
                                         }
                                     ?>
                                         <tr style="background: <?php echo $highligtRow; ?>;">
-                                        
-                                            <th scope="row"><?= $fetch['id'] ?></th>
                                             <td>#<?=$fetch['itemCode']?></td>
                                             <td><?= date('F d, Y',strtotime($fetch['created_at'])) ?></td>
                                             <td><?= date('F d, Y',strtotime($fetch['expiration_date'])) ?></td>

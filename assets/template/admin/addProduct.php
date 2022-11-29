@@ -56,18 +56,18 @@
             </div>
             <div class="noCategoryPrice mt-3" style="display: none;">
               <label style="font-size: 1.1rem">Price</label>
-              <input type="number" class="form-control  mt-2 " name="price" placeholder="Enter Price">
+              <input type="number" class="form-control  mt-2 with-no-size" name="price" placeholder="Enter Price">
             </div>
             <div class="pizzaPrice mt-3" style="display: none;">
               <label style="font-size: 1.1rem">Price</label>
               <!--Medium-->
               <div style="display: flex;">
                 <input type="text" class="bg-transparent border-0" name="pizzaSize[]" value="Medium" style="width: 80px">
-                <input type="number" class="form-control  mt-2 " name="pizzaPrice[]" placeholder="Enter Price">
+                <input type="number" class="form-control  mt-2 medium-size" name="pizzaPrice[]" placeholder="Enter Price">
               </div>
               <div class="mt-3"  style="display: flex;">
                 <input type="text" class="bg-transparent border-0" name="pizzaSize[]" value="Large" style="width: 80px">
-                <input type="number" class="form-control mt-2" name="pizzaPrice[]" placeholder="Enter Price">
+                <input type="number" class="form-control mt-2 large-size" name="pizzaPrice[]" placeholder="Enter Price">
               </div>
             </div>
             <div class="bilaoPrice mt-3" style="display: none;">
@@ -75,20 +75,20 @@
               <!--Medium-->
               <div style="display: flex;">
                 <input type="text" class="bg-transparent border-0" name="bilaoSize[]" value="7 - 10 Person" style="width: 120px">
-                <input type="number" class="form-control  mt-2 " name="bilaoPrice[]" placeholder="Enter Price">
+                <input type="number" class="form-control  mt-2 seven-to-ten" name="bilaoPrice[]" placeholder="Enter Price">
               </div>
               <div class="mt-3"  style="display: flex;">
-                <input type="text" class="bg-transparent border-0" name="bilaoSize[]" value="10 -15 Person" style="width: 120px">
-                <input type="number" class="form-control mt-2" name="bilaoPrice[]" placeholder="Enter Price">
+                <input type="text" class="bg-transparent border-0 with-sizes" name="bilaoSize[]" value="10 -15 Person" style="width: 120px">
+                <input type="number" class="form-control mt-2 ten-to-fifteen" name="bilaoPrice[]" placeholder="Enter Price">
               </div>
               <div class="mt-3"  style="display: flex;">
-                <input type="text" class="bg-transparent border-0" name="bilaoSize[]" value="15 -20 Person" style="width: 120px">
-                <input type="number" class="form-control mt-2" name="bilaoPrice[]" placeholder="Enter Price">
+                <input type="text" class="bg-transparent border-0 with-sizes" name="bilaoSize[]" value="15 -20 Person" style="width: 120px">
+                <input type="number" class="form-control mt-2 fifteen-to-twenty" name="bilaoPrice[]" placeholder="Enter Price">
               </div>
             </div>
             <div class="mt-3">
               <label style="font-size: 1.1rem">Time of Preparation</label>
-              <input type="number" class="form-control" name="preparedTime" placeholder="e.g (20 mins)">
+              <input type="number" class="form-control" name="preparedTime" placeholder="e.g (20 mins)" required>
             </div>
             <div class="mt-3">
               <label style="font-size: 1.1rem">Add Main Ingredients</label><br>
@@ -172,12 +172,12 @@
               <!--product with variation-->
               <div style="display: flex;">
                 <input type="text" class="categoryPrice  bg-transparent border-0" name="editProductVariation" value="<?=$fetch['productVariation']?>" style="width: 120px">
-                <input type="number" class="form-control" name="editProductPrice" placeholder="Enter Price" value="<?=$fetch['price']?>">
+                <input type="number" class="form-control" name="editProductPrice" placeholder="Enter Price" value="<?=$fetch['price']?>" required>
               </div>
             </div>
             <div class="mt-3">
               <label style="font-size: 1.1rem">Time of Preparation</label>
-              <input type="number" class="form-control" name="editPreparedTime" placeholder="e.g (20 mins)" value="<?=$fetch['preparationTime']?>">
+              <input type="number" class="form-control" name="editPreparedTime" placeholder="e.g (20 mins)" value="<?=$fetch['preparationTime']?>" required>
             </div>
             <div class="mt-3">
               <label style="font-size: 1.1rem">Edit Main Ingredients</label><br>

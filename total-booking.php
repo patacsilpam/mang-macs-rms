@@ -99,9 +99,9 @@
                                         $orderReceived = "Order Received";
                                         $date = date('Y-m-d');
                                         $getTotalOrder = $connect->prepare("SELECT refNumber,email,fname,lname,guests,scheduled_date,scheduled_time 
-                                        FROM tblreservation WHERE status IN (?,?) 
+                                        FROM tblreservation WHERE status IN (?,?) AND scheduled_date=?
                                         ORDER BY STR_TO_DATE(CONCAT(scheduled_date,' ',scheduled_time),'%Y-%m-%d %h:%i %p') ASC");
-                                        $getTotalOrder->bind_param('ss',$reserved,$orderReceived);        
+                                        $getTotalOrder->bind_param('sss',$reserved,$orderReceived,$date);        
                                         $getTotalOrder->execute();
                                         $getTotalOrder->bind_result($refNumber,$email,$fname,$lname,$guests,$schedDate,$schedTime);
                                         if($getTotalOrder){

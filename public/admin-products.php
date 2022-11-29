@@ -39,11 +39,12 @@ function insertProducts(){
                 foreach($pizzaSize as $key => $value){
                     $newId = $id[$key];
                     $code = bin2hex(random_bytes(20));
+                    $stockCode = "70697a7a61";
                     $newPizzaSize = $value;
                     $newPizzaPrice = $pizzaPrice[$key];
-                    $insertProduct = $connect->prepare("INSERT INTO tblproducts(id,code,productName,productCategory,productVariation,stocks,price,preparationTime,mainIngredients,productImage,created_at)
-                    VALUES(?,?,?,?,?,?,?,?,?,?,?)");
-                    $insertProduct->bind_param('issssiiisss', $newId,$code, $productName, $productCategory, $newPizzaSize,$stocks,$newPizzaPrice, $preparationTime,$mainIngredients,$imageServerUrl, $created_at);
+                    $insertProduct = $connect->prepare("INSERT INTO tblproducts(id,code,stockCode,productName,productCategory,productVariation,stocks,price,preparationTime,mainIngredients,productImage,created_at)
+                    VALUES(?,?,?,?,?,?,?,?,?,?,?,?)");
+                    $insertProduct->bind_param('isssssiiisss', $newId,$code,$stockCode, $productName, $productCategory, $newPizzaSize,$stocks,$newPizzaPrice, $preparationTime,$mainIngredients,$imageServerUrl, $created_at);
                     $insertProduct->execute();
                     if ($insertProduct) {
                         header('Location:products.php?inserted');
@@ -57,12 +58,13 @@ function insertProducts(){
                 foreach($bilaoSize as $key => $value){
                     $newId = $id[$key];
                     $code = bin2hex(random_bytes(20));
+                    $stockCode = "62696c616f ";
                     $newBilaoSize = $value;
                     $newBilaoPrice = $bilaoPrice[$key];
-                    $insertProduct = $connect->prepare("INSERT INTO tblproducts(id,code,productName,productCategory,productVariation,stocks,price,preparationTime,mainIngredients,productImage,created_at)
-                    VALUES(?,?,?,?,?,?,?,?,?,?,?)");
+                    $insertProduct = $connect->prepare("INSERT INTO tblproducts(id,code,stockCode,productName,productCategory,productVariation,stocks,price,preparationTime,mainIngredients,productImage,created_at)
+                    VALUES(?,?,?,?,?,?,?,?,?,?,?,?)");
                     echo $connect->error;
-                    $insertProduct->bind_param('issssiiisss', $newId,$code, $productName, $productCategory, $newBilaoSize,$stocks,$newBilaoPrice, $preparationTime,$mainIngredients,$imageServerUrl, $created_at);
+                    $insertProduct->bind_param('isssssiiisss', $newId,$code,$stockCode ,$productName, $productCategory, $newBilaoSize,$stocks,$newBilaoPrice, $preparationTime,$mainIngredients,$imageServerUrl, $created_at);
                     $insertProduct->execute();
                     if ($insertProduct) {
                         header('Location:products.php?inserted');
@@ -76,9 +78,10 @@ function insertProducts(){
                 $ids = "";
                 $noCategorySize = '';
                 $code = bin2hex(random_bytes(20));
-                $insertProduct = $connect->prepare("INSERT INTO tblproducts(id,code,productName,productCategory,productVariation,stocks,price,preparationTime,mainIngredients,productImage,created_at)
-                VALUES(?,?,?,?,?,?,?,?,?,?,?)");
-                $insertProduct->bind_param('issssiiisss', $ids,$code, $productName, $productCategory, $noCategorySize,$stocks,$noCategoryPrice, $preparationTime,$mainIngredients,$imageServerUrl, $created_at);
+                $stockCode = bin2hex(random_bytes(5));
+                $insertProduct = $connect->prepare("INSERT INTO tblproducts(id,code,stockCode,productName,productCategory,productVariation,stocks,price,preparationTime,mainIngredients,productImage,created_at)
+                VALUES(?,?,?,?,?,?,?,?,?,?,?,?)");
+                $insertProduct->bind_param('isssssiiisss', $ids,$code,$stockCode, $productName, $productCategory, $noCategorySize,$stocks,$noCategoryPrice, $preparationTime,$mainIngredients,$imageServerUrl, $created_at);
                 if ($insertProduct->execute()) {
                     header('Location:products.php?inserted');
                    
@@ -107,8 +110,8 @@ function updateProducts(){
             $edited_at = date('Y-m-d h:i:s');
             //update product
             if  ($editImageProduct  != '') {
-                $updateProduct = $connect->prepare("UPDATE tblproducts SET productName=?,productCategory=?,productVariation=?,price=?,preparationTime=?,mainIngredients=?,productImage=?,created_at=? WHERE id=?");
-                $updateProduct->bind_param('sssiisssi', $editProductName, $editProductCategory, $editProductVariation, $editPrice,$editPreparationTime,$editMainIngredients, $imageServerUrl, $edited_at, $id);
+                $updateProduct = $connect->prepare("UPDATE tblproducts SET productName=?,productCategory=?,productVariation=?,price=?,preparationTime=?,mainIngredients=?,productImage=? WHERE id=?");
+                $updateProduct->bind_param('sssiissi', $editProductName, $editProductCategory, $editProductVariation, $editPrice,$editPreparationTime,$editMainIngredients, $imageServerUrl, $id);
                 $updateProduct->execute();
                 if ($updateProduct) {
                     move_uploaded_file($editImageProductTemp,$imageFolderPath);
@@ -125,9 +128,9 @@ function updateProducts(){
                 $fetch = $row->fetch_assoc();
                 $editProductImage = $fetch['productImage'];
                 //update product
-                $updateProduct = $connect->prepare("UPDATE tblproducts SET productName=?,productCategory=?,productVariation=?,price=?,preparationTime=?,mainIngredients=?,productImage=?,created_at=? WHERE id=?");
+                $updateProduct = $connect->prepare("UPDATE tblproducts SET productName=?,productCategory=?,productVariation=?,price=?,preparationTime=?,mainIngredients=?,productImage=? WHERE id=?");
                 echo $connect->error;
-                $updateProduct->bind_param('sssiisssi', $editProductName, $editProductCategory, $editProductVariation,$editPrice,$editPreparationTime,$editMainIngredients,$editProductImage, $edited_at, $id);
+                $updateProduct->bind_param('sssiissi', $editProductName, $editProductCategory, $editProductVariation,$editPrice,$editPreparationTime,$editMainIngredients,$editProductImage, $id);
                 $updateProduct->execute();
                 if ($updateProduct) {
                     

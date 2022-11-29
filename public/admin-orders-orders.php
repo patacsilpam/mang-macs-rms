@@ -70,7 +70,7 @@ function updateOrderStatus(){
                     case "Ready for Pick Up":
                         include 'public/email-notifications/mail-ready-for-pick-up.php';
                         include 'public/local-notification/firebase-notifcation.php';
-                        $data = array('title'=>"$orderStatus",'body'=>"Hello $customerName,\nyour order #$orderNumber is out for delivery.");
+                        $data = array('title'=>"$orderStatus",'body'=>"Hello $customerName,\nyour order #$orderNumber is ready for pick up.");
                         pushNotifcation($sendTo,$data);
                         mailReadyForPickUp($email,$orderNumber,$logo,$customerName,$orderDate,$orderType);
                         break;
@@ -93,12 +93,19 @@ function updateOrderStatus(){
                         $insertSale->execute();
                         break;
 
-                    case "Cancelled":
+                    case "Invalid Payment":
                         include 'public/email-notifications/mail-order-cancelled.php';
                         include 'public/local-notification/firebase-notifcation.php';
                         $data = array('title'=>"$orderStatus",'body'=>"Hello $customerName,\nyour order #$orderNumber is canceled due to your invalid payment.");
                         pushNotifcation($sendTo,$data);
                         mailOrderCanceled($email,$orderNumber,$logo,$customerName,$orderDate,$orderType);
+                        break;
+                    case "Out of Stock":
+                        include 'public/email-notifications/mail-order-out-of-stock.php';
+                        include 'public/local-notification/firebase-notifcation.php';
+                        $data = array('title'=>"$orderStatus",'body'=>"Hello $customerName,\nyour order #$orderNumber is out of stock.");
+                        pushNotifcation($sendTo,$data);
+                        mailOutOfStock($email,$orderNumber,$logo,$customerName,$orderDate,$orderType);
                         break;
 
                     default:

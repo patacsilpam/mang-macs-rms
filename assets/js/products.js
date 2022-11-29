@@ -6,6 +6,9 @@ function changeVariation(sel) {
         let noneCategoryList = document.querySelectorAll('.noCategoryPrice');
         for (let i = 0; i < pizzaList.length; i++) {
             pizzaList[i].style.display = 'block';
+            document.querySelector('.with-no-size').required = false;
+            document.querySelector('.medium-size').required = true;
+            document.querySelector('.large-size').required = true;
         }
         for (let i = 0; i < noneCategoryList.length; i++) {
             noneCategoryList[i].style.display = 'none';
@@ -16,28 +19,42 @@ function changeVariation(sel) {
         for (let i = 0; i < pizzaList.length; i++) {
             for (let i = 0; i < pizzaList.length; i++) {
                 pizzaList[i].style.display = 'none';
+                document.querySelector('.medium-size').required = false;
+                document.querySelector('.large-size').required = false;
+                document.querySelector('.with-no-size').required = true;
             }
-            for (let i = 0; i < noneCategoryList.length; i++) {
-                noneCategoryList[i].style.display = 'block';
-            }
+        for (let i = 0; i < noneCategoryList.length; i++) {
+            noneCategoryList[i].style.display = 'block';
+        }
     }
+
         //display fields of bilao price if selected
         if (sel.value == "Carbonara Bilao" || sel.value == "Palabok Bilao" || sel.value == "Pancit Bilao(Bihon Guisado)" || sel.value == "Pancit Bilao(Canton Bihon)" || sel.value == "Spaghetti Bilao") {
             let noneCategoryList = document.querySelectorAll('.noCategoryPrice');
             for (let i = 0; i < bilaoList.length; i++) {
                 bilaoList[i].style.display = 'block';
+                document.querySelector('.seven-to-ten').required = true;
+                document.querySelector('.ten-to-fifteen').required = true;
+                document.querySelector('.fifteen-to-twenty').required = true;
+                document.querySelector('.with-no-size').required = false;
             }
             for (let i = 0; i < noneCategoryList.length; i++) {
                 noneCategoryList[i].style.display = 'none';
+                //document.querySelector('.with-no-size').required = true;
             }
         } else {
             let noneCategoryList = document.querySelectorAll('.noCategoryPrice');
             for (let i = 0; i < pizzaList.length; i++) {
                 for (let i = 0; i < bilaoList.length; i++) {
                     bilaoList[i].style.display = 'none';
+                    document.querySelector('.seven-to-ten').required = false;
+                    document.querySelector('.ten-to-fifteen').required = false;
+                    document.querySelector('.fifteen-to-twenty').required = false;
+                    document.querySelector('.with-no-size').required = true;
                 }
                 for (let i = 0; i < noneCategoryList.length; i++) {
                     noneCategoryList[i].style.display = 'block';
+                    //document.querySelector('.with-no-size').required = false;
                 }
             }
         }
@@ -51,6 +68,7 @@ function clickCategory(category) {
         for (let i = 0; i < categoryList.length; i++) {
             categoryList[i].style.display = 'block';
         }
+        //document.querySelector('.with-no-size').required = false;
     } else {
         for (let i = 0; i < categoryList.length; i++) {
             categoryList[i].style.display = 'none';

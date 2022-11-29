@@ -41,11 +41,10 @@
                             <?php include 'assets/template/admin/addProduct.php'?>
                         </div> <br>
                         <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'])?>" method="POST">
-                        <table id="example" class="table table-hover display">
+                        <table id="example" class="table table-hover display" data-toggle="table" data-sort-name="date" data-sort-order="desc" >
                             <thead class="thead-dark">
                                 <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Created At</th>
+                                    <th scope="col" data-field="date">Created At</th>
                                     <th scope="col">Image</th>
                                     <th scope="col">Product</th>
                                     <th scope="col">Product Category</th>
@@ -57,14 +56,13 @@
                             </thead>
                             <tbody>
                                 <?php
-                                $selectProduct = "SELECT * FROM tblproducts";
+                                $selectProduct = "SELECT * FROM tblproducts ORDER BY created_at DESC";
                                 $displayProduct = $connect->query($selectProduct);
                                 while ($fetch = $displayProduct->fetch_assoc()) {
                                     $newPrepTime = $fetch['preparationTime'];
                                     $convertMinHr = $newPrepTime/60;
                                 ?>
                                 <tr>
-                                    <th scope="row"><?= $fetch['id'] ?></th>
                                     <td><?= $fetch['created_at'] ?></td>
                                     <td><img src="<?= $fetch['productImage']?>" alt="image" width="50" class="img-products"></td>
                                     <td><?= $fetch['productName'] ?></td>

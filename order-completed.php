@@ -36,7 +36,7 @@ require 'public/admin-orders.php'
             <section>
                 <article>
                     <div class="table-responsive table-container">
-                        <table id="example" class="table table-hover">
+                        <table id="example" class="table table-hover" data-toggle="table" data-sort-name="date" data-sort-order="asc">
                             <thead class="thead-dark">
                                 <tr>
                                     <th scope="col">#</th>
@@ -45,7 +45,7 @@ require 'public/admin-orders.php'
                                     <th scope="col">Order Type</th>
                                     <th scope="col">Total Order Amount</th>
                                     <th scope="col">Order Time</th>
-                                    <th scope="col">Required Date</th>
+                                    <th scope="col" data-field="date">Required Date</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Action</th>
                                 </tr>

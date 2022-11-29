@@ -16,14 +16,14 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
     <link rel="icon" type="image/jpeg" href="assets/images/mang-macs-logo.jpg" sizes="70x70">
     <link rel="stylesheet" href="assets/css/main.css" type="text/css">
-    <title>Customers</title>
+    <title>Mang Macs App Users</title>
 </head>
 
 <body>
     <div class="grid-container">
         <!--Navigation-->
         <header class="nav-container">
-            <h5>Customers (<?php echo date('F d, Y')?>)</h5>
+            <h3 class="mx-2 font-weight-normal">Mang Macs App Users <small>(<?php echo date('F d, Y')?>)</small></h3>
             <ul class="nav-list">
                 <?php include 'assets/template/admin/navbar.php' ?>
             </ul>

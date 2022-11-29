@@ -109,7 +109,7 @@
                      <!--Total Order---->
                      <section>
                         <section class="box-orders">
-                            <h3>Total Order</h3>
+                            <h3>Today's Orders</h3>
                             <section class="view-sales-details">
                                 <p class="text--total"><?php countTotalOrders();?></p>
                                 <a href="total-order.php" title="View Details">View</a>
@@ -119,7 +119,7 @@
                     <!--Total Reservation---->
                     <section>
                         <section class="box-orders">
-                            <h3>Total Reservation</h3>
+                            <h3>Today's Reservation</h3>
                             <section class="view-sales-details">
                                 <p class="text--total"><?php countTotalBooking() ?></p>
                                 <a href="total-booking.php" title="View Details">View</a>
@@ -129,7 +129,7 @@
                      <!--Customers-->
                     <section>
                         <section class="box-orders">
-                            <h3>Mang Macs App Customers</h3>
+                            <h3>Mang Macs App Users</h3>
                             <section class="view-sales-details">
                                 <p class="text--active"><?php countCustomers() ?></p>
                                 <a href="customers.php" title="View Details">View</a>

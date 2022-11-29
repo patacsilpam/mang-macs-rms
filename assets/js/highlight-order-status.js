@@ -6,7 +6,12 @@ const highlightOrderStatus = () =>{
             orderStatus[i].style.backgroundColor = '#FFF4BD';
             orderStatus[i].style.color = '#E3C005';
         }
-        else if(orderStatus[i].value == "Cancelled" || orderStatus[i].value == "No Shows"){
+        else if(orderStatus[i].value == "Invalid Payment"  || orderStatus[i].value == "Out of Stock"){
+            orderStatus[i].style.border = '2px solid #FA0000';
+            orderStatus[i].style.backgroundColor = '#FFADAD';
+            orderStatus[i].style.color = '#E00000';
+        }
+        else if(orderStatus[i].value == "No Shows" || orderStatus[i].value == "Cancelled"){
             orderStatus[i].style.border = '2px solid #FA0000';
             orderStatus[i].style.backgroundColor = '#FFADAD';
             orderStatus[i].style.color = '#E00000';

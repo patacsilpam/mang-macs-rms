@@ -44,11 +44,9 @@ require 'public/admin-pos.php'
                                     <th scope="col">PWD/Senior ID Number</th>
                                     <th scope="col">Customer Type</th>
                                     <th scope="col">Ordered Date</th>
-                                   
                                     <th scope="col">Total</th>
-                                    <th scope="col">Discounted Amount</th>
+                                    <th scope="col">Discounted Price</th>
                                     <th scope="col">Amount Pay</th>
-                                   
                                     <th scope="col">Status</th>
                                     <th scope="col">Action</th>
                                 </tr>
@@ -69,9 +67,9 @@ require 'public/admin-pos.php'
                                             <td><?=$pwdSeniorNumber;?></td>
                                             <td><?=$customerType;?></td>
                                             <td><?=$orderDate;?></td>
-                                            <td><?=$total;?></td>
-                                            <td><?=$discountedPrice;?></td>
-                                            <td><?=$amountPay;?></td>
+                                            <td>₱ <?=$total;?></td>
+                                            <td>₱ <?=$discountedPrice;?></td>
+                                            <td>₱ <?=$amountPay;?></td>
                                             <td>
                                                 <?=$statuss;?>
                                                 <button title="Edit" type="button" class="btn btn-transparent" data-toggle="modal" data-target="#editPosOrder<?=$idNumber?>"><i class="fas fa-edit" style="color: blue;"></i></button>

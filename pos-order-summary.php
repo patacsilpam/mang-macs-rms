@@ -17,14 +17,14 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
     <link rel="icon" type="image/jpeg" href="assets/images/mang-macs-logo.jpg" sizes="70x70">
     <link rel="stylesheet" href="assets/css/main.css" type="text/css">
-    <title>Order Summary</title>
+    <title>POS Order Summary</title>
 </head>
 
 <body>
     <div class="grid-container">
         <!--Navigation-->
         <header class="nav-container">
-            <h3>Order Summary</h3>
+            <h3>POS Order Summary</h3>
             <ul class="nav-list">
                 <?php include 'assets/template/admin/navbar.php' ?>
             </ul>
@@ -109,10 +109,10 @@
                                         <td><?=$idNumber?></td>
                                         <td><?=$productName?></td>
                                         <td><?=$quantity?></td>
-                                        <td><?=$price?></td>
+                                        <td>₱ <?=$price?>.00</td>
                                         <td><?=$variation?></td>
                                         <td><?=$category?></td>
-                                        <td><?=$subTotal = $price * $quantity;?></td>
+                                        <td>₱ <?=$subTotal = $price * $quantity;?>.00</td>
                                     </tr>
                                     <?php
                                     }

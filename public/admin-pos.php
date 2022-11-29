@@ -91,7 +91,7 @@ function insertCart(){
             $discount = $_POST['discount'];
             $pwdSeniorNumber = $_POST['idNumber'];
             $dateCode = date('Ymd');
-            $bindHexCode =  bin2hex(openssl_random_pseudo_bytes(5));
+            $bindHexCode =  rand(1000,9999);
             $noIdNumber = $dateCode.$bindHexCode;
             $discountedPrice = $_POST['discountedPrice'];
             $noDiscount = "";

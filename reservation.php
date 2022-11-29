@@ -21,10 +21,10 @@
 </head>
 
 <body>
-    <div class="grid-container">
+    <div class="grid-container"> 
         <!--header-->
         <header class="nav-container">
-            <h3>Reservation <small>(Finished)</small></h3>
+            <h3>Reservation <small>(All)</small></h3>
             <ul class="nav-list">
                 <?php include 'assets/template/admin/navbar.php'?>
             </ul>
