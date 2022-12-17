@@ -57,11 +57,18 @@
                         <table id="example" class="table table-hover">
                             <thead class="thead-dark">
                                 <tr>
-                                    <th scope="col">No.</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">User Type</th>
                                     <th scope="col">Date</th>
-                                    <th scope="col">Sales</th>
+                                    <th scope="col">Product</th>
+                                    <th scope="col">Category</th>
+                                    <th scope="col">Variation</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Add Ons</th>
+                                    <th scope="col">Add Ons Fee</th>
+                                    <th scope="col">Order Type</th>
+                                    <th scope="col">Subtotal</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -69,28 +76,41 @@
                                     require 'public/connection.php';
                                     $totalAmount=0;
                                     error_reporting(0);
-                                    if($_GET['userType'] == "All"){   
-                                        $userType = $_GET['userType'];        
+                                    if($_GET['userType'] == "All"){  
+                                        $orderCompleted = "Order Completed";
+                                        $orderReceived = "Order Received";     
                                         $startDate = $_GET['startDate'];
                                         $endDate = $_GET['endDate'];
-                                        $getTotalOrder = $connect->prepare("SELECT id,fullname,sales,user_type,report_date FROM tblreport WHERE STR_TO_DATE(report_date,'%Y-%m-%d') BETWEEN (?) AND (?)");
-                                        $getTotalOrder->bind_param('ss',$startDate,$endDate);
+                                        $getTotalOrder = $connect->prepare("SELECT tblreport.fullname,tblreport.sales,tblreport.user_type,tblreport.report_date,
+                                        tblorderdetails.product_name,tblorderdetails.product_category,tblorderdetails.product_variation, tblorderdetails.quantity,
+                                        tblorderdetails.price,tblorderdetails.price * tblorderdetails.quantity as 'subtotal',
+                                        tblorderdetails.add_ons,tblorderdetails.add_ons_fee, tblorderdetails.order_type
+                                        FROM `tblreport` RIGHT JOIN tblorderdetails ON tblreport.order_number = tblorderdetails.order_number 
+                                        WHERE tblorderdetails.order_status IN (?,?)  AND tblreport.report_date BETWEEN (?) AND (?)");
+                                        $getTotalOrder->bind_param('ssss',$orderCompleted,$orderReceived,$startDate,$endDate);
                                         $getTotalOrder->execute();
-                                        $getTotalOrder->bind_result($id,$fullname,$sales,$userType,$reportDate);
+                                        $getTotalOrder->bind_result($fullname,$sales,$userType,$reportDate,$productName,$productCategory,$productVariation,$quantity,$price,$subTotal,$addOns,$addOnsFee,$orderType);
                                         if($getTotalOrder){
                                             while($getTotalOrder->fetch()){
-                                                $totalAmount += $sales;
+                                                $totalAmount +=$subTotal;
                                                 ?>
                                                 <tr>
-                                                    <td><?= $id?></td>
                                                     <td><?= $fullname?></td>
                                                     <td><?= $userType?></td>
                                                     <td><?= $reportDate?></td>
-                                                    <td><?= $sales?>.00</td>
+                                                    <td><?= $productName?></td>
+                                                    <td><?= $productCategory?></td>
+                                                    <td><?= $productVariation?></td>
+                                                    <td><?= $quantity?></td>
+                                                    <td><?= $price?></td>
+                                                    <td><?= $addOns?></td>
+                                                    <td><?= $addOnsFee?></td>
+                                                    <td><?= $orderType?></td>
+                                                    <td><?= $price * $quantity?></td>
                                                 </tr> 
                                             <?php } ?> 
                                                 <tr>
-                                                    <td colspan="4"></td>
+                                                    <td colspan="11"></td>
                                                     <td><b>Sales(All):&emsp;</b>₱ <?= $totalAmount?>.00 </td>
                                                 </tr>  
                                             <?php }
@@ -99,27 +119,41 @@
                                             }
                                         }
                                         else if(isset($_GET['userType']) == "Admin" || isset($_GET['userType']) == "Staff"){
+                                            $orderCompleted = "Order Completed";
+                                            $orderReceived = "Order Received";
                                             $userType = $_GET['userType'];       
                                             $startDate = $_GET['startDate'];
                                             $endDate = $_GET['endDate'];
-                                            $getTotalOrder = $connect->prepare("SELECT id,fullname,sales,user_type,report_date FROM tblreport WHERE STR_TO_DATE(report_date,'%Y-%m-%d') BETWEEN (?) AND (?) AND user_type=?");
-                                            $getTotalOrder->bind_param('sss',$startDate,$endDate,$userType);
+                                            $getTotalOrder = $connect->prepare("SELECT tblreport.fullname,tblreport.sales,tblreport.user_type,tblreport.report_date,
+                                            tblorderdetails.product_name,tblorderdetails.product_category,tblorderdetails.product_variation, tblorderdetails.quantity,
+                                            tblorderdetails.price,tblorderdetails.price * tblorderdetails.quantity as 'subtotal',
+                                            tblorderdetails.add_ons,tblorderdetails.add_ons_fee, tblorderdetails.order_type
+                                            FROM `tblreport` LEFT JOIN tblorderdetails ON tblreport.order_number = tblorderdetails.order_number 
+                                            WHERE tblorderdetails.order_status IN (?,?) AND tblreport.user_type = ? AND tblreport.report_date BETWEEN (?) AND (?)");
+                                            $getTotalOrder->bind_param('sssss',$orderCompleted,$orderReceived,$userType,$startDate,$endDate);
                                             $getTotalOrder->execute();
-                                            $getTotalOrder->bind_result($id,$fullname,$sales,$userType,$reportDate);
+                                            $getTotalOrder->bind_result($fullname,$sales,$userType,$reportDate,$productName,$productCategory,$productVariation,$quantity,$price,$subTotal,$addOns,$addOnsFee,$orderType);
                                             if($getTotalOrder){
                                                 while($getTotalOrder->fetch()){
-                                                    $totalAmount += $sales;
+                                                    $totalAmount += $subTotal;
                                                     ?>
                                                     <tr>
-                                                        <td><?= $id?></td>
                                                         <td><?= $fullname?></td>
                                                         <td><?= $userType?></td>
                                                         <td><?= $reportDate?></td>
-                                                        <td><?= $sales?>.00</td>
+                                                        <td><?= $productName?></td>
+                                                        <td><?= $productCategory?></td>
+                                                        <td><?= $productVariation?></td>
+                                                        <td><?= $quantity?></td>
+                                                        <td><?= $price?></td>
+                                                        <td><?= $addOns?></td>
+                                                        <td><?= $addOnsFee?></td>
+                                                        <td><?= $orderType?></td>
+                                                        <td><?= $subTotal?></td>
                                                     </tr> 
                                                 <?php } ?> 
                                                     <tr>
-                                                        <td colspan="4"></td>
+                                                        <td colspan="11"></td>
                                                         <td><b>Sales in <?=$userType?>:&emsp;</b>₱ <?= $totalAmount?>.00 </td>
                                                     </tr>  
                                                 <?php }
@@ -128,26 +162,41 @@
                                                 }
                                         }
                                          else{
-                                            $date = date('Y-m-d');
-                                            $getTotalOrder = $connect->prepare("SELECT id,fullname,sales,user_type,report_date FROM tblreport WHERE STR_TO_DATE(report_date,'%Y-%m-%d') = ?");
-                                            $getTotalOrder->bind_param('s',$date);
+                                           // $date = date('Y-m-d');
+                                            $orderCompleted = "Order Completed";
+                                            $orderReceived = "Order Received";
+                                            $getTotalOrder = $connect->prepare("SELECT tblreport.fullname,tblreport.sales,tblreport.user_type,tblreport.report_date, 
+                                            tblorderdetails.product_name,tblorderdetails.product_category,tblorderdetails.product_variation, 
+                                            tblorderdetails.quantity,tblorderdetails.price,tblorderdetails.price * tblorderdetails.quantity as 'subtotal',
+                                            tblorderdetails.add_ons,tblorderdetails.add_ons_fee,
+                                            tblorderdetails.order_type FROM `tblreport` LEFT JOIN tblorderdetails 
+                                            ON tblreport.order_number = tblorderdetails.order_number 
+                                            WHERE tblorderdetails.order_status IN (?,?)");
+                                            $getTotalOrder->bind_param('ss',$orderCompleted,$orderReceived);
                                             $getTotalOrder->execute();
-                                            $getTotalOrder->bind_result($id,$fullname,$sales,$userType,$reportDate);
+                                            $getTotalOrder->bind_result($fullname,$sales,$userType,$reportDate,$productName,$productCategory,$productVariation,$quantity,$price,$subTotal,$addOns,$addOnsFee,$orderType);
                                             if($getTotalOrder){
                                             while($getTotalOrder->fetch()){
-                                                $totalAmount += $sales;
+                                                $totalAmount += $subTotal;
                                             ?>
                                             <tr>
-                                                <td><?= $id?></td>
                                                 <td><?= $fullname?></td>
                                                 <td><?= $userType?></td>
                                                 <td><?= $reportDate?></td>
-                                                <td><?= $sales?></td>
+                                                <td><?= $productName?></td>
+                                                <td><?= $productCategory?></td>
+                                                <td><?= $productVariation?></td>
+                                                <td><?= $quantity?></td>
+                                                <td><?= $price?></td>
+                                                <td><?= $addOns?></td>
+                                                <td><?= $addOnsFee?></td>
+                                                <td><?= $orderType?></td>
+                                                <td><?= $price * $quantity?></td>
                                             </tr>
                                             <?php } ?>
                                             <tr>
-                                                <td colspan="4"></td>
-                                                <td><b>Sales(All):&emsp;</b>₱ <?= $totalAmount?>.00 </td>
+                                                <td colspan="11"></td>
+                                                <td><b>Sales(All):&emsp;</b>₱ <?= number_format($totalAmount)?>.00 </td>
                                             </tr>    
                                             <?php }
                                             else{

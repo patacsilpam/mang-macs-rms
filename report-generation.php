@@ -3,7 +3,8 @@
 require 'public/connection.php';
 include 'fpdf/fpdf.php';
 date_default_timezone_set('Asia/Manila');
-$id=$fullname=$userType=$reportDate=$sales="";
+session_start();
+$fullname=$userType=$sales=$reportDate=$productName=$productCategory=$productVariation=$quantity=$price=$addOns=$addOnsFee=$orderType="";
 
 class PDF extends FPDF
 {
@@ -27,32 +28,53 @@ class PDF extends FPDF
     function headerTable()
     {
         $this->SetFont('Arial', 'B', 9);
-        $this->Cell(10, 10, 'No.', 1, 0, 'C');
-        $this->Cell(30, 10, 'Name', 1, 0, 'C');
-        $this->Cell(50, 10, 'User Type', 1, 0, 'C');
-        $this->Cell(40, 10, 'Date', 1, 0, 'C');
-        $this->Cell(40, 10, 'Sales', 1, 0, 'C');
+        $this->Cell(25, 10, 'Name', 1, 0, 'C');
+        $this->Cell(15, 10, 'User Type', 1, 0, 'C');
+        $this->Cell(30, 10, 'Date', 1, 0, 'C');
+        $this->Cell(40, 10, 'Product', 1, 0, 'C');
+        $this->Cell(35, 10, 'Category', 1, 0, 'C');
+        $this->Cell(20, 10, 'Variation', 1, 0, 'C');
+        $this->Cell(20, 10, 'Quantity', 1, 0, 'C');
+        $this->Cell(20, 10, 'Price', 1, 0, 'C');
+        $this->Cell(20, 10, 'Add Ons', 1, 0, 'C');
+        $this->Cell(20, 10, 'Add Ons Fee', 1, 0, 'C');
+        $this->Cell(20, 10, 'Order Type', 1, 0, 'C');
+        $this->Cell(20, 10, 'Subtotal', 1, 0, 'C');
         $this->Ln();
     }
-    function viewTable($connect,$id,$fullname,$userType,$reportDate,$sales) {
+    function viewTable($connect,$fullname,$userType,$sales,$reportDate,$productName,$productCategory,$productVariation,$quantity,$price,$addOns,$addOnsFee,$orderType) {
         if($_GET['userType'] == "Admin" || $_GET['userType'] == "Staff"){ 
-            $totalAmount=0;
+            $totalAmount = 0;
+            $orderCompleted = "Order Completed";
+            $orderReceived = "Order Received";
+            $userType = $_GET['userType'];       
             $startDate = $_GET['startDate'];
             $endDate = $_GET['endDate'];
-            $userType = $_GET['userType'];
-            $getTotalOrder = $connect->prepare("SELECT * FROM tblreport WHERE report_date BETWEEN (?) AND (?) HAVING user_type=?");
-            $getTotalOrder->bind_param('sss',$startDate,$endDate,$userType);
+            $getTotalOrder = $connect->prepare("SELECT tblreport.fullname,tblreport.sales,tblreport.user_type,tblreport.report_date,
+            tblorderdetails.product_name,tblorderdetails.product_category,tblorderdetails.product_variation, tblorderdetails.quantity,
+            tblorderdetails.price,tblorderdetails.price * tblorderdetails.quantity as 'subtotal',
+            tblorderdetails.add_ons,tblorderdetails.add_ons_fee, tblorderdetails.order_type
+            FROM `tblreport` LEFT JOIN tblorderdetails ON tblreport.order_number = tblorderdetails.order_number 
+            WHERE tblorderdetails.order_status IN (?,?)  AND tblreport.report_date BETWEEN (?) AND (?) HAVING tblreport.user_type=?");
+            $getTotalOrder->bind_param('sssss',$orderCompleted,$orderReceived,$startDate,$endDate,$userType);
             $getTotalOrder->execute();
-            $getTotalOrder->bind_result($id,$fullname,$sales,$reportDate,$userType);
+            $getTotalOrder->bind_result($fullname,$sales,$userType,$reportDate,$productName,$productCategory,$productVariation,$quantity,$price,$subTotal,$addOns,$addOnsFee,$orderType);
             if($getTotalOrder){
                 while($getTotalOrder->fetch()){
-                    $totalAmount+=$sales;
+                    $totalAmount+=$subTotal;
                     $this->SetFont('Arial', '', 8);
-                    $this->Cell(10, 10, $id, 1, 0, 'C');
-                    $this->Cell(30, 10, $fullname, 1, 0, 'C');
-                    $this->Cell(50, 10, $userType, 1, 0, 'C');
-                    $this->Cell(40, 10, $reportDate, 1, 0, 'C');
-                    $this->Cell(40, 10, $sales.".00", 1, 0, 'C');
+                    $this->Cell(25, 10, $fullname, 1, 0, 'C');
+                    $this->Cell(15, 10, $userType, 1, 0, 'C');
+                    $this->Cell(30, 10, $reportDate, 1, 0, 'C');
+                    $this->Cell(40, 10, $productName, 1, 0, 'C');
+                    $this->Cell(35, 10, $productCategory, 1, 0, 'C');
+                    $this->Cell(20, 10, $productVariation, 1, 0, 'C');
+                    $this->Cell(20, 10, $quantity, 1, 0, 'C');
+                    $this->Cell(20, 10, $price, 1, 0, 'C');
+                    $this->Cell(20, 10, $addOns, 1, 0, 'C');
+                    $this->Cell(20, 10, $addOnsFee, 1, 0, 'C');
+                    $this->Cell(20, 10, $orderType, 1, 0, 'C');
+                    $this->Cell(20, 10, $subTotal, 1, 0, 'C');
                     $this->Ln();
                     //$this->Cell(40, 10, $eSignature, 1, 0, 'C');
                    // $this->Cell(40,40,$this->Image($eSignature,$this->GetX(),$this->GetY(),33.78),0,0,'L',false);
@@ -62,36 +84,49 @@ class PDF extends FPDF
         }
         else{
             $totalAmount=0;
+            $orderCompleted = "Order Completed";
+            $orderReceived = "Order Received";
             $startDate = $_GET['startDate'];
             $endDate = $_GET['endDate'];
-            $getTotalOrder = $connect->prepare("SELECT * FROM tblreport WHERE report_date BETWEEN (?) AND (?)");
-            $getTotalOrder->bind_param('ss',$startDate,$endDate);
+            $getTotalOrder = $connect->prepare("SELECT tblreport.fullname,tblreport.sales,tblreport.user_type,tblreport.report_date,
+            tblorderdetails.product_name,tblorderdetails.product_category,tblorderdetails.product_variation, tblorderdetails.quantity,
+            tblorderdetails.price,tblorderdetails.price * tblorderdetails.quantity as 'subtotal',
+            tblorderdetails.add_ons,tblorderdetails.add_ons_fee, tblorderdetails.order_type
+            FROM `tblreport` LEFT JOIN tblorderdetails ON tblreport.order_number = tblorderdetails.order_number 
+            WHERE tblorderdetails.order_status IN (?,?)");
+            $getTotalOrder->bind_param('ss',$orderCompleted,$orderReceived);
             $getTotalOrder->execute();
-            $getTotalOrder->bind_result($id,$fullname,$sales,$reportDate,$userType);
+            $getTotalOrder->bind_result($fullname,$sales,$userType,$reportDate,$productName,$productCategory,$productVariation,$quantity,$price,$subTotal,$addOns,$addOnsFee,$orderType);
             $sig = "";
             if($getTotalOrder){
                 while($getTotalOrder->fetch()){
-                    $totalAmount+=$sales;
+                    $totalAmount+=$subTotal;
                     $this->SetFont('Arial', '', 8);
-                    $this->Cell(10, 10, $id, 1, 0, 'C');
-                    $this->Cell(30, 10, $fullname, 1, 0, 'C');
-                    $this->Cell(50, 10, $userType, 1, 0, 'C');
-                    $this->Cell(40, 10, $reportDate, 1, 0, 'C');
-                    $this->Cell(40, 10, $sales.".00", 1, 0, 'C');
-                    
+                    $this->Cell(25, 10, $fullname, 1, 0, 'C');
+                    $this->Cell(15, 10, $userType, 1, 0, 'C');
+                    $this->Cell(30, 10, $reportDate, 1, 0, 'C');
+                    $this->Cell(40, 10, $productName, 1, 0, 'C');
+                    $this->Cell(35, 10, $productCategory, 1, 0, 'C');
+                    $this->Cell(20, 10, $productVariation, 1, 0, 'C');
+                    $this->Cell(20, 10, $quantity, 1, 0, 'C');
+                    $this->Cell(20, 10, $price, 1, 0, 'C');
+                    $this->Cell(20, 10, $addOns, 1, 0, 'C');
+                    $this->Cell(20, 10, $addOnsFee, 1, 0, 'C');
+                    $this->Cell(20, 10, $orderType, 1, 0, 'C');
+                    $this->Cell(20, 10, $subTotal, 1, 0, 'C');
                     $this->Ln();
                     //$this->Cell(40, 10, (empty($eSignature) || $eSignature == 'no signature') ? '' : $this->Image(''.$eSignature,$this->GetX(),$this->GetY(),0,10),1,0,'L',false); //show signature if it is not empty
                 }
             }
         }
-        $this->Cell(130, 10, "", 0, 0, 'C');
-        $this->Cell(40, 10, "Total Sales: PHP $totalAmount.00", 1, 0, 'C');
+        $this->Cell(245, 10, "", 0, 0, 'C');
+        $this->Cell(40, 10, "Total Sales: PHP ".number_format($totalAmount).".00", 1, 0, 'C');
         $this->Ln();
         $this->SetFont('Arial', '', 10);
         $this->Cell(0,10,"Prepared by:",0,0,'L');
         $this->Ln();
         $this->SetFont('Arial', 'B', 12);
-        $this->Cell(0,10,$fullname,0,0,'L');
+        $this->Cell(0,10,$_SESSION['fname']."".$_SESSION['lname'],0,0,'L');
     }
     function Footer()
     {
@@ -108,7 +143,6 @@ $pdf = new PDF('L');
 $pdf->AliasNbPages();
 $pdf->AddPage();
 $pdf->SetFont('Times', '', 8);
-$pdf->setLeftMargin('60');
 $pdf->headerTable();
-$pdf->viewTable($connect,$id,$fullname,$userType,$reportDate,$sales);
+$pdf->viewTable($connect,$fullname,$userType,$sales,$reportDate,$productName,$productCategory,$productVariation,$quantity,$price,$addOns,$addOnsFee,$orderType);
 $pdf->Output();

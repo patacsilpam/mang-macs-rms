@@ -3,7 +3,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-function mailClosedStore($id,$email,$refNumber,$logo,$customerName,$guests,$createAt,$schedDate,$schedTime,$bookStatus) {
+function mailNoShowsReservation($id,$email,$refNumber,$logo,$customerName,$guests,$createAt,$schedDate,$schedTime,$bookStatus) {
     require 'public/connection.php';
     require 'php-mailer/vendor/autoload.php';
     $mail = new PHPMailer(true);
@@ -21,7 +21,7 @@ function mailClosedStore($id,$email,$refNumber,$logo,$customerName,$guests,$crea
     $updateBookStatus = $connect->prepare("UPDATE tblreservation SET status=? WHERE id=?");
     $updateBookStatus->bind_param('si',$bookStatus,$id);
     if($updateBookStatus->execute()){
-        $mail->Subject = "Closed Store";
+        $mail->Subject = "No Shows";
         $mail->Body = "
             <div class='container' style='padding: 1rem;'>
                 <div style='display: flex; flex-direction: column; align-items: center;'>
@@ -34,7 +34,7 @@ function mailClosedStore($id,$email,$refNumber,$logo,$customerName,$guests,$crea
                 </div>
                 <div style='text-align: center;'>
                     <p>Hello ".$customerName."</p>
-                    <h3>Sorry, we are not available right now.</h3> 
+                    <h3>Due to your delayed arrival on the set scheduled date and time, we have now decided to cancel your table reservation.</h3> 
                 </div>
                 </div>
                 <hr style='border:0.3px solid #dbdbdb;'>
@@ -54,12 +54,6 @@ function mailClosedStore($id,$email,$refNumber,$logo,$customerName,$guests,$crea
                         <p style='width:150px;'>Schedule:</p>
                         <p>".$schedDate." ".$schedTime."</p>
                     </div> 
-                    <div style='display: flex; justify-content: space-between;'>
-                        <p style='width:150px;'>Reminder</p><br>
-                        <p style='text-align:center'>Don't be an hour late, please. 
-                        Your table reservation will be canceled 
-                        if you arrive more than 30 minutes late.</p>
-                    </div>
                         </div>
                     <hr style='border:0.3px solid #dbdbdb;'>
                     <div style='text-align:center';>

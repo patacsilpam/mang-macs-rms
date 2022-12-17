@@ -41,9 +41,9 @@
                                     <th scope="col">Date Schedule</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Email</th>
+                                    <th scope="col">Phone No.</th>
                                     <th scope="col">No. of Guests</th>
                                     <th scope="col">Status</th>
-                                    <th scope="col">View Payment</th>
                                 </tr>
                             </thead>
                             <!---->
@@ -51,8 +51,14 @@
                                 <?php
                                     require 'public/connection.php';
                                     date_default_timezone_set("Asia/Manila");
+                                    //fetch waiting time from tblsettings
+                                    $fetchWaitingTimeDb = $connect->query("SELECT * FROM tblsettings");
+                                    $fetchWaitingTime = $fetchWaitingTimeDb->fetch_assoc();
+                                    $intValTime =  $fetchWaitingTime['waitingTime'];
+                                    //fetch all active reservation
                                     $queryReservation = $connect->query("SELECT * FROM tblreservation
-                                    WHERE STR_TO_DATE(CONCAT(scheduled_date,' ', scheduled_time),'%Y-%m-%d %h:%i %p') >= DATE_SUB(CURDATE(), INTERVAL 60 MINUTE)
+                                    WHERE STR_TO_DATE(CONCAT(scheduled_date,' ', scheduled_time),'%Y-%m-%d %h:%i %p') >= DATE_SUB(CURDATE(), INTERVAL $intValTime MINUTE) 
+                                    AND status IN ('Pending','Reserved')
                                     ORDER BY STR_TO_DATE(CONCAT(scheduled_date,' ',scheduled_time),'%Y-%m-%d %h:%i %p') ASC");
                                     while($fetch = $queryReservation->fetch_assoc()){
                                    ?>
@@ -61,6 +67,7 @@
                                     <td><?= $fetch['scheduled_date']?> <br> <?=$fetch['scheduled_time']?></td>
                                     <td><?= $fetch['fname'] ?> <?=$fetch['lname']?></td>
                                     <td><?= $fetch['email']?></td>
+                                    <td><?= $fetch['phone_no']?></td>
                                     <td><?= $fetch['guests']?></td>
                                     <td>
                                         <input type="text"  class="order-status" value="<?=$fetch['status']?>">
@@ -69,11 +76,11 @@
                                                 class="fas fa-edit" style="color: blue;"></i></button>
                                         <?php include 'assets/template/admin/bookingStatus.php' ?>
                                     </td>
-                                    <td>
-                                        <a href='view-payment-1.php?order_number=<?= $fetch['refNumber'];?>' title="View Payment">
+                                    <!--<td>
+                                        <a href='view-payment-1.php?order_number=' title="View Payment">
                                             <button class="btn btn-primary"><i class="fas fa-eye"></i></button>
                                         </a>
-                                    </td>
+                                    </td>-->
                                 </tr>
                                 <?php
                                     }

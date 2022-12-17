@@ -61,6 +61,8 @@
                                     <th scope="col">Category</th>
                                     <th scope="col">Quantity</th>
                                     <th scope="col">Price</th>
+                                    <th scope="col">Subtotal</th>
+                                    <th scope="col">Total</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -72,15 +74,15 @@
                                         $orderSettled = "Completed";
                                         $startDate = $_GET['startDate'];
                                         $endDate = $_GET['endDate'];
-                                        $getTotalOrder = $connect->prepare("SELECT tblpos.ordered_date,tblpos.pwd_senior_number,tblposorders.products,
-                                        tblposorders.quantity, tblposorders.price,tblposorders.category,tblposorders.variation, 
-                                        tblpos.customer_type,tblposorders.price*tblposorders.quantity as 'total'
-                                        FROM tblpos LEFT JOIN tblposorders ON tblpos.id_number = tblposorders.id_number
-                                        WHERE tblpos.status=? AND tblpos.ordered_date BETWEEN (?) AND (?)
+                                        $getTotalOrder = $connect->prepare("SELECT tblpos.ordered_date,tblpos.pwd_senior_number,tblorderdetails.product_name,
+                                        tblorderdetails.quantity, tblorderdetails.price,tblorderdetails.product_category,tblorderdetails.product_variation, 
+                                        tblpos.customer_type,tblorderdetails.price*tblorderdetails.quantity as 'total',tblpos.total,tblpos.discounted_price
+                                        FROM tblpos LEFT JOIN tblorderdetails ON tblpos.id_number = tblorderdetails.order_number 
+                                        WHERE tblpos.ordered_date BETWEEN (?) AND (?)
                                         ORDER BY tblpos.ordered_date ASC");
-                                        $getTotalOrder->bind_param('sss',$orderSettled,$startDate,$endDate);
+                                        $getTotalOrder->bind_param('ss',$startDate,$endDate);
                                         $getTotalOrder->execute();
-                                        $getTotalOrder->bind_result($orderedDate,$pwdSenior,$products,$quantity,$price,$category,$variation,$customerType,$total);
+                                        $getTotalOrder->bind_result($orderedDate,$pwdSenior,$products,$quantity,$price,$category,$variation,$customerType,$subTotal,$total,$discountedPrice);
                                         if($getTotalOrder){
                                             while($getTotalOrder->fetch()){
                                              $totalAmount +=$total;
@@ -93,7 +95,9 @@
                                                 <td><?= $variation?></td>
                                                 <td><?= $category?></td>
                                                 <td><?= $quantity?></td>
-                                                <td><?= $price?></td>
+                                                <td>₱ <?= $price?>.00</td>
+                                                <td>₱ <?= $subTotal?>.00</td>
+                                                <td>₱ <?= $total?>.00</td>
                                             </tr>
                                 <?php
                                         }
@@ -103,16 +107,14 @@
                                         }
                                     } else{
                                         $date = date('Y-m-d');
-                                        $orderSettled = "Completed";
-                                        $getTotalOrder = $connect->prepare("SELECT tblpos.ordered_date,tblpos.pwd_senior_number,tblposorders.products,
-                                        tblposorders.quantity, tblposorders.price,tblposorders.category,tblposorders.variation, 
-                                        tblpos.customer_type,tblposorders.price*tblposorders.quantity as 'total'
-                                        FROM tblpos LEFT JOIN tblposorders ON tblpos.id_number = tblposorders.id_number 
-                                        WHERE tblpos.status=? AND tblpos.ordered_date=?
-                                        ORDER BY tblpos.ordered_date ASC");
-                                        $getTotalOrder->bind_param('ss',$orderSettled,$date);
+                                        $getTotalOrder = $connect->prepare("SELECT tblpos.ordered_date,tblpos.pwd_senior_number,tblorderdetails.product_name,
+                                        tblorderdetails.quantity, tblorderdetails.price,tblorderdetails.product_category,tblorderdetails.product_variation, 
+                                        tblpos.customer_type,tblorderdetails.price*tblorderdetails.quantity as 'total',tblpos.total,tblpos.discounted_price
+                                        FROM tblpos LEFT JOIN tblorderdetails ON tblpos.id_number = tblorderdetails.order_number 
+                                        WHERE tblpos.ordered_date=? ORDER BY tblpos.ordered_date ASC");
+                                        $getTotalOrder->bind_param('s',$date);
                                         $getTotalOrder->execute();
-                                        $getTotalOrder->bind_result($orderedDate,$idNumber,$products,$quantity,$price,$category,$variation,$customerType,$total);
+                                        $getTotalOrder->bind_result($orderedDate,$idNumber,$products,$quantity,$price,$category,$variation,$customerType,$subTotal,$total,$discountedPrice);
                                         if($getTotalOrder){
                                             while($getTotalOrder->fetch()){
                                                 $totalAmount +=$total;
@@ -125,7 +127,9 @@
                                             <td><?= $variation?></td>
                                             <td><?= $category?></td>
                                             <td><?= $quantity?></td>
-                                            <td><?= $price?></td>
+                                            <td>₱ <?= $price?>.00</td>
+                                            <td>₱ <?= $subTotal?>.00</td>
+                                            <td>₱ <?= $total?>.00</td>
                                         </tr>
                                 <?php
                                         }
@@ -138,9 +142,9 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="6"></td>
+                                    <td colspan="8"></td>
                                     <td><b>Total Sales:  </b></td>
-                                    <td><b>₱ <?= $totalAmount?>.00</b> </td>
+                                    <td><b>₱ <?= number_format($totalAmount)?>.00</b> </td>
                                     <td></td>
                                 </tr>
                             </tfoot>

@@ -45,6 +45,10 @@
                                 <button type="submit" class="btn btn-primary">
                                     Filter <i class="fa fa-filter" aria-hidden="true"></i>
                                 </button> 
+                                <a href="cancel-orders-report.php?startDate=<?php if(isset($_GET['startDate'])) {echo $_GET['startDate'];} else{ echo date('Y-m-d',strtotime("first day of january this year"));}?>&endDate=<?php if(isset($_GET['endDate'])){ echo $_GET['endDate'];} else{ echo date('Y-m-d',strtotime("last day of december this year"));}?>"
+                                    class="btn btn-success">
+                                    <span>Export <i class="fa fa-file-pdf"></i></span>
+                                </a>
                             </form>
                         </div><br>
                         <table id="example" class="table table-hover">
@@ -53,11 +57,11 @@
                                     <th scope="col">#</th>
                                     <th scope="col">Ordered Date</th>
                                     <th scope="col">Customer Name</th>
-                                    <th scope="col">Email</th>
                                     <th scope="col">Product</th>
                                     <th scope="col">Variation</th>
                                     <th scope="col">Quantity</th>
                                     <th scope="col">Price</th>
+                                    <th scope="col">Total</th>
                                     <th scope="col">Order Type</th>
                                 </tr>
                             </thead>
@@ -69,7 +73,9 @@
                                     if(isset($_GET['startDate']) && isset($_GET['endDate'])){   
                                         $orderDeliver = "Deliver";
                                         $orderPickUp = "Pick Up"; 
-                                        $orderStatus = "Cancelled";     
+                                        $cancelled = "Cancelled";
+                                        $invalidPayment = "Invalid Payment";
+                                        $outOfStock = "Out of Stock"; 
                                         $startDate = $_GET['startDate'];
                                         $endDate = $_GET['endDate'];
                                         $getTotalOrder = $connect->prepare("SELECT tblorderdetails.order_number,tblorderdetails.required_date,
@@ -77,11 +83,11 @@
                                         tblorderdetails.quantity,tblorderdetails.price,tblorderdetails.price * tblorderdetails.quantity as 'subtotal',
                                         tblorderdetails.add_ons,tblorderdetails.order_type 
                                         FROM tblorderdetails LEFT JOIN tblcustomerorder ON tblorderdetails.order_number = tblcustomerorder.order_number
-                                        WHERE tblorderdetails.order_type IN (?,?) AND tblorderdetails.order_status=? 
+                                        WHERE tblorderdetails.order_status IN (?,?,?)
                                         AND tblorderdetails.required_date  BETWEEN (?) AND (?)
-                                        ORDER BY STR_TO_DATE(CONCAT(required_date,' ',required_time),'%Y-%m-%d %h:%i %p') ASC");
+                                        ORDER BY tblorderdetails.id DESC");
                                         echo $connect->error;
-                                        $getTotalOrder->bind_param('sssss',$orderDeliver,$orderPickUp,$orderStatus,$startDate,$endDate);
+                                        $getTotalOrder->bind_param('sssss',$cancelled,$invalidPayment,$outOfStock,$startDate,$endDate);
                                         $getTotalOrder->execute();
                                         $getTotalOrder->bind_result($orderNumber,$requiredDate,$customerName,$product,$variation,$quantity,$price,$subtotal,$addOns,$orderType);
                                         if($getTotalOrder){
@@ -108,15 +114,18 @@
                                     } else{
                                         $orderDeliver = "Deliver";
                                         $orderPickUp = "Pick Up"; 
-                                        $orderStatus = "Cancelled";
+                                        $cancelled = "Cancelled";
+                                        $invalidPayment = "Invalid Payment";
+                                        $outOfStock = "Out of Stock";
                                         $date = date('Y-m-d');
                                         $getTotalOrder = $connect->prepare("SELECT tblorderdetails.order_number,tblorderdetails.required_date,
                                         tblcustomerorder.customer_name,tblorderdetails.product_name,tblorderdetails.product_variation,
                                         tblorderdetails.quantity,tblorderdetails.price,tblorderdetails.price * tblorderdetails.quantity as 'subtotal',
                                         tblorderdetails.add_ons,tblorderdetails.order_type 
                                         FROM tblorderdetails LEFT JOIN tblcustomerorder ON tblorderdetails.order_number = tblcustomerorder.order_number
-                                        ORDER BY STR_TO_DATE(CONCAT(required_date,' ',required_time),'%Y-%m-%d %h:%i %p') ASC");
-                                        $getTotalOrder->bind_param('ss',$date,$orderStatus);
+                                        WHERE tblorderdetails.order_status IN (?,?,?)
+                                        ORDER BY tblorderdetails.id DESC");
+                                        $getTotalOrder->bind_param('sss',$cancelled,$invalidPayment,$outOfStock);
                                         $getTotalOrder->execute();
                                         $getTotalOrder->bind_result($orderNumber,$requiredDate,$customerName,$product,$variation,$quantity,$price,$subtotal,$addOns,$orderType);
                                         if($getTotalOrder){

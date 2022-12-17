@@ -61,20 +61,22 @@
         </li>
         <!--Point of sales-->
         <li title="POS">    
-            <a class="text-white" href="pos.php" data-toggle="collapse" data-target="#collapsePOS" role="button" aria-expanded="false">
-                <i class="fas fa-cash-register icons"></i>
-                <span class="span">POS <i class="fas fa-angle-down icons"></i></span>
+            <a class="text-white" href="pos.php">
+                <i class="fas fa-cash-register icons"></i><span class="span">POS </span>
             </a>
-            <div class="collapse" id="collapsePOS">
-                <div class="card card-body"  style="background:#070b2e; padding:0; font-size:.9rem;">
-                    <a class="text-white" href="pos.php">POS</a>
-                    <a class="text-white" href="pos-orders.php">POS Orders</a>
-                </div>
-            </div>
         </li>
          <!--Inventory-->
-        <li title="Inventory">
-            <a href="inventory.php"><i class="fas fa-boxes icons"></i><span class="span">Inventory</span></a>
+        <li title="Inventory">    
+            <a class="text-white" href="inventory.php" data-toggle="collapse" data-target="#collapseInventory" role="button" aria-expanded="false">
+            <i class="fa-solid fa-boxes-stacked icons"></i>
+                <span class="span">Inventory <i class="fas fa-angle-down icons"></i></span>
+            </a>
+            <div class="collapse" id="collapseInventory">
+                <div class="card card-body"  style="background:#070b2e; padding:0; font-size:.9rem;">
+                    <a class="text-white" href="inventory.php">Inventory</a>
+                    <a class="text-white" href="expired-items.php">Expired Items</a>
+                </div>
+            </div>
         </li>
          <!--Users-->
         <li title="Users">

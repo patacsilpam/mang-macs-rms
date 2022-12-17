@@ -2,7 +2,7 @@
 <li class="dropdown">
     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
         aria-expanded="false">
-        <i class="fas fa-bell text-primary bell-icon"><sup id="countNotif"><?= $fetchNotif[0] ?></sup></i>
+        <i class="fas fa-bell text-primary bell-icon"><sup id="countNotif"><?= $fetchNotif[0] + $fetchRunOfStock[0] ?></sup></i>
     </a>
     <div class="dropdown-menu dropdown-bell-icon" aria-labelledby="dropdownMenuLink">
         <a class="dropdown-item" href="inventory.php">
@@ -27,6 +27,26 @@
                         } else {
                             echo '<small>Today</small>';
                         } ?>
+                <hr>
+            </div>
+            <?php
+                }
+            }
+            ?>
+            <?php
+            //display inventory that are running out of stock 
+            $getRunningStock = "SELECT * FROM tblinventory WHERE quantityInStock <= 20 GROUP BY code";
+            $displayAboutToExp = $connect->query($getRunningStock);
+            if ($displayAboutToExp) {
+                while ($fetchItem = $displayAboutToExp->fetch_assoc()) {
+                    $today = date('F d, Y', strtotime($fetchItem['created_at']));
+
+                ?>
+            <div class="dropdown-notif">
+                <b>Running Out of Stock</b>
+                <p class="text-dark">The item <i>( <?= $fetchItem['product'] ?> )</i> you purchased from <br> <?= $today ?>
+                    is running out of stock  (#<?=$fetchItem['itemCode']?>).</p>
+                
                 <hr>
             </div>
             <?php

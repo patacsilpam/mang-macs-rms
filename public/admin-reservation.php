@@ -1,5 +1,5 @@
 <?php
- include 'public/email-notifications/mail-no-shows-reserved.php';
+
 function updateBookStatus(){
     require 'public/connection.php';
     if(isset($_SERVER["REQUEST_METHOD"]) == "POST"){
@@ -22,20 +22,30 @@ function updateBookStatus(){
             switch($bookStatus){
                 case "Reserved":
                     include 'public/email-notifications/mail-booking-reserved.php';
+                    include 'public/local-notification/firebase-booking-notification.php';
                     $data = array('title'=>"$bookStatus",'body'=>"Hello $customerName,\nyour table reservation for $guests guests  is already confirmed. See you at $schedDate - $schedTime");
                     mailBookingReserved($id,$email,$refNumber,$logo,$customerName,$guests,$createAt,$schedDate,$schedTime,$bookStatus);
                     pushNotifcation($sendTo,$data);
                     break;
                 case "Not Available":
                     include 'public/email-notifications/mail-not-available-reserved.php';
+                    include 'public/local-notification/firebase-booking-notification.php';
                     $data = array('title'=>"$bookStatus",'body'=>"Hello $customerName,\nsorry, there is no available table for accomodation.");
-                    noShowsReservation();
+                    mailNotAvailable($id,$email,$refNumber,$logo,$customerName,$guests,$createAt,$schedDate,$schedTime,$bookStatus);
                     pushNotifcation($sendTo,$data);
                     break;
                 case "No Shows":
-                    include 'public/email-notifications/mail-no-shows-reserved.php';
+                    include 'public/email-notifications/mail-no-shows1-reserved.php';
+                    include 'public/local-notification/firebase-booking-notification.php';
                     $data = array('title'=>"$bookStatus",'body'=>"Hello $customerName,\ndue to your delayed arrival on the set scheduled date and time, we have now decided to cancel your table reservation.");
-                    noShowsReservation();
+                    mailNoShowsReservation($id,$email,$refNumber,$logo,$customerName,$guests,$createAt,$schedDate,$schedTime,$bookStatus);
+                    pushNotifcation($sendTo,$data);
+                    break;
+                case "Closed Store":
+                    include 'public/email-notifications/mail-closed-store-reserved.php';
+                    include 'public/local-notification/firebase-booking-notification.php';
+                    $data = array('title'=>"$bookStatus",'body'=>"Hello $customerName,\nsorry, we are not available right now.");
+                    mailClosedStore($id,$email,$refNumber,$logo,$customerName,$guests,$createAt,$schedDate,$schedTime,$bookStatus);
                     pushNotifcation($sendTo,$data);
                     break;
                 case "Finished";
@@ -51,6 +61,9 @@ function updateBookStatus(){
     }
 }
 updateBookStatus();
+
+//no shows
+include 'public/email-notifications/mail-no-shows-reserved.php';
 noShowsReservation();
 
 

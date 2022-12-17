@@ -59,7 +59,9 @@
                 <h5>Mang Mac's Pizza</h5>
                 <div class="product-container">
                 <?php
-                    $getMenu = "SELECT * FROM tblproducts WHERE productCategory='Pizza' ORDER BY productname ASC";
+                    $getMenu = "SELECT tblproducts.*,tblinventory.quantityInStock as 'itemStock' FROM tblproducts LEFT JOIN tblinventory
+                    ON tblproducts.productVariation = tblinventory.itemVariation
+                    WHERE productCategory='Pizza' GROUP BY tblproducts.id ORDER BY productname ASC ";
                     $displayMenu = $connect->query($getMenu);
                     while($fetch = $displayMenu->fetch_assoc()){ 
                 ?>
@@ -71,7 +73,10 @@
                     <small class="text-dark"><?=$fetch['productVariation']?></small>
                     <label class="text-success">₱<?=$fetch['price']?>.00</label>
                     <input type="number" class="form-control input-quantity" value="1" name="quantity">
-                    <button type="submit" name="add-to-cart" class="btn btn-warning">Add</button>
+                    <p class="text-danger"><?php if($fetch['itemStock'] > 0 ){echo "Stocks:".$fetch['itemStock'];} ?></p>
+                    <button type="submit" name="add-to-cart" class="btn btn-warning" <?php if($fetch['itemStock']  <= 0){ echo "disabled";}?>> 
+                        <?php if($fetch['itemStock'] <= 0){ echo "Not Available";} else{echo "Add";}?>
+                    </button>
                    
                 </form>
                 <?php
@@ -300,7 +305,9 @@
                 <h5>Drinks</h5>
                 <div class="product-container">
                 <?php
-                    $getMenu = "SELECT * FROM tblproducts WHERE productCategory='Drinks' ORDER BY productname ASC";
+                    $getMenu = "SELECT tblproducts.*,tblinventory.quantityInStock as 'itemStock' FROM `tblproducts` 
+                    LEFT JOIN tblinventory ON tblproducts.productName = tblinventory.product
+                    WHERE  tblproducts.productCategory='Drinks'  GROUP BY tblproducts.productName";
                     $displayMenu = $connect->query($getMenu);
                     while($fetch = $displayMenu->fetch_assoc()){ 
                 ?>
@@ -311,9 +318,9 @@
                     <small class="text-dark"><?=$fetch['productVariation']?></small>
                     <strong class="text-success">₱<?=$fetch['price']?>.00</strong>
                     <input type="number" class="form-control input-quantity" value="1" name="quantity">
-                    <p class="text-danger"><?php if($fetch['stocks'] <= 10 && $fetch['stocks'] != 0){echo $fetch['stocks']." items left";} else{echo "";}?></p>
-                    <button type="submit" name="add-to-cart" class="btn btn-warning" <?php if($fetch['stocks']  <= 0){ echo "disabled";}?>> 
-                        <?php if($fetch['stocks'] <= 0){ echo "Not Available";} else{echo "Add";}?>
+                    <p class="text-danger"><?php if($fetch['itemStock'] > 0 ){echo "Stocks:".$fetch['itemStock'];} ?></p>
+                    <button type="submit" name="add-to-cart" class="btn btn-warning" <?php if($fetch['itemStock']  <= 0){ echo "disabled";}?>> 
+                        <?php if($fetch['itemStock'] <= 0){ echo "Out of Stock";} else{echo "Add";}?>
                     </button>
                     <!---Add Category and Product Code Here :)----!-->
                 </form>
@@ -398,7 +405,9 @@
                 <h5>Beverages & Liqours</h5>
                 <div class="product-container">
                 <?php
-                    $getMenu = "SELECT * FROM tblproducts WHERE  productCategory='Beverages and Liqours'  ORDER BY productname ASC";
+                    $getMenu = "SELECT tblproducts.*,tblinventory.quantityInStock as 'itemStock' FROM `tblproducts` 
+                    LEFT JOIN tblinventory ON tblproducts.productName = tblinventory.product
+                    WHERE  tblproducts.productCategory='Beverages and Liqours'  GROUP BY tblproducts.productName";
                     $displayMenu = $connect->query($getMenu);
                     while($fetch = $displayMenu->fetch_assoc()){ 
                 ?>
@@ -409,9 +418,9 @@
                     <small class="text-dark"><?=$fetch['productVariation']?></small>
                     <label class="text-success">₱<?=$fetch['price']?>.00</label>
                     <input type="number" class="form-control input-quantity" value="1" name="quantity">
-                    <p class="text-danger"><?php if($fetch['stocks'] <= 10 && $fetch['stocks'] != 0){echo $fetch['stocks']." items left";} else{echo "";}?></p>
-                    <button type="submit" name="add-to-cart" class="btn btn-warning" <?php if($fetch['stocks']  <= 0){ echo "disabled";}?>> 
-                        <?php if($fetch['stocks'] <= 0){ echo "Not Available";} else{echo "Add";}?>
+                    <p class="text-danger"><?php if($fetch['itemStock'] > 0 ){echo "Stocks:".$fetch['itemStock'];} ?></p>
+                    <button type="submit" name="add-to-cart" class="btn btn-warning" <?php if($fetch['itemStock']  <= 0){ echo "disabled";}?>> 
+                        <?php if($fetch['itemStock'] <= 0){ echo "Out of Stock";} else{echo "Add";}?>
                     </button>
                     <!---Add Category and Product Code Here :)----!-->
                 </form>
@@ -424,7 +433,9 @@
                 <h5>Wine</h5>
                 <div class="product-container">
                 <?php
-                    $getMenu = "SELECT * FROM tblproducts WHERE  productCategory='Wine'  ORDER BY productname ASC";
+                    $getMenu = "SELECT tblproducts.*,tblinventory.quantityInStock as 'itemStock' FROM `tblproducts` 
+                    LEFT JOIN tblinventory ON tblproducts.productName = tblinventory.product
+                    WHERE  tblproducts.productCategory='Wine'  GROUP BY tblproducts.productName";
                     $displayMenu = $connect->query($getMenu);
                     while($fetch = $displayMenu->fetch_assoc()){ 
                 ?>
@@ -435,9 +446,9 @@
                     <small class="text-dark"><?=$fetch['productVariation']?></small>
                     <label class="text-success">₱<?=$fetch['price']?>.00</label>
                     <input type="number" class="form-control input-quantity" value="1" name="quantity">
-                    <p class="text-danger"><?php if($fetch['stocks'] <= 10 && $fetch['stocks'] != 0){echo $fetch['stocks']." items left";} else{echo "";}?></p>
-                    <button type="submit" name="add-to-cart" class="btn btn-warning" <?php if($fetch['stocks']  <= 0){ echo "disabled";}?>> 
-                        <?php if($fetch['stocks'] <= 0){ echo "Not Available";} else{echo "Add";}?>
+                    <p class="text-danger"><?php if($fetch['itemStock'] > 0 ){echo "Stocks:".$fetch['itemStock'];} ?></p>
+                    <button type="submit" name="add-to-cart" class="btn btn-warning" <?php if($fetch['itemStock']  <= 0){ echo "disabled";}?>> 
+                        <?php if($fetch['itemStock'] <= 0){ echo "Out of Stock";} else{echo "Add";}?>
                     </button>
                     <!---Add Category and Product Code Here :)----!-->
                 </form>

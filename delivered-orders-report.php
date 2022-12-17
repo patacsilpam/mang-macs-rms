@@ -28,10 +28,10 @@ class PDF extends FPDF
     {
         $this->SetFont('Arial', 'B', 9);
         $this->Cell(30, 10, 'Ordered Date', 1, 0, 'C');
-        $this->Cell(35, 10, 'Customer Name', 1, 0, 'C');
+        $this->Cell(40, 10, 'Customer Name', 1, 0, 'C');
         $this->Cell(40, 10, 'Food', 1, 0, 'C');
         $this->Cell(22, 10, 'Order Type', 1, 0, 'C');
-        $this->Cell(20, 10, 'Variation', 1, 0, 'C');
+        $this->Cell(17, 10, 'Variation', 1, 0, 'C');
         $this->Cell(17, 10, 'Quantity', 1, 0, 'C');
         $this->Cell(20, 10, 'Unit Price', 1, 0, 'C');
         $this->Cell(30, 10, 'Add Ons', 1, 0, 'C');
@@ -46,21 +46,21 @@ class PDF extends FPDF
             $totalSales=0;
             $orderCompleted = "Order Completed";
             $orderReceived = "Order Received";
-            $reserved = "Finished";
+            $orderType = "Deliver";
             $startDate = $_GET['startDate'];
             $endDate = $_GET['endDate'];
             $getTotalOrder = $connect->prepare("SELECT tblorderdetails.order_number,tblorderdetails.required_date,
-            tblcustomerorder.customer_name,tblorderdetails.product_name,tblorderdetails.product_variation,
+            tblcustomerorder.customer_name,tblreservation.fname,tblreservation.lname,tblorderdetails.product_name,tblorderdetails.product_variation,
             tblorderdetails.quantity,tblorderdetails.price,tblorderdetails.price * tblorderdetails.quantity as 'subtotal',
             tblorderdetails.add_ons,tblorderdetails.add_ons_fee * tblorderdetails.quantity as 'add_ons_fee',tblorderdetails.order_type 
             FROM tblorderdetails LEFT JOIN tblcustomerorder ON tblorderdetails.order_number = tblcustomerorder.order_number
-            LEFT JOIN tblposorders ON tblorderdetails.order_number = tblposorders.id_number
-            WHERE tblorderdetails.order_status IN (?,?,?)  AND tblorderdetails.completed_time BETWEEN (?) AND (?)
+            LEFT JOIN tblreservation ON tblorderdetails.order_number = tblreservation.refNumber
+            WHERE tblorderdetails.order_status IN (?,?)  AND tblorderdetails.completed_time BETWEEN (?) AND (?)
+            AND tblorderdetails.order_type = ?
             ORDER BY tblorderdetails.required_date ASC");
-            echo $connect->error;
-            $getTotalOrder->bind_param('sssss',$orderCompleted,$orderReceived,$reserved,$startDate,$endDate);
+            $getTotalOrder->bind_param('sssss',$orderCompleted,$orderReceived,$startDate,$endDate,$orderType);
             $getTotalOrder->execute();
-            $getTotalOrder->bind_result($orderNumber,$requiredDate,$customerName,$product,$variation,$quantity,$price,$subtotal,$addOns,$addOnsFee,$orderType);
+            $getTotalOrder->bind_result($orderNumber,$requiredDate,$customerName,$fname,$lname,$product,$variation,$quantity,$price,$subtotal,$addOns,$addOnsFee,$orderType);
             if($getTotalOrder){
                 while($getTotalOrder->fetch()){
                     $totalAmount+=$subtotal;
@@ -68,10 +68,10 @@ class PDF extends FPDF
                     $totalSales = $totalAmount + $totalAddOnsFee;
                     $this->SetFont('Arial', '', 8);
                     $this->Cell(30, 10, $requiredDate, 1, 0, 'C');
-                    $this->Cell(35, 10, $customerName, 1, 0, 'C');
+                    $this->Cell(40, 10, $customerName."".$fname." ".$lname, 1, 0, 'C');
                     $this->Cell(40, 10, $product, 1, 0, 'C');
                     $this->Cell(22, 10, $orderType, 1, 0, 'C');
-                    $this->Cell(20, 10, $variation, 1, 0, 'C');
+                    $this->Cell(17, 10, $variation, 1, 0, 'C');
                     $this->Cell(17, 10, $quantity, 1, 0, 'C');
                     $this->Cell(20, 10, $price.".00", 1, 0, 'C');
                     $this->Cell(30, 10, $addOns, 1, 0, 'C');
@@ -80,7 +80,7 @@ class PDF extends FPDF
                     $this->Ln();
                 }
             }
-            $this->Cell(214, 10, "", 0, 0, 'C');
+            $this->Cell(216, 10, "", 0, 0, 'C');
             $this->Cell(50, 10, "Total Sales: PHP ".number_format($totalAmount).".00", 1, 0, 'C');
             $this->Ln();
             $this->SetFont('Arial', '', 10);
@@ -105,6 +105,7 @@ $pdf = new PDF('L');
 $pdf->AliasNbPages();
 $pdf->AddPage();
 $pdf->SetFont('Times', '', 8);
+
 $pdf->headerTable();
 $pdf->viewTable($connect,$id,$createdAt,$customerName,$product,$variation,$quantity,$price,$subtotal,$addOns,$addOnsFee,$orderType);
 $pdf->Output();

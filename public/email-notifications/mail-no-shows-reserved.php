@@ -13,9 +13,9 @@ function noShowsReservation(){
     $customerName = array();
     $guests = array();
     $scheduledDate = array();
-    $getId = $connect->query("SELECT * FROM tblreservation WHERE 
+    $getId = $connect->query("SELECT *,(SELECT waitingTime FROM tblsettings WHERE id=1) as 'waitingTime' FROM tblreservation WHERE 
     STR_TO_DATE(CONCAT(scheduled_date,' ',scheduled_time), '%Y-%m-%d %h:%i %p') <= 
-    DATE_SUB(NOW(),INTERVAL 1 HOUR) AND status='Reserved'");
+    DATE_SUB(NOW(),INTERVAL 'waitingTime' HOUR) AND status IN ('Reserved')");
     while($fetch = $getId->fetch_assoc()){
         $bookingNumber[] =  $fetch['refNumber'];
         $email[] = $fetch['email'];
@@ -46,7 +46,7 @@ function noShowsReservation(){
         $mail->addAddress($newEmail);
         $mail->isHTML(true);
         if($updateRemoveStat->execute()){
-            $mail->Subject = "Your reservation #".$newOrderNumber." is not available";
+            $mail->Subject = "No Shows";
             $mail->Body = "
             <div class='container' style='padding: 1rem;'>
             <div style='display: flex; flex-direction: column; align-items: center;'>

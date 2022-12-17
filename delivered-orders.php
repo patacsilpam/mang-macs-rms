@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/4adbff979d.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
@@ -45,6 +45,10 @@
                                 <button type="submit" class="btn btn-primary">
                                     Filter <i class="fa fa-filter" aria-hidden="true"></i>
                                 </button> 
+                                <a href="delivered-orders-report.php?startDate=<?php if(isset($_GET['startDate'])) {echo $_GET['startDate'];} else{ echo date('Y-m-d',strtotime("first day of january this year"));}?>&endDate=<?php if(isset($_GET['endDate'])){ echo $_GET['endDate'];} else{ echo date('Y-m-d',strtotime("last day of december this year"));}?>"
+                                    class="btn btn-success">
+                                    <span>Export <i class="fa fa-file-pdf"></i></span>
+                                </a>
                             </form>
                         </div><br>
                         <table id="example" class="table table-hover">
@@ -168,7 +172,7 @@
                               <tr>
                                     <td colspan="8"></td>
                                     <td><b>Total Sales:  </b></td>
-                                    <td><b>₱ <?= $totalAddOns +  $totalAmount?>.00</b></td>
+                                    <td><b>₱ <?= number_format($totalAddOns +  $totalAmount)?>.00</b></td>
                                     <td></td>
                               </tr>
                           </tfoot>

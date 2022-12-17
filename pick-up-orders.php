@@ -45,6 +45,10 @@
                                 <button type="submit" class="btn btn-primary">
                                     Filter <i class="fa fa-filter" aria-hidden="true"></i>
                                 </button> 
+                                <a href="pick-up-orders-report.php?startDate=<?php if(isset($_GET['startDate'])) {echo $_GET['startDate'];} else{ echo date('Y-m-d',strtotime("first day of january this year"));}?>&endDate=<?php if(isset($_GET['endDate'])){ echo $_GET['endDate'];} else{ echo date('Y-m-d',strtotime("last day of december this year"));}?>"
+                                    class="btn btn-success">
+                                    <span>Export <i class="fa fa-file-pdf"></i></span>
+                                </a>
                             </form>
                         </div><br>
                         <table id="example" class="table table-hover">
@@ -159,7 +163,7 @@
                               <tr>
                                 <td colspan="8"></td>
                                 <td><b>Total Sales:  </b></td>
-                                <td><b>₱<?= $totalAmount + $totalAddOnsFee?>.00</b> </td>
+                                <td><b>₱ <?= number_format($totalAmount + $totalAddOnsFee)?>.00</b> </td>
                                 <td></td>
                               </tr>
                           </tfoot>

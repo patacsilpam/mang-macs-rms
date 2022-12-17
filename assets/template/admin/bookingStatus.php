@@ -25,8 +25,11 @@
                        <select class="form-control"  name="bookStatus">
                             <option value="Reserved" <?php if($fetch['status'] == "Reserved"){ echo 'selected ? "selected"';} ?>>Reserved</option>
                             <option value="Finished"  <?php if($fetch['status'] == "Finished"){ echo 'selected ? "selected"';} ?>>Finished</option>
-                            <option value="Not Available"  <?php if($fetch['status'] == "Not Available"){  echo 'selected ? "selected"';} ?>>Not Available</option>
-                            <option value="No Shows"  <?php if($fetch['status'] == "Not Available"){  echo 'selected ? "selected"';} ?>>No Shows</option>
+                            <optgroup label="Cancel">
+                                <option value="Not Available"  <?php if($fetch['status'] == "Not Available"){  echo 'selected ? "selected"';} ?>>Not Available</option>
+                                <option value="No Shows"  <?php if($fetch['status'] == "No Shows"){  echo 'selected ? "selected"';} ?>>No Shows</option>
+                                <option value="Closed Store"  <?php if($fetch['status'] == "Closed Store"){  echo 'selected ? "selected"';} ?>>Close Store</option>
+                            </optgroup>
                        </select>
                     </div>
                 </div>

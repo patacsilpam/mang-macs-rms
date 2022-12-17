@@ -37,29 +37,17 @@ function updateSalary(){
         }
     }
 }
-function settings(){
+function deliveryFee(){
     require 'public/connection.php';
    
     if (isset($_SERVER["REQUEST_METHOD"]) == "POST") {
-        $selectSettings = "SELECT * FROM tblsettings WHERE id='1'";
+        $selectSettings = "SELECT * FROM tblsettings";
         $displaySettings = $connect->query($selectSettings);
         $fetch = $displaySettings->fetch_assoc();
         $id = $fetch['id'];
         $GLOBALS['waitingTime'] = $fetch['waitingTime'];
         $GLOBALS['deliveryChange'] = $fetch['deliveryChange'];
-        /*
-           if (isset($_POST["save"])) {
-            $id = 0;
-            $waitingTimeAmount = $_POST['waitingTime'];
-            $deliveryChangeAmount = $_POST['deliveryChange'];
-            $insertSettingsContent = $connect->prepare("INSERT INTO tblsettings(id,waitingTime,deliveryChange) VALUES(?,?,?)");
-            $insertSettingsContent->bind_param('isi', $id, $waitingTimeAmount, $deliveryChangeAmount);
-            $insertSettingsContent->execute();
-            if ($insertSettingsContent) {
-                header('Location:settings.php?');
-            }
-        }
-         */
+        
         if (isset($_POST["edit"])) {
             $waitingTimeAmount = $_POST['waitingTime'];
             $deliveryChangeAmount = $_POST['deliveryChange'];
@@ -72,7 +60,24 @@ function settings(){
         }
     }
 }
+
+function waitingTime(){
+    require 'public/connection.php';
+    if (isset($_SERVER["REQUEST_METHOD"]) == "POST") {
+        if(isset($_POST['btn-waiting-time'])){
+            $id = 1;
+            $waitingTimeAmount = $_POST['waitingTime'];
+            $updateSettingsContent = $connect->prepare("UPDATE tblsettings SET waitingTime=? WHERE id=?");
+            $updateSettingsContent->bind_param('si', $waitingTimeAmount, $id);
+            $updateSettingsContent->execute();
+            if ($updateSettingsContent) {
+                header('Location:settings.php?');
+            }
+        }
+    }
+}
 updateSalary();
-settings();
+deliveryFee();
+waitingTime();
 
 ?>

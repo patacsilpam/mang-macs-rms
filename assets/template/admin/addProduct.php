@@ -87,7 +87,7 @@
               </div>
             </div>
             <div class="mt-3">
-              <label style="font-size: 1.1rem">Time of Preparation</label>
+              <label style="font-size: 1.1rem">Order Preparation Time</label>
               <input type="number" class="form-control" name="preparedTime" placeholder="e.g (20 mins)" required>
             </div>
             <div class="mt-3">
@@ -176,7 +176,7 @@
               </div>
             </div>
             <div class="mt-3">
-              <label style="font-size: 1.1rem">Time of Preparation</label>
+              <label style="font-size: 1.1rem">Order Preparation Time</label>
               <input type="number" class="form-control" name="editPreparedTime" placeholder="e.g (20 mins)" value="<?=$fetch['preparationTime']?>" required>
             </div>
             <div class="mt-3">
@@ -245,7 +245,7 @@
             <p>Category: <?=$fetch['productCategory']?></p>
             <p>Variation: <?=$fetch['productVariation']?></p>
             <p>Price: ₱ <?=$fetch['price']?>.00</p>
-            <p>Time of Preparation: <?=$fetch['preparationTime']?>mins</p>
+            <p>Order Preparation Time: <?=$fetch['preparationTime']?>mins</p>
             <p>Main Ingredients: <?=$fetch['mainIngredients']?></p>
             <p>Created At: <?=date('F d, Y h:i:s',strtotime($fetch['created_at']));?></p>
           </div>

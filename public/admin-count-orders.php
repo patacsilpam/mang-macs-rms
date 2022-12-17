@@ -5,11 +5,13 @@ function countActiveOrders(){
     $orderCompleted = "Order Completed";
     $orderReceived = "Order Received";
     $orderCancelled = "Cancelled";
+    $invalidPayment = "Invalid Payment";
+    $outOfStock = "Out of Stock";
     $orderType = "Dine In";
     $count = $connect->prepare("SELECT SUM(COUNT(DISTINCT order_number)) OVER() as 'active_orders' 
-    FROM tblorderdetails WHERE order_status NOT IN (?,?,?) AND order_type != ?
+    FROM tblorderdetails WHERE order_status NOT IN (?,?,?,?,?) AND order_type != ?
     GROUP BY order_number");
-    $count->bind_param('ssss',$orderCompleted,$orderReceived,$orderCancelled,$orderType);
+    $count->bind_param('ssssss',$orderCompleted,$orderReceived,$orderCancelled,$invalidPayment,$outOfStock,$orderType);
     $count->execute();
     $row = $count->get_result();
     $fetch = $row->fetch_assoc();
@@ -82,9 +84,11 @@ function countCancelledOrders(){
     $orderDeliver = "Deliver";
     $orderPickUp = "Pick Up";
     $cancelled = "Cancelled";
+    $invalidPayment = "Invalid Payment";
+    $outOfStock = "Out of Stock";
     $date = date('Y-m-d');
-    $count = $connect->prepare("SELECT COUNT(*) as 'totalCancelled' FROM tblorderdetails WHERE order_status=?");
-    $count->bind_param('s',$cancelled);
+    $count = $connect->prepare("SELECT COUNT(*) as 'totalCancelled' FROM tblorderdetails WHERE order_status IN (?,?,?)");
+    $count->bind_param('sss',$cancelled,$invalidPayment,$outOfStock);
     $count->execute();
     $row = $count->get_result();
     if($fetch = $row->fetch_assoc()){
@@ -100,9 +104,10 @@ function countCancelledBooking(){
     require 'public/connection.php';
     $cancelled = "Cancelled";
     $noShows = "No Shows";
+    $notAvailable = "Not Available";
     $date = date('Y-m-d');
-    $count = $connect->prepare("SELECT COUNT(*) as 'totalCancelled' FROM tblreservation WHERE status=?");
-    $count->bind_param('s',$cancelled);
+    $count = $connect->prepare("SELECT COUNT(*) as 'totalCancelled' FROM tblreservation WHERE status IN (?,?,?)");
+    $count->bind_param('sss',$cancelled,$noShows,$notAvailable);
     $count->execute();
     $row = $count->get_result();
     if( $fetch = $row->fetch_assoc()){
@@ -118,15 +123,17 @@ function countCancelledBooking(){
 //count total point of sales
 function countPosOrders(){
     require 'public/connection.php';
-    $status = "Completed";
+    $status = "Order Completed";
     $date = date('Y-m-d');
-    $count = $connect->prepare("SELECT SUM(COUNT(DISTINCT tblpos.id_number)) OVER() AS 'dailyPos',
+    $count = $connect->prepare("SELECT SUM(COUNT(tblpos.id_number)) OVER() AS 'dailyPos',
     (SELECT SUM(COUNT(DISTINCT tblpos.id_number)) OVER() 
-    FROM tblpos LEFT JOIN tblposorders ON 
-    tblpos.id_number = tblposorders.id_number WHERE tblpos.status = ?) AS 'totalPos'
-    FROM tblpos LEFT JOIN tblposorders ON 
-    tblpos.id_number = tblposorders.id_number WHERE tblpos.status = ? AND tblpos.ordered_date=?");
+    FROM tblpos LEFT JOIN tblorderdetails ON 
+    tblpos.id_number = tblorderdetails.order_number  WHERE tblpos.status = ?) AS 'totalPos'
+    FROM tblpos LEFT JOIN tblorderdetails ON 
+    tblpos.id_number =  tblorderdetails.order_number  WHERE tblpos.status = ? AND tblpos.ordered_date=?");
+    echo $connect->error;
     $count->bind_param('sss',$status,$status,$date);
+    
     $count->execute();
     $row = $count->get_result();
     if($fetch = $row->fetch_assoc()){
@@ -147,7 +154,7 @@ function countTotalOrders(){
     $count->execute();
     $row = $count->get_result();
     if($fetch = $row->fetch_assoc()){
-        echo $countTotalOrder = $fetch['totalOrders']; 
+        echo $countTotalOrder = $fetch['dailyOrders']; 
     }
 }
 
@@ -164,7 +171,7 @@ function countTotalBooking(){
     $count->execute();
     $row = $count->get_result();
     if($fetch = $row->fetch_assoc()){
-        echo $countActiveBooking = $fetch['totalBooking'];  
+        echo $countActiveBooking = $fetch['dailyBooking'];  
     }
 }
 

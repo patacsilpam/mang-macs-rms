@@ -17,14 +17,14 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
     <link rel="icon" type="image/jpeg" href="assets/images/mang-macs-logo.jpg" sizes="70x70">
     <link rel="stylesheet" href="assets/css/main.css" type="text/css">
-    <title>Inventory</title>
+    <title>Expired Items</title>
 </head>
 
 <body>
     <div class="grid-container">
         <!--header-->
         <header class="nav-container">
-            <h3>Stocks</h3>
+            <h3>Expired Items</h3>
             <ul class="nav-list">
             <?php include 'assets/template/admin/navbar.php'?>
             </ul>
@@ -51,40 +51,22 @@
                                         <th scope="col">Category</th>
                                         <th scope="col">Variation</th>
                                         <th scope="col">Purchased</th>
-                                        <th scope="col">Stock</th>
-                                        <th scope="col">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $selectInventory = "SELECT * FROM tblinventory WHERE status !='expired' ORDER BY expiration_date asc";
+                                    $selectInventory = "SELECT * FROM tblexpired";
                                     $displayInventory = $connect->query($selectInventory);
                                     while ($fetch = $displayInventory->fetch_assoc()) {
-                                        $today = date('y-m-d');
-                                        $expiredDate = $fetch['expiration_date'];
-                                        $offset = strtotime("+1 day");
-                                        $endDate = date($expiredDate, $offset);
-                                        $todayDate = new DateTime($today);
-                                        $exp = new DateTime($endDate);
-                                        if ($exp > $todayDate) {
-                                            $highligtRow = "#ffffff";
-                                        }
                                     ?>
                                         <tr style="background: <?php echo $highligtRow; ?>;">
                                             <td>#<?=$fetch['itemCode']?></td>
                                             <td><?= date('F d, Y',strtotime($fetch['created_at'])) ?></td>
                                             <td><?= date('F d, Y',strtotime($fetch['expiration_date'])) ?></td>
-                                            <td><?= $fetch['product'] ?></td>
-                                            <td><?= $fetch['itemCategory'] ?></td>
-                                            <td><?= $fetch['itemVariation'] ?></td>
-                                            <td><?= $fetch['quantityPurchased'] ?></td>
-                                            <td><?= $fetch['quantityInStock'] ?></td>
-                                            <td style="display: flex;">
-                                                <?php require 'assets/template/admin/inventory.php' ?>
-                                                <span><button title="View" type="button" class="btn btn-primary mr-3" data-toggle="modal" data-target="#viewStocks<?= $fetch['id']; ?>"><i class="fas fa-eye"></i></button></span>
-                                                <span><button title="Edit" type="button" class="btn btn-success mr-3" data-toggle="modal" data-target="#editInventory<?= $fetch['id'] ?>"><i class="fas fa-edit"></i></button></span>
-                                                <span><button title="Delete" type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteInventory<?= $fetch['id'] ?>"><i class="fas fa-trash"></i></button></span>
-                                            </td>
+                                            <td><?= $fetch['item_name'] ?></td>
+                                            <td><?= $fetch['item_category'] ?></td>
+                                            <td><?= $fetch['item_variation'] ?></td>
+                                            <td><?= $fetch['quantity_purchased'] ?></td>
                                         </tr>
                                     <?php
 
@@ -105,7 +87,7 @@
     <script src="assets/js/sidebar-menu-active.js"></script>
     <script src="assets/js/activePage.js"></script>
     <script src="assets/js/table.js"></script>
-    <script src="assets/js/inventory-category.js"></script>
+    
 </body>
 
 </html>

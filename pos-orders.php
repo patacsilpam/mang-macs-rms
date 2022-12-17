@@ -41,9 +41,6 @@ require 'public/admin-pos.php'
                             <thead class="thead-dark">
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">PWD/Senior ID Number</th>
-                                    <th scope="col">Customer Type</th>
-                                    <th scope="col">Ordered Date</th>
                                     <th scope="col">Total</th>
                                     <th scope="col">Discounted Price</th>
                                     <th scope="col">Amount Pay</th>
@@ -64,9 +61,6 @@ require 'public/admin-pos.php'
                                         ?>
                                        <tr>
                                             <td><?=$id;?></td>
-                                            <td><?=$pwdSeniorNumber;?></td>
-                                            <td><?=$customerType;?></td>
-                                            <td><?=$orderDate;?></td>
                                             <td>₱ <?=$total;?></td>
                                             <td>₱ <?=$discountedPrice;?></td>
                                             <td>₱ <?=$amountPay;?></td>

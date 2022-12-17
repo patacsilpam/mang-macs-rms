@@ -41,10 +41,10 @@
                                     <th scope="col">Date Schedule</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Email</th>
+                                    <th scope="col">Phone No.</th>
                                     <th scope="col">No. of Guests</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Suggestions</th>
-                                    <th scope="col">View Payment</th>
                                 </tr>
                             </thead>
                             <!---->
@@ -52,10 +52,14 @@
                                 <?php
                                     require 'public/connection.php';
                                     date_default_timezone_set("Asia/Manila");
-                                    $queryReservation = $connect->query("SELECT * FROM tblreservation 
-                                    WHERE status = 'Reserved' AND
-                                    STR_TO_DATE(CONCAT(scheduled_date,' ', scheduled_time),'%Y-%m-%d %h:%i %p') >= DATE_SUB(CURDATE(), INTERVAL 60 MINUTE)
-                                    ORDER BY STR_TO_DATE(CONCAT(scheduled_date,' ',scheduled_time),'%Y-%m-%d %h:%i %p') ASC");
+                                     //fetch waiting time from tblsettings
+                                     $fetchWaitingTimeDb = $connect->query("SELECT * FROM tblsettings");
+                                     $fetchWaitingTime = $fetchWaitingTimeDb->fetch_assoc();
+                                     $intValTime =  $fetchWaitingTime['waitingTime'];
+                                     //fetch all active reservation
+                                     $queryReservation = $connect->query("SELECT * FROM tblreservation
+                                     WHERE STR_TO_DATE(CONCAT(scheduled_date,' ', scheduled_time),'%Y-%m-%d %h:%i %p') >= DATE_SUB(CURDATE(), INTERVAL $intValTime MINUTE)
+                                     ORDER BY STR_TO_DATE(CONCAT(scheduled_date,' ',scheduled_time),'%Y-%m-%d %h:%i %p') ASC");
                                     while($fetch = $queryReservation->fetch_assoc()){
                                    ?>
                                 <tr>
@@ -63,6 +67,7 @@
                                     <td><?= $fetch['scheduled_date']?> <br> <?=$fetch['scheduled_time']?></td>
                                     <td><?= $fetch['fname'] ?> <?=$fetch['lname']?></td>
                                     <td><?= $fetch['email']?></td>
+                                    <td><?= $fetch['phone_no']?></td>
                                     <td><?= $fetch['guests']?></td>
                                     <td>
                                         <input type="text"  class="order-status" value="<?=$fetch['status']?>">
@@ -73,11 +78,13 @@
                                     </td>
                                     
                                     <td><small><?=$fetch['comments']?></small></td>
-                                    <td>
-                                        <a href='view-payment-1.php?order_number=<?= $fetch['refNumber'];?>' title="View Payment">
+                                    <!--
+                                        <td>
+                                        <a href='view-payment-1.php?order_number=' title="View Payment">
                                             <button class="btn btn-primary"><i class="fas fa-eye"></i></button>
                                         </a>
                                     </td>
+                                    -->
                                 </tr>
                                 <?php
                                     }
@@ -94,6 +101,11 @@
     <script src="assets/js/activePage.js"></script>
     <script src="assets/js/table.js"></script>
     <script src="assets/js/highlight-order-status.js"></script>
+    <script>
+        setTimeout(() => {
+        document.location.reload();
+    },60000)
+    </script>
 </body>
 
 </html>

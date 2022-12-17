@@ -11,6 +11,9 @@ $countNotif = "SELECT COUNT(*) FROM tblinventory WHERE expiration_date BETWEEN c
 $displayNotif = $connect->query($countNotif);
 $fetchNotif = $displayNotif->fetch_row();
 //
+$countRunningStock = "SELECT COUNT(DISTINCT(code)) FROM tblinventory WHERE quantityInStock <= 20 ";
+$displayRunStock = $connect->query($countRunningStock);
+$fetchRunOfStock = $displayRunStock->fetch_row();
 function insertStocks(){
     require 'public/connection.php';
     if (isset($_SERVER["REQUEST_METHOD"]) == "POST"){
@@ -23,7 +26,7 @@ function insertStocks(){
             $quantityPurchased= mysqli_real_escape_string($connect, $_POST['quantityPurchased']);
             $itemCategory = mysqli_real_escape_string($connect,$_POST['itemCategory']);
             $itemVariation = mysqli_real_escape_string($connect,$_POST['itemVariation']);
-            $code = $product."-".$itemVariation;
+            $code = $product."-".$itemVariation."-".$itemCategory;
             $quantityInStock = $quantityPurchased;
             $quantitySold = 0;
             $status ='';
@@ -220,100 +223,35 @@ function deleteStocks(){
         }
     }
 }
-/*function autoDeletion(){
+function autoDeletion(){
     require 'public/connection.php';
-    //fetch all expired  items from tblinventory
-    $fetchExpItemDb = $connect->prepare("SELECT * FROM tblinventory WHERE expiration_date < CURDATE()");
-    $fetchExpItemDb->execute();
-    $row = $fetchExpItemDb->get_result();
-    $fetch = $row->fetch_assoc();
-    if($row->num_rows > 0){
-        $totalStock = $fetch['quantityInStock'];
-        $product = $fetch['product'];
-        $itemCategory = $fetch['itemCategory'];
-        $itemVariation = $fetch['itemVariation'];
-        //
-        if($product == "Pizza Bread"){
-            $fetchProdStockDb = $connect->prepare("SELECT * FROM tblproducts WHERE productCategory=? AND productVariation=?");
-            $fetchProdStockDb->bind_param('ss',$itemCategory,$itemVariation);
-            $fetchProdStockDb->execute();
-            $row = $fetchProdStockDb->get_result();
-            $fetch = $row->fetch_assoc();
-            if($row->num_rows > 0){
-                $stock = $fetch['stocks'] -  $totalStock;
-                $updateProductStock = $connect->prepare("UPDATE tblproducts SET stocks=? WHERE productCategory=? AND productVariation=?");
-                $updateProductStock->bind_param('iss',$stock,$itemCategory,$itemVariation);
-                $updateProductStock->execute();
-                header('Location:inventory.php?updated');
-            }
-        }
-        /*else{
-            $fetchExpItemDb = $connect->prepare("SELECT * FROM tblproducts WHERE productName=? AND productCategory=?");
-            $fetchExpItemDb->bind_param('ss',$itemCategory,$itemVariation);
-            $fetchExpItemDb->execute();
-            $row = $fetchExpItemDb->get_result();
-            $fetch = $row->fetch_assoc();
-            if($row->num_rows > 0){
-                $stock = $fetch['stocks'] -  $totalStock;
-                $updateProductStock = $connect->prepare("UPDATE tblproducts SET stocks=? WHERE productName=? AND productCategory=?");
-                $updateProductStock->bind_param('iss',$stock,$product,$itemCategory);
-                $updateProductStock->execute();
-                header('Location:inventory.php?updated');
-            }
-        }
-
-       
-        
-    }
-
-    /*$itemExpired = "expired";
-    $autoDelProduct = $connect->prepare("UPDATE tblinventory SET status=? WHERE expiration_date < CURDATE()");
-    $autoDelProduct->bind_param('s',$itemExpired);
-    $autoDelProduct->execute();
     
-}*/
+    $selectProduct = "SELECT * FROM tblinventory WHERE expiration_date < CURDATE()";
+     $displayProduct = $connect->query($selectProduct);
+    while($fetch = $displayProduct->fetch_assoc()){
+        $id = NULL;
+        $idDb = $fetch['id'];
+        $itemCodeDb = $fetch['itemCode'];
+        $codeDb = $fetch['code'];
+        $expDateDb = $fetch['expiration_date'];
+        $createAtDb = $fetch['created_at'];
+        $productDb = $fetch['product'];
+        $qtyPurchasedDb = $fetch['quantityPurchased'];
+        $itemCategoryDb = $fetch['itemCategory'];
+        $itemVariationDb = $fetch['itemVariation'];
+        $insertExpItemDb = $connect->prepare("INSERT INTO tblexpired(id,itemCode,item_name,code,expiration_date,created_at,quantity_purchased,item_category,item_variation) VALUES(?,?,?,?,?,?,?,?,?)");
+        $insertExpItemDb->bind_param('isssssiss',$id,$itemCodeDb,$productDb,$codeDb,$expDateDb,$createAtDb,$qtyPurchasedDb,$itemCategoryDb,$itemVariationDb);
+        $insertExpItemDb->execute();
+        $deleteExpItemDb = $connect->prepare("DELETE FROM tblinventory WHERE id=?");
+        $deleteExpItemDb->bind_param('i',$idDb);
+        $deleteExpItemDb->execute();
+    }
+   
+}
+
 insertStocks();
 updateStocks();
 deleteStocks();
-//autoDeletion();
-function autoDeletion(){
-    require 'public/connection.php';
-    $fetchExpItemDb = $connect->prepare("SELECT * FROM tblinventory WHERE expiration_date < CURDATE()");
-    $fetchExpItemDb->execute();
-    $row = $fetchExpItemDb->get_result();
-    $fetch = $row->fetch_assoc();
-    if($row->num_rows > 0){
-        $totalStock = $fetch['quantityPurchased'];
-        $product = $fetch['product'];
-        $itemCategory = $fetch['itemCategory'];
-        $itemVariation = $fetch['itemVariation'];
-        $stock = -$totalStock;
-            $updateProductStock = $connect->prepare("UPDATE tblproducts SET stocks=? WHERE productName=? AND productCategory=?");
-            $updateProductStock->bind_param('iss',$stock,$product,$itemCategory);
-            $updateProductStock->execute();
-            //
-            $itemExpired = "expired";
-            $autoDelProduct = $connect->prepare("UPDATE tblinventory SET status=? WHERE expiration_date < CURDATE()");
-            $autoDelProduct->bind_param('s',$itemExpired);
-            $autoDelProduct->execute();
-        /*$fetchProdStockDb = $connect->prepare("SELECT * FROM tblproducts WHERE productName=? AND productCategory=?");
-        $fetchProdStockDb->bind_param('ss',$product,$itemCategory);
-        $fetchProdStockDb->execute();
-        $row1 = $fetchProdStockDb->get_result();            
-        $fetch1 = $row->fetch_assoc();
-        if($row1->num_rows > 0){
-            $stock = $fetch1['stocks'] - $totalStock ?? '';
-            $updateProductStock = $connect->prepare("UPDATE tblproducts SET stocks=? WHERE productName=? AND productCategory=?");
-            $updateProductStock->bind_param('iss',$stock,$product,$itemCategory);
-            $updateProductStock->execute();
-            //
-            $itemExpired = "expired";
-            $autoDelProduct = $connect->prepare("UPDATE tblinventory SET status=? WHERE expiration_date < CURDATE()");
-            $autoDelProduct->bind_param('s',$itemExpired);
-            $autoDelProduct->execute();
-        }*/
-    }
-    /*;*/
-}
 autoDeletion();
+
 ?>

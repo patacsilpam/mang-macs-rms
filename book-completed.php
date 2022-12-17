@@ -41,10 +41,10 @@
                                     <th scope="col">Date Schedule</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Email</th>
+                                    <th scope="col">Phone No.</th>
                                     <th scope="col">No. of Guests</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Suggestions</th>
-                                    <th scope="col">View Payment</th>
                                 </tr>
                             </thead>
                             <!---->
@@ -62,6 +62,7 @@
                                     <td><?= $fetch['scheduled_date']?> <br> <?=$fetch['scheduled_time']?></td>
                                     <td><?= $fetch['fname'] ?> <?=$fetch['lname']?></td>
                                     <td><?= $fetch['email']?></td>
+                                    <td><?= $fetch['phone_no']?></td>
                                     <td><?= $fetch['guests']?></td>
                                     <td>
                                         <input type="text"  class="order-status" value="<?=$fetch['status']?>">
@@ -72,11 +73,13 @@
                                     </td>
                                     
                                     <td><small><?=$fetch['comments']?></small></td>
-                                    <td>
-                                        <a href='view-payment-1.php?order_number=<?= $fetch['refNumber'];?>' title="View Payment">
+                                    <!--
+                                        <td>
+                                        <a href='view-payment-1.php?order_number=' title="View Payment">
                                             <button class="btn btn-primary"><i class="fas fa-eye"></i></button>
                                         </a>
                                     </td>
+                                    -->
                                 </tr>
                                 <?php
                                     }

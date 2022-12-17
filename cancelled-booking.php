@@ -45,6 +45,10 @@
                                 <button type="submit" class="btn btn-primary">
                                     Filter <i class="fa fa-filter" aria-hidden="true"></i>
                                 </button> 
+                                <a href="cancelled-booking-report.php?startDate=<?php if(isset($_GET['startDate'])) {echo $_GET['startDate'];} else{ echo date('Y-m-d',strtotime("first day of january this year"));}?>&endDate=<?php if(isset($_GET['endDate'])){ echo $_GET['endDate'];} else{ echo date('Y-m-d',strtotime("last day of december this year"));}?>"
+                                    class="btn btn-success">
+                                    <span>Export <i class="fa fa-file-pdf"></i></span>
+                                </a>
                             </form>
                         </div><br>
                         <table id="example" class="table table-hover">
@@ -63,13 +67,14 @@
                                         
                                     if(isset($_GET['startDate']) && isset($_GET['endDate'])){     
                                         $cancelled = "Cancelled";    
-                                        $noShows = "No Shows";       
+                                        $noShows = "No Shows"; 
+                                        $notAvailable = "Not Available";      
                                         $startDate = $_GET['startDate'];
                                         $endDate = $_GET['endDate'];
                                         $getTotalOrder = $connect->prepare("SELECT refNumber,fname,lname,guests,scheduled_date,scheduled_time,status 
-                                        FROM tblreservation WHERE status IN (?,?) AND scheduled_date BETWEEN (?) AND (?)
+                                        FROM tblreservation WHERE status IN (?,?,?) AND scheduled_date BETWEEN (?) AND (?)
                                         ORDER BY STR_TO_DATE(CONCAT(scheduled_date,' ',scheduled_time),'%Y-%m-%d %h:%i %p') ASC");
-                                        $getTotalOrder->bind_param('ssss',$cancelled,$noShows,$startDate,$endDate);
+                                        $getTotalOrder->bind_param('sssss',$cancelled,$noShows,$notAvailable,$startDate,$endDate);
                                         $getTotalOrder->execute();
                                         $getTotalOrder->bind_result($refNumber,$fname,$lname,$guests,$schedDate,$schedTime,$bookStatus);
                                         if($getTotalOrder){
@@ -91,13 +96,14 @@
                                     
                                     } else{
                                         $cancelled = "Cancelled";    
-                                        $noShows = "No Shows"; 
+                                        $noShows = "No Shows";
+                                        $notAvailable = "Not Available"; 
                                         $date = date('Y-m-d');
                                         $getTotalOrder = $connect->prepare("SELECT refNumber,fname,lname,guests,scheduled_date,scheduled_time,status 
-                                        FROM tblreservation WHERE status IN (?,?) 
+                                        FROM tblreservation WHERE status IN (?,?,?) 
                                         ORDER BY STR_TO_DATE(CONCAT(scheduled_date,' ',scheduled_time),'%Y-%m-%d %h:%i %p') ASC");
                                         echo $connect->error;
-                                        $getTotalOrder->bind_param('ss',$cancelled,$noShows);          
+                                        $getTotalOrder->bind_param('sss',$cancelled,$noShows,$notAvailable);          
                                         $getTotalOrder->execute();
                                         $getTotalOrder->bind_result($refNumber,$fname,$lname,$guests,$schedDate,$schedTime,$bookStatus);
                                         if($getTotalOrder){

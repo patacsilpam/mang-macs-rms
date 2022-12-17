@@ -68,7 +68,12 @@ require 'public/admin-orders-orders.php';
                         <p><strong>Order Number:</strong> <?=$orderNumber?></p>
                         <p><strong>Account name:</strong> <?=$customerName?></p>
                         <p><strong>Date Added:</strong> <?=$placedOn?></p>
-                        <p><strong>Delivery Time:</strong> <?=$requiredDate." ". $requiredTime?></p>
+                        <p><strong>Delivery/Pick Up Time:</strong> <?=$requiredDate." ". $requiredTime?>
+                            <button title="Edit" type="button" class="btn btn-transparent"
+                                data-toggle="modal" data-target="#editOrderTime"><i
+                            class="fas fa-edit" style="color: blue;"></i></button>
+                            <?php include 'assets/template/admin/orders.php' ?>
+                        </p>
                         <p><strong>Order Type:</strong> <?=$orderType; ?></p>
                         <p>
                             <div id="setCourier">
@@ -171,35 +176,47 @@ require 'public/admin-orders-orders.php';
                                         <td>₱ <?= $totalAmount + $deliveryFee?>.00</td>
                                     </tr>
                                     <tr>
-                                        <td colspan="7"></td>
+                                        <td colspan="6"></td>
                                         <td><b>Order Status</b><span class="mx-3 text-danger" style="font-size:1.5rem">*</span></td>
                                         <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST">
                                             <td>
+                                                <?php
+                                                $selectInventory = "SELECT * FROM tblorderdetails WHERE order_number='$orderNumber' ORDER BY id ASC";
+                                                $displayInventory = $connect->query($selectInventory);
+                                                while ($fetch = $displayInventory->fetch_assoc()) {
+                                                    ?>
+                                                     <input type="hidden" name="productName[]" value="<?=$fetch['product_name']?>">
+                                                     <input type="hidden" name="quantity[]" value="<?=$fetch['quantity']?>">
+                                                     <input type="hidden" name="category[]" value="<?=$fetch['product_category']?>">
+                                                     <input type="hidden" name="variation[]" value="<?=$fetch['product_variation']?>">
+                                                    <?php
+                                                }
+                                                ?>
+
                                                 <input type="hidden" name="email" value="<?=$email?>">
                                                 <input type="hidden" name="customerName" value="<?=$customerName?>">
                                                 <input type="hidden" name="orderNumber" value="<?=$orderNumber?>">
-                                                <input type="hidden" name="quantity" value="<?=$quantity?>">
-                                                <input type="hidden" name="category" value="<?=$category?>">
-                                                <input type="hidden" name="variation" value="<?=$variation?>">
                                                 <input type="hidden" name="sales" value="<?=$totalAmount?>">
                                                 <input type="hidden" id="order-type" name="orderType" value="<?=$orderType?>">
                                                 <input type="hidden" name="token" value="<?=$token?>">
                                                 <input type="hidden" name="orderDate" value="<?=$placedOn?>">
                                                 <input type="hidden" name="requiredTime" value="<?=$requiredTime?>">
                                                 <input type="hidden" name="preparedTime" value="<?=$preparedTime?>">
-                                                <select name="orderStatus" class="form-control" style="font-size:1.3rem" id="order-status">
+                                                
+                                                <select name="orderStatus" class="form-control" style="font-size:1.3rem" id="order-status" onchange="changeOrderStatus(this)">
                                                     <option value="Pending" <?php if($orderStatus == "Pending") { echo 'selected ? "selected"';}?>>Pending</option>
                                                     <option value="Order Processing" <?php if($orderStatus == "Order Processing") { echo 'selected ? "selected"';}?>>Processing (Confirm Order)</option>
                                                     <option id="out-delivery" value="Out for Delivery" <?php if($orderStatus == "Out for Delivery") { echo 'selected ? "selected"';}?>>Out for Delivery (Deliver)</option>
                                                     <option id="ready-pickup" value="Ready for Pick Up" <?php if($orderStatus == "Ready for Pick Up") { echo 'selected ? "selected"';}?>>Ready for Pick Up (Pick Up)</option>
                                                     <option value="Order Completed" <?php if($orderStatus == "Order Completed") { echo 'selected ? "selected"';}?>>Complete</option><br>
-                                                    <optgroup label="Cancel" style="color:#676767">
+                                                    <optgroup label="Cancel" id="cancel-order" style="display:none">
                                                         <option value="Invalid Payment" <?php if($orderStatus == "Invalid Payment") { echo 'selected ? "selected"';}?>>Invalid Payment</option>
                                                         <option value="Out of Stock" <?php if($orderStatus == "Out of Stock") { echo 'selected ? "selected"';}?>>Out of Stock</option>
                                                     </optgroup>
                                                 </select>
                                             </td>
-                                            <td>
+                                            <td>    
+                                                
                                                 <button type="submit" name="btn-update" class="btn btn-primary">Update Status</button>
                                             </td>
                                         </form>

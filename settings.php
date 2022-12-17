@@ -43,11 +43,24 @@
                                     <div>
                                         <h3>Delivery Fee</h3>
                                         <input type="number" class="form-control" name="deliveryChange"
-                                            placeholder="Delivery Charge (ex. 50)" value="<?= $deliveryChange; ?>"
+                                            placeholder="Delivery Fee (ex. 50)" value="<?= $deliveryChange; ?>"
                                             required>
                                     </div><br>
                                     <div> 
                                         <button type="submit" name="edit" class="btn btn-success">Save Changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="reservation-container">
+                                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST">
+                                    <div>
+                                        <h3>Waiting Time (min)</h3>
+                                        <input type="number" class="form-control" name="waitingTime"
+                                            placeholder="Waiting Time (ex. 30 mins)" value="<?=$waitingTime?>"
+                                            required>
+                                    </div><br>
+                                    <div> 
+                                        <button type="submit" name="btn-waiting-time" class="btn btn-success">Save Changes</button>
                                     </div>
                                 </form>
                             </div>

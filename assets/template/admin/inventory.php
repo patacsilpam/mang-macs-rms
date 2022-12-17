@@ -23,37 +23,14 @@
                             <input type="date" id="expirationDate" name="expirationDate" class="form-control" required>
                         </div>
                         <div class="mt-2">
-                            <label>Item Name</label>
-                            <div>
-                                <select id="name" class="form-control" name="product" required>
-                                    <option disabled selected>Please Choose...</option>
-                                    <option value="Pizza Bread">Pizza Bread</option>
-                                    <?php
-                                    require 'public/connection.php';
-                                        $fetchCategoryDb = $connect->prepare("SELECT productName,stockCode FROM tblproducts 
-                                        WHERE productCategory IN ('Beverages and Liqours','Wine','Drinks')");
-                                        $fetchCategoryDb->execute();
-                                        $fetchCategoryDb->store_result();
-                                        $fetchCategoryDb->bind_result($productName,$stockCode);
-                                        while($fetchCategoryDb->fetch()){
-                                            ?>
-                                                <option value="<?=$productName?>"><?=$productName?></option>
-                                            <?php
-                                        }
-                                        
-                                    ?>
-                                </select>
-                            </div>  
-                        </div>
-                        <div class="mt-2">
                             <label>Item Category</label>
                             <div>
-                                <select id="category" class="form-control" name="itemCategory" required>
+                                <select id="category" class="form-control item-category" name="itemCategory" required onchange="changeCategory(this)">
                                     <option disabled selected>Please Choose...</option>
                                     <?php
                                     require 'public/connection.php';
                                         $fetchCategoryDb = $connect->prepare("SELECT productCategory FROM tblproducts
-                                        WHERE productCategory IN ('Beverages & Liqours','Drinks','Pizza','Wine') GROUP BY productCategory");
+                                        WHERE productCategory IN ('Beverages and Liqours','Drinks','Pizza','Wine') GROUP BY productCategory");
                                         $fetchCategoryDb->execute();
                                         $fetchCategoryDb->store_result();
                                         $fetchCategoryDb->bind_result($productCategory);
@@ -66,10 +43,94 @@
                                     ?>
                                 </select>
                             </div>  
+                            <div class="mt-2" style="display:none" id="pizzaBread">
+                                <label>Item Name</label>
+                                <select class="form-control" name="product">
+                                    <option disabled selected>Please Choose...</option>
+                                    <option value="Pizza Bread">Pizza Bread</option>
+                                </select>
+                            </div>
+                            <div class="mt-2" style="display:none" id="bevLiqours">
+                                <label>Item Name</label>
+                                <select class="form-control" name="product">
+                                    <option disabled selected>Please Choose...</option>
+                                    <?php
+                                        require 'public/connection.php';
+                                        $fetchCategoryDb = $connect->prepare("SELECT productName,stockCode FROM tblproducts WHERE productCategory = 'Beverages and Liqours'");
+                                        $fetchCategoryDb->execute();
+                                        $fetchCategoryDb->store_result();
+                                        $fetchCategoryDb->bind_result($productName,$stockCode);
+                                        while($fetchCategoryDb->fetch()){
+                                            ?>
+                                                <option value="<?=$productName?>"><?=$productName?></option>
+                                            <?php
+                                        }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="mt-2" style="display:none" id="drinks">
+                                <label>Item Name</label>
+                                <select class="form-control" name="product">
+                                    <option disabled selected>Please Choose...</option>
+                                    <?php
+                                        require 'public/connection.php';
+                                        $fetchCategoryDb = $connect->prepare("SELECT productName,stockCode FROM tblproducts WHERE productCategory = 'Drinks'");
+                                        $fetchCategoryDb->execute();
+                                        $fetchCategoryDb->store_result();
+                                        $fetchCategoryDb->bind_result($productName,$stockCode);
+                                        while($fetchCategoryDb->fetch()){
+                                            ?>
+                                                <option value="<?=$productName?>"><?=$productName?></option>
+                                            <?php
+                                        }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="mt-2" style="display:none" id="wine">
+                                <label>Item Name</label>
+                                <select class="form-control" name="product">
+                                    <option disabled selected>Please Choose...</option>
+                                    <?php
+                                        require 'public/connection.php';
+                                        $fetchCategoryDb = $connect->prepare("SELECT productName,stockCode FROM tblproducts WHERE productCategory = 'Wine'");
+                                        $fetchCategoryDb->execute();
+                                        $fetchCategoryDb->store_result();
+                                        $fetchCategoryDb->bind_result($productName,$stockCode);
+                                        while($fetchCategoryDb->fetch()){
+                                            ?>
+                                                <option value="<?=$productName?>"><?=$productName?></option>
+                                            <?php
+                                        }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="mt-2" style="display:none" id="beerBucket">
+                                <label>Item Name</label>
+                                <select class="form-control" name="product">
+                                    <option disabled selected>Please Choose...</option>
+                                    <?php
+                                        require 'public/connection.php';
+                                        $fetchCategoryDb = $connect->prepare("SELECT productName,stockCode FROM tblproducts WHERE productCategory = 'Beer Bucket'");
+                                        $fetchCategoryDb->execute();
+                                        $fetchCategoryDb->store_result();
+                                        $fetchCategoryDb->bind_result($productName,$stockCode);
+                                        while($fetchCategoryDb->fetch()){
+                                            ?>
+                                                <option value="<?=$productName?>"><?=$productName?></option>
+                                            <?php
+                                        }
+                                    ?>
+                                </select>
+                            </div>
                         </div>
-                        <div class="mt-2">
+                        
+                        <div class="mt-2" id="pizzaVariation" style="display:none">
                             <label>Item Variation</label>
-                            <input type="text" class="form-control" name="itemVariation" placeholder="Enter Item Variation" required>
+                            <select class="form-control" name="itemVariation" required>
+                                <option disabled selected>Please Choose...</option>
+                                <option value="Medium">Medium</option>
+                                <option value="Large">Large</option>
+                            </select>
                         </div>
                         <div class="mt-2">
                             <label>Item Purchase</label>
@@ -113,35 +174,43 @@
                                 value="<?=$fetch['expiration_date']?>" required>
                         </div>
                         <div class="mt-2">
-                            <label for="product">Product</label>
-                            <input type="text" class="form-control" name="product" placeholder="Enter Product"
-                                value="<?=$fetch['product']?>" required>
+                            <label>Item Category</label>
+                            <select class="form-control" name="product">
+                                
+                                <?php
+                                    require 'public/connection.php';
+                                    $category = $fetch['itemCategory'];
+                                    $prod = $fetch['product'];
+                                    if($category != "Pizza"){
+                                        $fetchCategoryDb = $connect->prepare("SELECT productName,stockCode FROM tblproducts WHERE productCategory = '$category' GROUP BY productName");
+                                        $fetchCategoryDb->execute();
+                                        $fetchCategoryDb->store_result();
+                                        $fetchCategoryDb->bind_result($productName,$stockCode);
+                                        while($fetchCategoryDb->fetch()){
+                                            ?>
+                                                <option value="<?=$productName?>" <?php if($productName == $prod){echo "selected ? 'selected'";}?>><?=$productName?></option>
+                                            <?php
+                                        }
+                                    }
+                                    else{
+                                        ?>
+                                            <option value="Pizza Bread">Pizza Bread</option>
+                                        <?php
+                                    }
+                                ?>
+                            </select>
                         </div>
                         <div class="mt-2">
                             <label>Item Category</label>
-                            <input type="text" list="category" class="form-control" name="itemCategory" placeholder="Enter Item Category" value="<?=$fetch['itemCategory']?>">
-                            <div>
-                                <datalist id="category">
-                                    <?php
-                                    require 'public/connection.php';
-                                        $fetchCategoryDb = $connect->prepare("SELECT productCategory FROM tblproducts GROUP BY productCategory");
-                                        $fetchCategoryDb->execute();
-                                        $fetchCategoryDb->store_result();
-                                        $fetchCategoryDb->bind_result($productCategory);
-                                        while($fetchCategoryDb->fetch()){
-                                            ?>
-                                                <option value="<?=$productCategory?>"><?=$productCategory?></option>
-                                            <?php
-                                        }
-                                        
-                                    ?>
-                                </datalist>
-                            </div>  
+                            <input type="text" class="form-control" name="itemCategory" placeholder="Enter Item Category" value="<?=$fetch['itemCategory']?>" readonly>
                         </div>
                         <div class="mt-2">
-                            <label for="product">Variation</label>
-                            <input type="text" class="form-control" name="itemVariation" placeholder="Enter Item Variation"
-                                value="<?=$fetch['itemVariation']?>" required>
+                            <label for="product">Item Variation</label>
+                            <select class="form-control" name="itemVariation">
+                                <option disabled selected>Please Choose...</option>
+                                <option value="Medium" <?php if($fetch['itemVariation'] == "Medium") {echo "selected ? 'selected'";}?>>Medium</option>
+                                <option value="Large" <?php if($fetch['itemVariation'] == "Large") {echo "selected ? 'selected'";}?>>Large</option>
+                            </select>
                         </div>
                         <div  class="mt-2">
                           <label for="quantity">Add/Remove Quantity Purchased</label>

@@ -1,8 +1,8 @@
 <?php
 require 'public/connection.php';
 include 'fpdf/fpdf.php';
-session_start();
 date_default_timezone_set('Asia/Manila');
+session_start();
 $refNumber=$fname=$lname=$guests=$schedDate=$schedTime="";
 class PDF extends FPDF
 {
@@ -17,7 +17,7 @@ class PDF extends FPDF
         $this->Cell(0, 10, "Mang Mac's Marineros Pizza House", 0, 0, 'C'); //title
         $this->Ln(); //line break
         $this->SetFont('Arial', '', 12);  //select arial 15, regular
-        $this->Cell(0, 10, "Lists of Reservation $formatStartDate - $formatEndDate", 0, 0, 'C'); //title
+        $this->Cell(0, 10, "Lists of Canceled Reservation $formatStartDate - $formatEndDate", 0, 0, 'C'); //title
         $this->SetX($this->lMargin); //align text to center
         $this->Ln(20);
     }
@@ -34,17 +34,17 @@ class PDF extends FPDF
     {
         if(isset($_GET['startDate']) && isset($_GET['endDate'])){
             $totalGuests=0;
-            $orderCompleted = "Finished";
-            $orderReceived = "Order Received";          
+            $cancelled = "Cancelled";    
+            $noShows = "No Shows"; 
+            $notAvailable = "Not Available";       
             $startDate = $_GET['startDate'];
             $endDate = $_GET['endDate'];
-            $getTotalOrder = $connect->prepare("SELECT refNumber,fname,lname,guests,scheduled_date,scheduled_time 
-            FROM tblreservation WHERE status IN (?,?)  AND scheduled_date BETWEEN (?) AND (?)
+            $getTotalOrder = $connect->prepare("SELECT refNumber,fname,lname,guests,scheduled_date,scheduled_time,status 
+            FROM tblreservation WHERE status IN (?,?,?) AND scheduled_date BETWEEN (?) AND (?)
             ORDER BY STR_TO_DATE(CONCAT(scheduled_date,' ',scheduled_time),'%Y-%m-%d %h:%i %p') ASC");
-            echo $connect->error;
-            $getTotalOrder->bind_param('ssss',$orderCompleted,$orderReceived,$startDate,$endDate);
+            $getTotalOrder->bind_param('sssss',$cancelled,$noShows,$notAvailable,$startDate,$endDate);
             $getTotalOrder->execute();
-            $getTotalOrder->bind_result($refNumber,$fname,$lname,$guests,$schedDate,$schedTime);
+            $getTotalOrder->bind_result($refNumber,$fname,$lname,$guests,$schedDate,$schedTime,$bookStatus);
             if($getTotalOrder){
                 while($getTotalOrder->fetch()){
                     $totalGuests+=$guests;
@@ -55,8 +55,10 @@ class PDF extends FPDF
                     $this->Ln();
                 }
             }
-            $this->Cell(75,10,'',0,0,'C');
-            $this->Cell(25,10,"Total Guests: $totalGuests", 1, 0, 'C'); $this->Ln();
+           
+            $this->Cell(75, 10, "", 0, 0, 'C');
+            $this->Cell(25, 10, "Total Guests: $totalGuests", 1, 0, 'C');
+            $this->Ln();
             $this->SetFont('Arial', '', 10);
             $this->Cell(0,10,"Prepared by:",0,0,'L');
             $this->Ln();

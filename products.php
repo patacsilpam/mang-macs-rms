@@ -68,8 +68,8 @@
                                     <td><?= $fetch['productName'] ?></td>
                                     <td><?= $fetch['productCategory'] ?></td>
                                     <td><?= $fetch['productVariation'] ?></td>
-                                    <td>₱ <?= $fetch['price'] ?></td>
-                                    <td><?php echo $prepTime = ($newPrepTime < 60) ? "$newPrepTime mins" : "$convertMinHr hr";?></td>
+                                    <td>₱ <?= $fetch['price'] ?></td> 
+                                    <td><?php if($newPrepTime  == 0){echo "";} else if($newPrepTime < 60){echo $newPrepTime."mins";} else{echo $convertMinHr."hr";}?></td>
                                     <td style="display: flex;"> 
                                         <button title="View" type="button" class="btn btn-primary" data-toggle="modal" data-target="#viewProduct<?= $fetch['id']; ?>">
                                             <i class="fas fa-eye"></i>
