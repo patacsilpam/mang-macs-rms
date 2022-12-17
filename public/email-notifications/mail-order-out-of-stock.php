@@ -10,7 +10,7 @@ function mailOutOfStock($email,$orderNumber,$logo,$customerName,$orderDate,$orde
     $mail->Host = 'smtp.gmail.com';
     $mail->SMTPAuth = true;
     $mail->Username = 'mangmacspizzahouse@gmail.com';
-    $mail->Password = 'ylzikpnelhxltves'; 
+    $mail->Password = ''; 
     $mail->SMTPSecure = 'tls';
     $mail->Port = 587;
     $mail->setFrom('mangmacspizzahouse@gmail.com', "Mang Mac's Marinero");
