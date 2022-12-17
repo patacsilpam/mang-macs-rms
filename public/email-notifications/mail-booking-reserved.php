@@ -11,7 +11,7 @@ function mailBookingReserved($id,$email,$refNumber,$logo,$customerName,$guests,$
     $mail->Host = 'smtp.gmail.com';
     $mail->SMTPAuth = true;
     $mail->Username = 'mangmacspizzahouse@gmail.com';
-    $mail->Password = 'ylzikpnelhxltves'; 
+    $mail->Password = ''; 
     $mail->SMTPSecure = 'tls';
     $mail->Port = 587;
     $mail->setFrom('mangmacspizzahouse@gmail.com', "Mang Mac's Marinero");
