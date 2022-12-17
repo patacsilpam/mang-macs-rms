@@ -11,7 +11,7 @@ function mailNoShowsReservation($id,$email,$refNumber,$logo,$customerName,$guest
     $mail->Host = 'smtp.gmail.com';
     $mail->SMTPAuth = true;
     $mail->Username = 'mangmacspizzahouse@gmail.com';
-    $mail->Password = 'ylzikpnelhxltves'; 
+    $mail->Password = ''; 
     $mail->SMTPSecure = 'tls';
     $mail->Port = 587;
     $mail->setFrom('mangmacspizzahouse@gmail.com', "Mang Mac's Marinero");
